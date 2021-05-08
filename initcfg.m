@@ -118,7 +118,9 @@ niconfig.width = sqrt(tmp(1)+tmp(2)+tmp(3));
 
 niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
-niconfig.P = [niconfig.P1; niconfig.P2;];
+niconfig.P = [niconfig.P1; niconfig.P2];
+
+niconfig.O = (niconfig.P1+ niconfig.P2)/2-[0 0 0.08];
 
 niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*10;
 niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*100;%*niconfig.zclen/2;

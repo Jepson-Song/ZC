@@ -34,6 +34,10 @@ function draw(cur_index)
         pp(1) = po(1)+ sign* d*sqrt(1/(1+k2^2));
         pp(2) = po(2)-  d*sqrt(k2^2/(1+k2^2));
         
+        % cfg.O = po-[0 0 0.08]';
+        fa_v = fa_vector(p1', p2', cfg.O');
+        size(fa_v)
+%         fa_v = zeros(3,1);
         % pos
         if cfg.drawStyle == 1
             plot3(cfg.figure5, cfg.pos1(1,1:cur_index),  cfg.pos1(2,1:cur_index), cfg.pos1(3,1:cur_index), 'b', cfg.pos2(1,1:cur_index), cfg.pos2(2,1:cur_index), cfg.pos2(3,1:cur_index), 'r');
@@ -42,7 +46,8 @@ function draw(cur_index)
             
             plot(cfg.figure8, cfg.pos1(2,1:cur_index), cfg.pos1(3,1:cur_index), 'b', cfg.pos2(2,1:cur_index), cfg.pos2(3,1:cur_index), 'r');
         elseif cfg.drawStyle == 2
-            plot3(cfg.figure5, [cfg.pos1(1,cur_index),cfg.pos2(1,cur_index)],[cfg.pos1(2,cur_index),cfg.pos2(2,cur_index)],[cfg.pos1(3,cur_index),cfg.pos2(3,cur_index)]);
+%             plot3(cfg.figure5, [cfg.pos1(1,cur_index),cfg.pos2(1,cur_index),cfg.O(1),cfg.pos1(1,cur_index)],[cfg.pos1(2,cur_index),cfg.pos2(2,cur_index),cfg.O(2),cfg.pos1(2,cur_index)],[cfg.pos1(3,cur_index),cfg.pos2(3,cur_index),cfg.O(3),cfg.pos1(3,cur_index)]);
+            plot3(cfg.figure5,[0 fa_v(1)],[0 fa_v(2)],[0 fa_v(3)]);
             plot(cfg.figure6, [cfg.pos1(1,cur_index),cfg.pos2(1,cur_index)],[cfg.pos1(3,cur_index),cfg.pos2(3,cur_index)]);
             plot(cfg.figure7, [cfg.pos1(1,cur_index),cfg.pos2(1,cur_index)],[cfg.pos1(2,cur_index),cfg.pos2(2,cur_index)],'b',[po(1),pp(1)],[po(2),pp(2)],'r--');
             
@@ -84,4 +89,26 @@ function draw(cur_index)
         drawnow();
     
 %     end
+end
+
+%求三角形法向量
+function res=fa_vector(p1, p2, p3)
+% size(p1)
+% size(p2)
+% size(p3)
+%三个点的坐标
+% p1=[nodes(x1,2),nodes(x1,3),nodes(x1,4)];
+% p2=[nodes(x2,2),nodes(x2,3),nodes(x1,4)];
+% p3=[nodes(x3,2),nodes(x3,3),nodes(x3,4)];
+%两个边向量
+a=p2-p1;
+b=p3-p1;
+%求法向量
+c=cross(b,a);
+%归一化
+ norm = sqrt(c(1,1)^2+c(1,2)^2+c(1,3)^2);
+ x=c(1,1)/norm;
+ y=c(1,2)/norm;
+ z=c(1,3)/norm;
+ res = [x;y;z];
 end
