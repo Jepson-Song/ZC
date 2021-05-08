@@ -125,8 +125,8 @@ niconfig.O = (niconfig.P1+ niconfig.P2)/2-[0 0 0.08];
 niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*10;
 niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*100;%*niconfig.zclen/2;
 % niconfig.init_peak = ones(niconfig.nout, niconfig.nin)*0;
-niconfig.dis1 = [];zeros(niconfig.nin, niconfig.dislen);
-niconfig.dis2 = [];zeros(niconfig.nin, niconfig.dislen);
+niconfig.dis1 = [];%zeros(niconfig.nin, niconfig.dislen);
+niconfig.dis2 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.pos1 = [];
 niconfig.pos2 = [];
 
@@ -142,9 +142,10 @@ for k=1:1: 2 %两个发射端
         niconfig.init_dis(i, k) = sqrt(sum);
     end
 end
+niconfig.init_dis = niconfig.init_dis';
 
 % 偏移距离
-niconfig.shift_dis = zeros(3, 2);
+niconfig.shift_dis = zeros(3, 2)';
 
 niconfig.datain = [];
 niconfig.data_len = 0;

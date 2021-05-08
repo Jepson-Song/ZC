@@ -129,15 +129,18 @@ for i=1:cfg.nin                  %for each mic
 
 end
     
-    dis = [dis1',dis2'];
+    %dis = [dis1, dis2];
     %% 计算shift_dis
         if cur_index==1
-            cfg.shift_dis = dis;
+            cfg.shift_dis = [dis1; dis2];
         end
     
+%         size(dis1)
+%         size(cfg.shift_dis)
+%         size(cfg.init_dis)
     %% 真实距离
-    cfg.dis1 = [cfg.dis1, dis1'-cfg.shift_dis(:,1)+cfg.init_dis(:, 1)];
-    cfg.dis2 = [cfg.dis2, dis2'-cfg.shift_dis(:,2)+cfg.init_dis(:, 2)];
+    cfg.dis1 = [cfg.dis1; dis1-cfg.shift_dis(1, :)+cfg.init_dis(1, :)];
+    cfg.dis2 = [cfg.dis2; dis2-cfg.shift_dis(2, :)+cfg.init_dis(2, :)];
 
     
     %% 实时画图，画cir

@@ -340,8 +340,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     fprintf("【从文件读取距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dis = load(address);
-    %size(dis)
-    %size(dis, 1)
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:3);
     cfg.dis2 = dis(:, 4:6);
@@ -350,8 +348,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     fprintf("【从文件读取位置】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     pos = load(address);
-    size(pos)
-    size(pos, 1)
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);
     fprintf("-----【完成读取结果】-----\n");
@@ -398,9 +394,9 @@ global  cfg
     for cur_index = 1+1:1:cfg.index-1
         fprintf("【正在进行单个凸点修正...】 Dataseg index: %d\n",cur_index);
         for i=1:1:6
-            if dis(cur_index, i)>dis(cur_index-1, i) && dis(cur_index, i)>dis(cur_index+1, i)...
-                || dis(cur_index, i)<dis(cur_index-1, i) && dis(cur_index, i)<dis(cur_index+1, i)
-                dis(cur_index, i) = (dis(cur_index-1, i)+dis(cur_index+1, i))/2;
+            if dis(i,cur_index)>dis(i,cur_index-1) && dis(i,cur_index)>dis(i,cur_index+1)...
+                || dis(i,cur_index)<dis(i,cur_index-1) && dis(i,cur_index)<dis(i,cur_index+1)
+                dis(i,cur_index) = (dis(i,cur_index-1)+dis(i,cur_index+1))/2;
             end
         end
     end
@@ -408,15 +404,84 @@ global  cfg
     for cur_index = 1+1:1:cfg.index
         fprintf("【正在进行距离大幅度变化修正...】 Dataseg index: %d\n",cur_index);
         for i=1:1:6
-            if dis(cur_index, i)-dis(cur_index-1, i) > threhold
-                dis(cur_index, i) = dis(cur_index, i) - cfg.wavelength;
-            elseif dis(cur_index, i)-dis(cur_index-1, i) < -threhold
-                dis(cur_index, i) = dis(cur_index, i) + cfg.wavelength;
+            if dis(i,cur_index)-dis(i,cur_index-1) > threhold
+                dis(i,cur_index) = dis(i,cur_index) - cfg.wavelength;
+            elseif dis(i,cur_index)-dis(i,cur_index-1) < -threhold
+                dis(i,cur_index) = dis(i,cur_index) + cfg.wavelength;
             end
         end
+        % 修正距离
+%         fix = [-1 0 1];
+%         fix_len = length(fix);
+%         dis1 = cfg.dis1(:,cur_index);
+%         dis2 = cfg.dis2(:,cur_index);
+%         mymin = inf;
+%         chosedis1 = dis1;
+%         chosedis2 = dis2;
+%         flag = zeros(1, 6);
+%         for i=1:1:3
+%             if abs(cfg.dis1(i,cur_index)-cfg.dis1(i,cur_index-1)) < threhold
+%                 flag(i) = 1;
+%             end
+%         end
+%         for i=1:1:3
+%             if abs(cfg.dis2(i,cur_index)-cfg.dis2(i,cur_index-1)) < threhold
+%                 flag(i+3) = 1;
+%             end
+%         end
+%         for i1=1:fix_len
+%             if flag(1)==1 
+%                 continue;
+%             end
+%             for i2=1:fix_len
+%                 if flag(2)==1 
+%                     continue;
+%                 end
+%                 for i3=1:fix_len
+%                     if flag(3)==1
+%                         continue;
+%                     end
+%                     for j1=1:fix_len
+%                         if flag(4)==1
+%                             continue;
+%                         end
+%                         for j2=1:fix_len
+%                             if flag(5)==1
+%                                 continue;
+%                             end
+%                             for j3=1:fix_len
+%                                 if flag(6)==1
+%                                     continue;
+%                                 end
+%                                 tmpdis1 = dis1;
+%                                 tmpdis2 = dis2;
+%                                 
+%                                 tmpdis1(1) = tmpdis1(1) + fix(i1)*cfg.wavelength;
+%                                 tmpdis1(2) = tmpdis1(2) + fix(i2)*cfg.wavelength;
+%                                 tmpdis1(3) = tmpdis1(3) + fix(i3)*cfg.wavelength;
+%                                 tmpdis2(1) = tmpdis2(1) + fix(j1)*cfg.wavelength;
+%                                 tmpdis2(2) = tmpdis2(2) + fix(j2)*cfg.wavelength;
+%                                 tmpdis2(3) = tmpdis2(3) + fix(j3)*cfg.wavelength;
+%                                 
+%                                 [tmppos1, tmppos2] = solve_equations(tmpdis1, tmpdis2);
+%                                 tmpwidth = sqrt(sum((tmppos1-tmppos2).*(tmppos1-tmppos2)));
+%                                 diff = abs(tmpwidth-cfg.width);
+%                                 if diff<mymin
+%                                     mymin = diff;
+%                                     chosedis1 = tmpdis1;
+%                                     chosedis2 = tmpdis2;
+%                                 end
+%                             end
+%                         end
+%                     end
+%                 end
+%             end
+%         end
+%         cfg.dis1(:,cur_index) = chosedis1;
+%         cfg.dis2(:,cur_index) = chosedis2;
     end
-    cfg.dis1 = dis(:, 1:3);
-    cfg.dis2 = dis(:, 4:6);
+    cfg.dis1 = dis(1:3, :);
+    cfg.dis2 = dis(4:6, :);
 %     % 均值滤波
 %     cfg.dis1(i,:) = smooth(cfg.dis1(i,:),5,'lowess');
 %     cfg.dis2(i,:) = smooth(cfg.dis2(i,:),5,'lowess');
@@ -445,13 +510,13 @@ global  cfg
     fileName = [prefix, '_dis_cor.txt'];
     fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
-    dis_cor = [cfg.dis1,cfg.dis2];
+    dis_cor = [cfg.dis1;cfg.dis2];
     save(address, 'dis_cor', '-ascii')
     % 保存修正后的位置
     fileName = [prefix, '_pos_cor.txt'];
     fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
-    pos_cor = [cfg.pos1,cfg.pos2];
+    pos_cor = [cfg.pos1;cfg.pos2];
     save(address, 'pos_cor', '-ascii')
     fprintf("-----【完成保存修正后结果】-----\n");
 
@@ -483,16 +548,16 @@ global cfg
     fprintf("【从文件读取修正后的距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dis_cor = load(address);
-    cfg.index = size(dis_cor, 1);
-    cfg.dis1 = dis_cor(:, 1:3);
-    cfg.dis2 = dis_cor(:, 4:6);
+    cfg.index = size(dis_cor, 2);
+    cfg.dis1 = dis_cor(1:3,:);
+    cfg.dis2 = dis_cor(4:6,:);
     % 读取位置
     fileName = [prefix, '_pos_cor.txt'];
     fprintf("【从文件读取修正后的位置】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     pos_cor = load(address);
-    cfg.pos1 = pos_cor(:, 1:3);
-    cfg.pos2 = pos_cor(:, 4:6);  
+    cfg.pos1 = pos_cor(1:3,:);
+    cfg.pos2 = pos_cor(4:6,:);  
     fprintf("-----【完成读取修正后的结果】-----\n");
     
     %% 读取结果后画图

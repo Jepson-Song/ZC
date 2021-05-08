@@ -7,10 +7,8 @@ function draw(cur_index)
 %     dis1 =  cfg.dis1;
 %     dis2 =  cfg.dis2;
 %     if cur_index<cfg.dislen
-
         dis1 = [zeros(cfg.dislen, cfg.nin); cfg.dis1];
         dis2 = [zeros(cfg.dislen, cfg.nin); cfg.dis2];
-%         size(dis1)
 %     end
     
         fprintf("【正在画图...】 Dataseg index: %d\n",cur_index);
@@ -21,7 +19,7 @@ function draw(cur_index)
         plot(cfg.figure(2, 2),[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 1),cfg.color(1) ...
                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 2),cfg.color(2)...
                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 3),cfg.color(3));
-%         size(cfg.pos1)
+        
         p1 = cfg.pos1(cur_index, :);
         p2 = cfg.pos2(cur_index, :);
         po = (p1+p2)/2;
@@ -38,7 +36,7 @@ function draw(cur_index)
         
         % cfg.O = po-[0 0 0.08]';
         fa_v = fa_vector(p1, p2, cfg.O);
-%         size(fa_v)
+        size(fa_v)
 %         fa_v = zeros(3,1);
         % pos
         if cfg.drawStyle == 1
@@ -53,7 +51,7 @@ function draw(cur_index)
             plot(cfg.figure6, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3)]);
             plot(cfg.figure7, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2)],'b',[po(1),pp(1)],[po(2),pp(2)],'r--');
             
-            plot(cfg.figure8, [cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3)]);
+            plot(cfg.figure8, [cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index)]);
         end
         xlim(cfg.figure5, [-cfg.lim cfg.lim])
         ylim(cfg.figure5, [-cfg.lim cfg.lim])
