@@ -107,12 +107,12 @@ niconfig.windows = 40;%niconfig.seglen*2;
 niconfig.color = ["r", "g", "b"];
 
 
-niconfig.A = [0 0 0];
-niconfig.B = [0.1 0 0];
-niconfig.C = [0 0 0.1];
+niconfig.A = [0 0 -0.05];
+niconfig.B = [-0.1 0 0.1];
+niconfig.C = [0.1 0 0.1];
 
-niconfig.P1 = [0 0.25 0];%[0 0.15 -0.25+0.005];
-niconfig.P2 = [0.1 0.25 0];%[0.1 0.15 -0.25+0.005];
+niconfig.P1 = [-0.05 0.25 0];%[0 0.15 -0.25+0.005];
+niconfig.P2 = [0.05 0.25 0];%[0.1 0.15 -0.25+0.005];
 tmp = (niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2);
 niconfig.width = sqrt(tmp(1)+tmp(2)+tmp(3));
 
@@ -120,7 +120,7 @@ niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
 niconfig.P = [niconfig.P1; niconfig.P2];
 
-niconfig.O = (niconfig.P1+ niconfig.P2)/2-[0 0 0.08];
+niconfig.O = (niconfig.P1+ niconfig.P2)/2 - [0 0 0.08]
 
 niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*10;
 niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*100;%*niconfig.zclen/2;
@@ -129,6 +129,7 @@ niconfig.dis1 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.dis2 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.pos1 = [];
 niconfig.pos2 = [];
+niconfig.fa_v = [];
 
 
 % 初始距离

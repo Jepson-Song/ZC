@@ -75,7 +75,7 @@ cfg.figure8=handles.axes8;
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
-    set(handles.edit1, 'string', "");
+    set(handles.edit1, 'string', "20210505_180355");
 end
 
 %% Play
@@ -100,6 +100,7 @@ function init_para()
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.pos1 = [];
     cfg.pos2 = [];
+    cfg.fa_v = [];
     cfg.left_bd = ones(cfg.nout, cfg.nin)*10;
     cfg.right_bd = ones(cfg.nout, cfg.nin)*100;
 end
@@ -453,6 +454,12 @@ global  cfg
     address = [cfg.dataAddress,fileName];
     pos_cor = [cfg.pos1,cfg.pos2];
     save(address, 'pos_cor', '-ascii')
+    % 保存修正后的法向量
+    fileName = [prefix, '_fav_cor.txt'];
+    fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    fav_cor = cfg.fa_v;
+    save(address, 'fav_cor', '-ascii')
     fprintf("-----【完成保存修正后结果】-----\n");
 
     

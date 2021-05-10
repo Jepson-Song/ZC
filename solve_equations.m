@@ -16,8 +16,10 @@ function [pos1, pos2] = solve_equations(dis1, dis2)
     [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1]);
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
     
-    rem = 1;
-    pos1 = abs(double(real([x1(rem), y1(rem), z1(rem)])));
-    pos2 = abs(double(real([x2(rem), y2(rem), z2(rem)])));
+    rem = 2;
+%     pos1 = abs(double(real([x1(rem), y1(rem), z1(rem)])));
+%     pos2 = abs(double(real([x2(rem), y2(rem), z2(rem)])));
+    pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
+    pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
 
 end
