@@ -288,41 +288,41 @@ global  cfg
     fprintf("-----【完成保存距离】-----\n");
     
     
-    %% 计算位置
-    fprintf("\n-----【开始计算位置】-----\n");
-    fprintf('Total Data length: %d\n',cfg.data_len)
-    cfg.index = floor(cfg.data_len/cfg.seglen);
-
-    for cur_index = 1:1:cfg.index
-        fprintf("【正在计算位置...】 Dataseg index: %d\n",cur_index);
-
-        % 计算坐标
-        cal_pos(cur_index);
-    end
-    fprintf("-----【结束计算位置】-----\n");
-
-    
-    %% 保存位置
-    fprintf("\n-----【开始保存位置】-----\n");
-    prefix = get(handles.edit1, 'string');
-    fileName = [prefix, '_pos.txt'];
-    % 新建文件
-    fprintf("【创建文件保存位置】 "+fileName+"\n");
-    
-    address = [cfg.dataAddress,fileName];
-    pos = [cfg.pos1,cfg.pos2];
-    save(address, 'pos', '-ascii')
-    fprintf("-----【完成保存位置】-----\n");
-    
-        
-    %% 计算完成后画图
-    if cfg.ifDrawAfterCal
-        fprintf("\n-----【开始离线画图】-----\n");
-        for cur_index=1:1:cfg.index
-           draw(cur_index);
-        end
-        fprintf("-----【结束离线画图】-----\n");
-    end
+%     %% 计算位置
+%     fprintf("\n-----【开始计算位置】-----\n");
+%     fprintf('Total Data length: %d\n',cfg.data_len)
+%     cfg.index = floor(cfg.data_len/cfg.seglen);
+% 
+%     for cur_index = 1:1:cfg.index
+%         fprintf("【正在计算位置...】 Dataseg index: %d\n",cur_index);
+% 
+%         % 计算坐标
+%         cal_pos(cur_index);
+%     end
+%     fprintf("-----【结束计算位置】-----\n");
+% 
+%     
+%     %% 保存位置
+%     fprintf("\n-----【开始保存位置】-----\n");
+%     prefix = get(handles.edit1, 'string');
+%     fileName = [prefix, '_pos.txt'];
+%     % 新建文件
+%     fprintf("【创建文件保存位置】 "+fileName+"\n");
+%     
+%     address = [cfg.dataAddress,fileName];
+%     pos = [cfg.pos1,cfg.pos2];
+%     save(address, 'pos', '-ascii')
+%     fprintf("-----【完成保存位置】-----\n");
+%     
+%         
+%     %% 计算完成后画图
+%     if cfg.ifDrawAfterCal
+%         fprintf("\n-----【开始离线画图】-----\n");
+%         for cur_index=1:1:cfg.index
+%            draw(cur_index);
+%         end
+%         fprintf("-----【结束离线画图】-----\n");
+%     end
 end
 
 
@@ -332,6 +332,8 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    init_para();
+    
     global cfg
     %% 从文件中读取结果
     fprintf("\n-----【开始读取结果】-----\n");
@@ -346,15 +348,15 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:3);
     cfg.dis2 = dis(:, 4:6);
-    % 读取位置
-    fileName = [prefix, '_pos.txt'];
-    fprintf("【从文件读取位置】 "+fileName+"\n");
-    address = [cfg.dataAddress,fileName];
-    pos = load(address);
-    size(pos)
-    size(pos, 1)
-    cfg.pos1 = pos(:, 1:3);
-    cfg.pos2 = pos(:, 4:6);
+%     % 读取位置
+%     fileName = [prefix, '_pos.txt'];
+%     fprintf("【从文件读取位置】 "+fileName+"\n");
+%     address = [cfg.dataAddress,fileName];
+%     pos = load(address);
+%     size(pos)
+%     size(pos, 1)
+%     cfg.pos1 = pos(:, 1:3);
+%     cfg.pos2 = pos(:, 4:6);
     fprintf("-----【完成读取结果】-----\n");
     
     %% 读取结果后画图
@@ -481,7 +483,9 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-global cfg
+    init_para();
+    
+    global cfg
     %% 从文件中读取修正后的结果
     fprintf("\n-----【开始读取修正后的结果】-----\n");
     prefix = get(handles.edit1, 'string');
@@ -500,6 +504,11 @@ global cfg
     pos_cor = load(address);
     cfg.pos1 = pos_cor(:, 1:3);
     cfg.pos2 = pos_cor(:, 4:6);  
+    % 读取法向量
+    fileName = [prefix, '_fav_cor.txt'];
+    fprintf("【从文件读取修正后的法向量】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    cfg.fa_v = load(address);
     fprintf("-----【完成读取修正后的结果】-----\n");
     
     %% 读取结果后画图
