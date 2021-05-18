@@ -19,27 +19,14 @@ function draw(cur_index)
 
         if cur_index<=size(cfg.pos1, 1)
 
+            fa_v = cfg.fa_v(cur_index, :);
+            
             p1 = cfg.pos1(cur_index, :);
             p2 = cfg.pos2(cur_index, :);
+            o = cfg.O;
             po = (p1+p2)/2;
-            k1 = (p1(2)-p2(2))/(p1(1)-p2(1));
-            k2 = -1/k1;
-            pp = po;
-            d = 0.1;
-            sign = 1;
-            if k2 > 0
-                sign = -1;
-            end
-            pp(1) = po(1)+ sign* d*sqrt(1/(1+k2^2));
-            pp(2) = po(2)-  d*sqrt(k2^2/(1+k2^2));
-
-
-            % cfg.O = po-[0 0 0.08]';
-            fa_v = cfg.fa_v(cur_index, :);
-    %         size(fa_v)
-    %         size(fa_v)
-    %         fa_v = zeros(3,1);
-            % pos
+            triangle = [o; p1; p2; o;];
+            arrows = [ po; po+fa_v/100*15];
 
             if cfg.drawStyle == 1
                 plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
@@ -48,14 +35,17 @@ function draw(cur_index)
 
                 plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
             elseif cfg.drawStyle == 2
-                plot3(cfg.figure5, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 2),cfg.O(1),cfg.pos1(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2),cfg.O(2),cfg.pos1(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3),cfg.O(3),cfg.pos1(cur_index, 3)]);
-    %             figure(1)
-    %             plot3( [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 2),cfg.O(1),cfg.pos1(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2),cfg.O(2),cfg.pos1(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3),cfg.O(3),cfg.pos1(cur_index, 3)]);
-    %             plot3(cfg.figure5,[0 fa_v(1)],[0 fa_v(2)],[0 fa_v(3)]);
-                plot(cfg.figure6, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3)]);
-                plot(cfg.figure7, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2)],'b',[po(1),pp(1)],[po(2),pp(2)],'r--');
-
-                plot(cfg.figure8, [cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3)]);
+                
+                %plot3(cfg.figure5, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1),cfg.O(1),cfg.pos1(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2),cfg.O(2),cfg.pos1(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3),cfg.O(3),cfg.pos1(cur_index, 3)]);
+                
+                plot3(cfg.figure5, triangle(:, 1), triangle(:, 2), triangle(:, 3), 'b',...
+                                   arrows(:, 1), arrows(:, 2), arrows(:, 3), 'r--')
+                plot(cfg.figure6, triangle(:, 1), triangle(:, 3), 'b',...
+                                   arrows(:, 1), arrows(:, 3), 'r--')
+                plot(cfg.figure7, triangle(:, 1), triangle(:, 2), 'b',...
+                                   arrows(:, 1), arrows(:, 2), 'r--')
+                plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b',...
+                                   arrows(:, 2), arrows(:, 3), 'r--')
             end
             xlim(cfg.figure5, [-cfg.lim cfg.lim])
             ylim(cfg.figure5, [-cfg.lim cfg.lim])
