@@ -156,7 +156,7 @@ niconfig.ifCalAloneRead = 0;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间不大
 niconfig.ifDrawAfterCal = 1;
 
-niconfig.lim = 0.5;
+niconfig.lim = 0.4;
 % niconfig.time = 0;
 % niconfig.prefix = 0;
 niconfig.drawStyle = 2;

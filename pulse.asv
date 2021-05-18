@@ -147,10 +147,12 @@ startBackground(dev);
 
 
 fprintf("\n-----【开始读入数据】-----\n");
-    
-    %save_var(fileName)
-    
     init_para();
+    
+        prefix = get(handles.edit1, 'string');
+       fileName = [prefix, '_para.txt'];
+        
+    save_var(fileName)
         
     
 end
@@ -203,7 +205,7 @@ delete(cfg.outputlistener);
     time = datetime();
     prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
 %     cfg.prefix = prefix;
-    fileName =  [prefix, '.txt'];
+    fileName =  [prefix, '_data.txt'];
     % 新建文件
     fprintf("【创建文件保存数据】 "+fileName+"\n");
     set(handles.edit1, 'string', prefix);
@@ -250,9 +252,9 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-    global  cfg
+global  cfg
 
-    %save_var(fileName)
+    save_var(fileName)
     
     init_para();
     
@@ -260,7 +262,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     %% 从文件中读取数据
     fprintf("\n-----【开始读取数据】-----\n");
     prefix = get(handles.edit1, 'string');
-    fileName = [prefix, '.txt'];
+    fileName = [prefix, '_data.txt'];
     fprintf("【从文件读取数据】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     cfg.datain = load(address);
@@ -340,7 +342,8 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-    %save_var(fileName)
+    
+    save_var(fileName)
     
     init_para();
     
@@ -388,7 +391,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
 global  cfg
     
-    %save_var(fileName)
+    save_var(fileName)
     
     init_para();
     
@@ -495,15 +498,11 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     
-    global cfg
-    
-    %save_var(fileName)
-    
-    %clear
-    %load(address)
+    save_var(fileName)
     
     init_para();
     
+    global cfg
     %% 从文件中读取修正后的结果
     fprintf("\n-----【开始读取修正后的结果】-----\n");
     prefix = get(handles.edit1, 'string');
@@ -565,7 +564,7 @@ function edit1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-        set(hObject,'BackgroundColor','white');
-    end
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 end
