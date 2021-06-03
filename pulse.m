@@ -22,7 +22,7 @@ function varargout = pulse(varargin)
 
 % Edit the above text to modify the response to help pulse
 
-% Last Modified by GUIDE v2.5 29-Apr-2021 09:39:27
+% Last Modified by GUIDE v2.5 24-May-2021 15:42:08
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -75,7 +75,7 @@ cfg.figure8=handles.axes8;
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
-    set(handles.edit1, 'string', "20210505_180355");
+    set(handles.edit1, 'string', "20210518_193646");
 end
 
 %% Play
@@ -100,6 +100,7 @@ function init_para()
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.pos1 = [];
     cfg.pos2 = [];
+    cfg.pos3 = [];
     cfg.fa_v = [];
     cfg.left_bd = ones(cfg.nout, cfg.nin)*10;
     cfg.right_bd = ones(cfg.nout, cfg.nin)*100;
@@ -216,27 +217,27 @@ delete(cfg.outputlistener);
 %     whos datain
     fprintf("-----【完成保存数据】-----\n");
     
-    %% 保存结果并画图,如果实时计算的话
-    if cfg.ifCalAloneRead
-        % 保存结果
-        fprintf("\n-----【开始保存结果】-----\n");
-        prefix = get(handles.edit1, 'string');
-        fileName = [prefix, '_result.txt'];
-        % 新建文件
-        fprintf("【创建文件保存结果】 "+fileName+"\n");
-
-        address = [cfg.dataAddress,fileName];
-        result = [cfg.dis1(cfg.dislen+1:end,:),cfg.dis2(cfg.dislen+1:end,:),cfg.pos1,cfg.pos2];
-        save(address, 'result', '-ascii')
-        fprintf("-----【完成保存结果】-----\n");
-        
-        % 画图
-        fprintf("\n-----【开始离线画图】-----\n");
-        for cur_index=1:1:cfg.index
-           draw(cur_index);
-        end
-        fprintf("-----【结束离线画图】-----\n");
-    end
+%     %% 保存结果并画图,如果实时计算的话
+%     if cfg.ifCalAloneRead
+%         % 保存结果
+%         fprintf("\n-----【开始保存结果】-----\n");
+%         prefix = get(handles.edit1, 'string');
+%         fileName = [prefix, '_result.txt'];
+%         % 新建文件
+%         fprintf("【创建文件保存结果】 "+fileName+"\n");
+% 
+%         address = [cfg.dataAddress,fileName];
+%         result = [cfg.dis1(cfg.dislen+1:end,:),cfg.dis2(cfg.dislen+1:end,:),cfg.pos1,cfg.pos2];
+%         save(address, 'result', '-ascii')
+%         fprintf("-----【完成保存结果】-----\n");
+%         
+%         % 画图
+%         fprintf("\n-----【开始离线画图】-----\n");
+%         for cur_index=1:1:cfg.index
+%            draw(cur_index);
+%         end
+%         fprintf("-----【结束离线画图】-----\n");
+%     end
     
 save dataout.mat cfg
 
@@ -274,10 +275,12 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     cfg.index = floor(cfg.data_len/cfg.seglen);
 
     for cur_index = 1:1:cfg.index
-        fprintf("【正在计算距离...】 Dataseg index: %d\n",cur_index);
 
         % 计算距离
+        tic
         cal_dis(cur_index);
+        t = toc;
+        fprintf("【正在计算距离...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
 
     end
     fprintf("-----【结束计算距离】-----\n");
@@ -372,7 +375,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
-           draw(cur_index);
+        tic
+        draw(cur_index);
+        t = toc;
+        fprintf("【正在计算画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束画图】-----\n");
 
@@ -445,10 +451,13 @@ global  cfg
     cfg.pos2 = [];
     % 把data划分成dataseg
     for cur_index = 1:1:cfg.index
-        fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
+        %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
 
         % 计算坐标
+        tic
         cal_pos(cur_index);
+        t = toc;
+        fprintf("【正在计算位置...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束离线计算】-----\n");
     
@@ -466,7 +475,7 @@ global  cfg
     fileName = [prefix, '_pos_cor.txt'];
     fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
-    pos_cor = [cfg.pos1,cfg.pos2];
+    pos_cor = [cfg.pos1,cfg.pos2,cfg.pos3];
     save(address, 'pos_cor', '-ascii')
     % 保存修正后的法向量
     fileName = [prefix, '_fav_cor.txt'];
@@ -481,7 +490,10 @@ global  cfg
     if cfg.ifDrawAfterCal
         fprintf("\n-----【开始离线画图】-----\n");
         for cur_index=1:1:cfg.index
-           draw(cur_index);
+            tic
+            draw(cur_index);
+            t = toc;
+            fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
         end
         fprintf("-----【结束离线画图】-----\n");
     end
@@ -522,6 +534,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     pos_cor = load(address);
     cfg.pos1 = pos_cor(:, 1:3);
     cfg.pos2 = pos_cor(:, 4:6);  
+    cfg.pos3 = pos_cor(:, 7:9);  
     % 读取法向量
     fileName = [prefix, '_fav_cor.txt'];
     fprintf("【从文件读取修正后的法向量】 "+fileName+"\n");
@@ -532,7 +545,10 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
-           draw(cur_index);
+        tic
+        draw(cur_index);
+        t = toc;
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束画图】-----\n");
 
@@ -568,4 +584,12 @@ function edit1_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
+end
+
+
+% --- Executes when figure1 is resized.
+function figure1_SizeChangedFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 end

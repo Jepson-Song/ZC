@@ -36,7 +36,7 @@ niconfig.zc_l=307;%253;  %253   %ZC length must be odd
 % niconfig.zc_u=1;       %ZC u
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
-niconfig.zcrep = 10 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = 20 ; %4*1920/niconfig.zclen; % 16
 
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
@@ -110,17 +110,21 @@ niconfig.color = ["r", "g", "b"];
 niconfig.A = [0 0 -0.05];
 niconfig.B = [-0.1 0 0.1];
 niconfig.C = [0.1 0 0.1];
+niconfig.AB = sqrt(sum((niconfig.A-niconfig.B).*(niconfig.A-niconfig.B)));
+niconfig.BC = sqrt(sum((niconfig.B-niconfig.C).*(niconfig.B-niconfig.C)));
+niconfig.AC = sqrt(sum((niconfig.A-niconfig.C).*(niconfig.A-niconfig.C)));
 
 niconfig.P1 = [-0.05 0.25 0];%[0 0.15 -0.25+0.005];
 niconfig.P2 = [0.05 0.25 0];%[0.1 0.15 -0.25+0.005];
-tmp = (niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2);
-niconfig.width = sqrt(tmp(1)+tmp(2)+tmp(3));
+% tmp = (niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2);
+% niconfig.width = sqrt(tmp(1)+tmp(2)+tmp(3));
+niconfig.width = sqrt(sum((niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2)));
 
 niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
 niconfig.P = [niconfig.P1; niconfig.P2];
 
-niconfig.O = (niconfig.P1+ niconfig.P2)/2 - [0 0 0.08]
+niconfig.O = (niconfig.P1+ niconfig.P2)/2 - [0 0 0.08];
 
 niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*10;
 niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*100;%*niconfig.zclen/2;
@@ -129,6 +133,7 @@ niconfig.dis1 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.dis2 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.pos1 = [];
 niconfig.pos2 = [];
+niconfig.pos3 = [];
 niconfig.fa_v = [];
 
 
@@ -136,11 +141,11 @@ niconfig.fa_v = [];
 niconfig.init_dis = zeros(3, 2);
 for k=1:1: 2 %两个发射端
     for i=1:1:3 %三个接收端
-        sum = 0;
+        sumn = 0;
         for j=1:1:3% 三维
-            sum = sum + (niconfig.P(k, j)-niconfig.Q(i, j))^2;
+            sumn = sumn + (niconfig.P(k, j)-niconfig.Q(i, j))^2;
         end
-        niconfig.init_dis(i, k) = sqrt(sum);
+        niconfig.init_dis(i, k) = sqrt(sumn);
     end
 end
 niconfig.init_dis = niconfig.init_dis';
@@ -151,10 +156,14 @@ niconfig.shift_dis = zeros(3, 2)';
 niconfig.datain = [];
 niconfig.data_len = 0;
 niconfig.seg_index = 0;
-niconfig.ifCalAloneRead = 0;
+niconfig.ifCalAloneRead = 1;
 % niconfig.ifCalAfterRead = 1;
-niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间不大
+niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 1;
+niconfig.drawCir = 0;
+niconfig.drawDis = 0;
+niconfig.drawPos = 0;
+niconfig.drawVec = 1;
 
 niconfig.lim = 0.4;
 % niconfig.time = 0;
@@ -164,3 +173,13 @@ niconfig.drawStyle = 2;
 niconfig.dataAddress = 'C:\Users\Dell\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 
 end
+
+% function res = mysum(X)
+% 
+%     res = 0;
+%     for i=1:1:length(X)
+%         res = res + X(i);
+%     end
+%     res = sqrt(res);
+% 
+% end
