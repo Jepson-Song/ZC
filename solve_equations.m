@@ -24,13 +24,16 @@ function [pos1, pos2, pos3] = solve_equations(dis1, dis2)
     rem = 2;
     pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
-    len = size(cfg.pos1, 1);
-    if (len==0)
-        pos3 = (pos1+pos2)/2 - [0 0 0.08];
-    else
-%         pos3 = (cfg.pos1(1, :)+cfg.pos2(1, :))/2 - [0 0 0.08];
-        pos3 = cfg.pos3(1, :);
-    end
+    
+    pos3 = cfg.O;
+    
+%     len = size(cfg.pos1, 1);
+%     if (len==0)
+%         pos3 = (pos1+pos2)/2 - [0 0 0.08];
+%     else
+% %         pos3 = (cfg.pos1(1, :)+cfg.pos2(1, :))/2 - [0 0 0.08];
+%         pos3 = cfg.pos3(1, :);
+%     end
     
     
 

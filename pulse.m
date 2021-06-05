@@ -22,7 +22,7 @@ function varargout = pulse(varargin)
 
 % Edit the above text to modify the response to help pulse
 
-% Last Modified by GUIDE v2.5 24-May-2021 15:42:08
+% Last Modified by GUIDE v2.5 05-Jun-2021 20:50:19
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -183,6 +183,7 @@ function processData(src,event)
 
         % 计算坐标
         cal_pos(cur_index);
+        cfg.cur_index = cur_index;
     end
         
 end
@@ -275,7 +276,6 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     cfg.index = floor(cfg.data_len/cfg.seglen);
 
     for cur_index = 1:1:cfg.index
-
         % 计算距离
         tic
         cal_dis(cur_index);
@@ -456,6 +456,7 @@ global  cfg
         % 计算坐标
         tic
         cal_pos(cur_index);
+        cfg.cur_index = cur_index;
         t = toc;
         fprintf("【正在计算位置...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
@@ -593,3 +594,28 @@ function figure1_SizeChangedFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 end
+
+%% 校准
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    
+    global cfg
+    cfg.O = (cfg.pos1(cfg.cur_index, :)+cfg.pos2(cfg.cur_index, :))/2 - [0 0 0.08];
+    
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
