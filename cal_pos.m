@@ -8,13 +8,16 @@ function cal_pos(cur_index)
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
     cfg.pos3 = [cfg.pos3; pos3];
-%     size(cfg.pos2)
-%     fa = tic;
-%     cfg.O = (pos1+pos2)/2 - [0 0 0.08];
     
     po = (pos1+pos2)/2;
     fa_v = fa_vector(pos1, pos2, pos3);
     cfg.fa_v = [cfg.fa_v; fa_v];
+    
+    send_time = tic;
+    send_data = [num2str(fa_v(1)),' ',num2str(fa_v(2)),' ',num2str(fa_v(3))];
+    udp_client(send_data);
+    t = toc(send_time);
+    fprintf("发送数据用时：%.4f\n", vpa(t));
     
 %     arrows = [ po; po+fa_v/100*15];
 %     if cfg.drawVec == 1

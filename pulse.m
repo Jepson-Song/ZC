@@ -603,9 +603,8 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
     
     global cfg
-    cfg.O = (cfg.pos1(cfg.cur_index, :)+cfg.pos2(cfg.cur_index, :))/2 - [0 0 0.08];
+    cfg.O = (cfg.pos1(cfg.cur_index, :)+cfg.pos2(cfg.cur_index, :))/2 + cfg.ear2neck;
     
-
 end
 
 
