@@ -162,9 +162,9 @@ niconfig.ifCalAloneRead = 1;
 % niconfig.ifCalAfterRead = 1;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 1;
-niconfig.drawCir = 0;
+niconfig.drawCir = 1;
 niconfig.drawDis = 0;
-niconfig.drawPos = 1;
+niconfig.drawPos = 0;
 niconfig.drawVec = 0;
 
 niconfig.lim = 0.4;
