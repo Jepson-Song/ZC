@@ -98,9 +98,9 @@ function draw(cur_index)
 %         fig = figure
         	plot3(cfg.figure5, triangle(:, 1), triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 1), arrows(:, 2), arrows(:, 3), 'r')
-            xlim(cfg.figure5, [-cfg.lim cfg.lim])
-            ylim(cfg.figure5, [-cfg.lim cfg.lim])
-            zlim(cfg.figure5, [-cfg.lim cfg.lim])
+            xlim(cfg.figure5, [-cfg.lim*2 cfg.lim*2])
+            ylim(cfg.figure5, [-cfg.lim*2 cfg.lim*2])
+            zlim(cfg.figure5, [-cfg.lim*2 cfg.lim*2])
             set(cfg.figure5,  'XGrid', 'on')
             set(cfg.figure5,  'YGrid', 'on')
             set(cfg.figure5,  'ZGrid', 'on')

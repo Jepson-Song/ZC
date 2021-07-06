@@ -102,8 +102,10 @@ function init_para()
     cfg.pos2 = [];
     cfg.pos3 = [];
     cfg.fa_v = [];
-    cfg.left_bd = ones(cfg.nout, cfg.nin)*10;
-    cfg.right_bd = ones(cfg.nout, cfg.nin)*100;
+    if strcmp(cfg.signal, 'zc')==1
+        cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
+        cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
+    end
 end
 
 
@@ -179,9 +181,13 @@ function processData(src,event)
         cur_index = cfg.index;
         fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
         % 计算距离
-        cal_dis(cur_index);
+        if strcmp(cfg.signal, 'fmcw')==1
+            fmcw_cal_dis(cur_index);
+        elseif strcmp(cfg.signal, 'zc')==1
+            cal_dis(cur_index);
+        end
 
-        % 计算坐标
+        % 计算坐标 
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
     end

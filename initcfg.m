@@ -30,20 +30,59 @@ niconfig.inputlistener=[];
 niconfig.outputlistener=[];
 
 niconfig.outlength = niconfig.fs; %output sample buffer, one second
+
+niconfig.signal = 'fmcw';%'zc'
+
+niconfig.rate = 10;
+niconfig.notifysample = niconfig.fs/niconfig.rate;
+niconfig.seglen = niconfig.notifysample;
+niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
+
+
+niconfig.duration = 120; %Total testing time in seconds
+
+niconfig.temp=20;
+niconfig.soundspeed=(331.3+0.606*niconfig.temp);%*100;
+%niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength
+
+niconfig.dislen = 300;
+
+
+if strcmp(niconfig.signal, 'fmcw')==1
+    niconfig.fs = 96000;
+    %chirp周期
+    niconfig.T = 0.1;
+    niconfig.n = 1/niconfig.T;
+    %初始频率
+    niconfig.fl1 = 25000;
+    %最高频率
+    niconfig.fr1 = 35000;
+    %chirp带宽
+    niconfig.B1 = niconfig.fr1-niconfig.fl1;
+    %初始频率
+    niconfig.fl2 = 35000;
+    %最高频率
+    niconfig.fr2 = 45000;
+    %chirp带宽
+    niconfig.B2 = niconfig.fr2-niconfig.fl2;
+    niconfig.dataout =[createFMCW(niconfig.fl1, niconfig.B1, niconfig.T, niconfig.fs, niconfig.n)', createFMCW(niconfig.fl2, niconfig.B2, niconfig.T, niconfig.fs, niconfig.n)'];%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
+    niconfig.dataout=niconfig.dataout./max(abs(niconfig.dataout))*niconfig.volume;  % adjust Vpp
+    spectrogram(niconfig.dataout(:,1),128,120,128,niconfig.fs);
+
+elseif strcmp(niconfig.signal, 'zc')==1
 niconfig.freq =40000;%[32000, 42500];%[40000, 27000];  %27000 %central frequency %39000
 niconfig.zclen=960*2;   %FFT size 
 niconfig.zc_l=307;%253;  %253   %ZC length must be odd 
 % niconfig.zc_u=1;       %ZC u
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
-niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 
+
+niconfig.zclen=960*2;   %FFT size 
+niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
-
-niconfig.duration = 120; %Total testing time in seconds
-
 
 zcseq1 = zadoff_chu(niconfig.zc_l,niconfig.zc_u1); %generate ZC in time
 zcseq2 = zadoff_chu(niconfig.zc_l,niconfig.zc_u2); %generate ZC in time
@@ -88,21 +127,28 @@ niconfig.samples = 1;                           %record for samples
 niconfig.dc=ones(1,niconfig.nin)*0.78;          %microphone DC offset
 niconfig.rawdata =zeros(niconfig.fs*15,niconfig.nin);
 
-niconfig.temp=20;
-niconfig.soundspeed=(331.3+0.606*niconfig.temp);%*100;
-niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength
 
 
 % zcrep 16次在接收时只计算一次就可以?
 % niconfig.dc 纠正误差？
 % ofdm(end:-1:(niconfig.zclen/2+2))=conj(ofdm(2:niconfig.zclen/2)); 去掉也可以？
 
-niconfig.dislen = 300;
 % niconfig.dis = zeros(niconfig.nout, niconfig.nin, niconfig.dislen);%niconfig.fs*30
 niconfig.phase = [];
 niconfig.m = [];
 
 niconfig.windows = 40;%niconfig.seglen*2;
+
+
+niconfig.init_left_bd = 1;
+niconfig.init_right_bd = 960;
+niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*niconfig.init_left_bd;
+niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*niconfig.init_right_bd;%*niconfig.zclen/2;
+
+end
+
+
+
 
 niconfig.color = ["r", "g", "b"];
 
@@ -128,8 +174,7 @@ niconfig.ear2neck = [0 -0.09 0];
 niconfig.O = (niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
 niconfig.cur_index = 0;
 
-niconfig.left_bd = ones(niconfig.nout, niconfig.nin)*10;
-niconfig.right_bd = ones(niconfig.nout, niconfig.nin)*100;%*niconfig.zclen/2;
+
 % niconfig.init_peak = ones(niconfig.nout, niconfig.nin)*0;
 niconfig.dis1 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.dis2 = [];%zeros(niconfig.nin, niconfig.dislen);
@@ -163,9 +208,9 @@ niconfig.ifCalAloneRead = 1;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 1;
 niconfig.drawCir = 1;
-niconfig.drawDis = 0;
+niconfig.drawDis = 1;
 niconfig.drawPos = 0;
-niconfig.drawVec = 0;
+niconfig.drawVec = 1;
 
 niconfig.lim = 0.4;
 % niconfig.time = 0;

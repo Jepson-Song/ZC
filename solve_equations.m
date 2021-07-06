@@ -34,6 +34,7 @@ function [pos1, pos2, pos3] = solve_equations(dis1, dis2)
 %         pos3 = (cfg.pos1(1, :)+cfg.pos2(1, :))/2 - [0 0 0.08];
 %         pos3 = cfg.pos3(1, :);
         pos3 = cfg.O;
+%         pos3 = (pos1+pos2)/2 - [0 0 0.08];
     end
     
     
