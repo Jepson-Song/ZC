@@ -18,7 +18,7 @@ function fmcw_cal_dis(cur_index)
         ym = ys.*yr;
 %         whos ym
         
-        tmp = my_spectrogram(ym, cfg.fs);
+        tmp = my_spectrogram(ym, cfg.fs)
         dis1(i) = cfg.soundspeed*tmp*cfg.T/cfg.B1;
         
 %         figure(1)

@@ -3,7 +3,11 @@ function cal_pos(cur_index)
     %% 计算坐标
     global  cfg
     
+    %% 先选出三个信号最好的
     
+    
+    
+    %% 解方程
     [pos1, pos2, pos3] = solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
