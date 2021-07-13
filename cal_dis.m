@@ -9,10 +9,12 @@ function cal_dis(cur_index)
 
     cir1=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
     dis1 = zeros(1, cfg.nin);
+    SIGQUAL1 = zeros(1, cfg.nin);
     m1 = zeros(1, cfg.nin);
     peak1 = zeros(1, cfg.nin);
     cir2=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
     dis2 = zeros(1, cfg.nin);
+    SIGQUAL2 = zeros(1, cfg.nin);
     m2 = zeros(1, cfg.nin);
     peak2 = zeros(1, cfg.nin);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 开始奇偶插值
@@ -55,7 +57,7 @@ function cal_dis(cur_index)
         dis1(i) = peak1(i)*cfg.soundspeed/cfg.fs;
         % 整数倍波长
         dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength;
-
+        
         real_part1 = real(m1(i));
         imag_part1 = imag(m1(i));
 
@@ -64,8 +66,10 @@ function cal_dis(cur_index)
 
         % 用相位计算细粒度距离
         dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength;
+        SIGQUAL1(i) = tm1/(sum(abs(cir1(i,1:cfg.zclen/2,1)))-tm1)*(cfg.zclen/2-1);
         if i==cfg.nin
-            dis1
+%             dis1
+            SIGQUAL1
         end
 
 
@@ -90,8 +94,11 @@ function cal_dis(cur_index)
         phase2 = atan(imag_part2/real_part2);
 
         dis2(i) = dis2(i) + phase2/(2*pi)*cfg.wavelength;
+        
+        SIGQUAL2(i) = tm2/(sum(abs(cir2(i,1:cfg.zclen/2,1)))-tm2)*(cfg.zclen/2-1);
         if i==cfg.nin
-            dis2
+%             dis2
+            SIGQUAL2
         end
         
         
@@ -118,6 +125,8 @@ function cal_dis(cur_index)
     % 不校准直接用计算出来的坐绝对距离
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
+    cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
+    cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
     
  
     

@@ -78,7 +78,7 @@ niconfig.zc_u2=7;       %ZC u
 
 
 niconfig.zclen=960*2;   %FFT size 
-niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = 10 ; %4*1920/niconfig.zclen; % 16
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
@@ -176,9 +176,6 @@ niconfig.Q = [0 -0.05 0;
               0 -0.05 0;
               -0.1 0.1 0;
               0.1 0.1 0];
-niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
-niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
-
 niconfig.P = [niconfig.P1; niconfig.P2];
 
 niconfig.ear2neck = [0 -0.09 0];
@@ -194,6 +191,9 @@ niconfig.pos1 = [];
 niconfig.pos2 = [];
 niconfig.pos3 = [];
 niconfig.fa_v = [];
+
+niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
+niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
 
 
 % 初始距离

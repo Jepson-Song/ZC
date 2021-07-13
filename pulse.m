@@ -102,6 +102,8 @@ function init_para()
     cfg.pos2 = [];
     cfg.pos3 = [];
     cfg.fa_v = [];
+    cfg.SIGQUAL1 = [];
+    cfg.SIGQUAL2 = [];
     if strcmp(cfg.signal, 'zc')==1
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
