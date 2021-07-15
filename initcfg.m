@@ -10,7 +10,7 @@ niconfig.dev = 'Dev1';
 niconfig.nout=2;
 niconfig.output={'ao0', 'ao1'};  %NI output ports
 
-niconfig.nin=3;
+niconfig.nin=1;
 niconfig.input={'ai0','ai1','ai2','ai3','ai4','ai5'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
@@ -78,7 +78,7 @@ niconfig.zc_u2=7;       %ZC u
 
 
 niconfig.zclen=960*2;   %FFT size 
-niconfig.zcrep = 10 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
@@ -152,7 +152,7 @@ end
 
 
 
-niconfig.color = ["r", "g", "b"];
+niconfig.color = ["r", "g", "b","r", "g", "b"];
 
 
 niconfig.A = [0 -0.05 0];
@@ -219,8 +219,8 @@ niconfig.ifCalAloneRead = 1;
 % niconfig.ifCalAfterRead = 1;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 1;
-niconfig.drawCir = 0;
-niconfig.drawDis = 0;
+niconfig.drawCir = 1;
+niconfig.drawDis = 1;
 niconfig.drawPos = 0;
 niconfig.drawVec = 0;
 
