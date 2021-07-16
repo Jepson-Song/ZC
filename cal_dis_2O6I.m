@@ -60,8 +60,16 @@ function cal_dis(cur_index)
 
         % 用相位计算细粒度距离
         dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength;
+        
+        
         SIGQUAL1(i) = tm1/(sum(abs(cir1(i,1:cfg.zclen/2,1)))-tm1)*(cfg.zclen/2-1);
-        if i==cfg.nin
+        
+        % 更新初始距离
+        if SIGQUAL1(i) > cfg.SIG_LOS && dis1(i) < cfg.init_dis(1, i)
+            cfg.init_dis(1, i) = dis1(i);
+        end
+        
+        if i==cfg.nin/2
 %             dis1
             SIGQUAL1
         end
@@ -109,7 +117,14 @@ function cal_dis(cur_index)
 
         dis2(i) = dis2(i) + phase2/(2*pi)*cfg.wavelength;
         
+        
         SIGQUAL2(i) = tm2/(sum(abs(cir2(i,1:cfg.zclen/2,1)))-tm2)*(cfg.zclen/2-1);
+        
+        % 更新初始距离
+        if SIGQUAL2(i) > cfg.SIG_LOS && dis2(i) < cfg.init_dis(2, i)
+            cfg.init_dis(2, i) = dis2(i);
+        end
+        
         if i==cfg.nin
 %             dis2
             SIGQUAL2

@@ -10,8 +10,8 @@ niconfig.dev = 'Dev1';
 niconfig.nout=2;
 niconfig.output={'ao0', 'ao1'};  %NI output ports
 
-niconfig.nin=1;
-niconfig.input={'ai0','ai1','ai2','ai3','ai4','ai5'};%{'ai0','ai4','ai2'}; %NI input ports
+niconfig.nin=6;
+niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
 niconfig.figure2=[];
@@ -197,17 +197,20 @@ niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
 
 
 % 初始距离
-niconfig.init_dis = zeros(3, 2);
-for k=1:1: 2 %两个发射端
-    for i=1:1:3 %三个接收端
-        sumn = 0;
-        for j=1:1:3% 三维
-            sumn = sumn + (niconfig.P(k, j)-niconfig.Q(i, j))^2;
-        end
-        niconfig.init_dis(i, k) = sqrt(sumn);
-    end
-end
-niconfig.init_dis = niconfig.init_dis';
+% niconfig.init_dis = zeros(3, 2);
+% for k=1:1: 2 %两个发射端
+%     for i=1:1:3 %三个接收端
+%         sumn = 0;
+%         for j=1:1:3% 三维
+%             sumn = sumn + (niconfig.P(k, j)-niconfig.Q(i, j))^2;
+%         end
+%         niconfig.init_dis(i, k) = sqrt(sumn);
+%     end
+% end
+% niconfig.init_dis = niconfig.init_dis';
+niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
+niconfig.handles = [];
+niconfig.SIG_LOS = 4;
 
 % 偏移距离
 niconfig.shift_dis = zeros(3, 2)';
@@ -229,6 +232,7 @@ niconfig.lim = 0.4;
 % niconfig.prefix = 0;
 niconfig.drawStyle = 2;
 
-niconfig.dataAddress = 'C:\Users\Dell\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
+% niconfig.dataAddress = 'C:\Users\Dell\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
+niconfig.dataAddress = 'C:\Users\Jepson\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 
 end

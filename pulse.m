@@ -22,7 +22,7 @@ function varargout = pulse(varargin)
 
 % Edit the above text to modify the response to help pulse
 
-% Last Modified by GUIDE v2.5 05-Jun-2021 20:50:19
+% Last Modified by GUIDE v2.5 16-Jul-2021 16:45:42
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,6 +76,7 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
     set(handles.edit1, 'string', "20210518_193646");
+    set(handles.edit2, 'string', "20210518_193646");
 end
 
 %% Play
@@ -104,6 +105,7 @@ function init_para()
     cfg.fa_v = [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
+    cfg.init_dis = ones(cfg.nout, cfg.nin)*100;
     if strcmp(cfg.signal, 'zc')==1
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
@@ -156,6 +158,7 @@ fprintf("\n-----【开始读入数据】-----\n");
     %save_var(fileName)
     
     init_para();
+    cfg.handles = handles;
         
     
 end
@@ -186,8 +189,19 @@ function processData(src,event)
         if strcmp(cfg.signal, 'fmcw')==1
             fmcw_cal_dis(cur_index);
         elseif strcmp(cfg.signal, 'zc')==1
-            cal_dis(cur_index);
+%             cal_dis(cur_index);
+            cal_dis_2O6I(cur_index);
         end
+        
+        str = '';
+        for o = 1:1:cfg.nout
+            for i = 1:1:cfg.nin
+                str = [str, sprintf('%.4f ', cfg.init_dis(o, i))];
+            end
+            str = [str, '\n'];
+        end
+        set(cfg.handles.edit2, 'string', str);
+%         set(cfg.handles.edit2, 'string', "20210518_193646");
 
         % 计算坐标 
 %         cal_pos(cur_index);
@@ -626,3 +640,27 @@ end
 
 
 
+
+
+
+function edit2_Callback(hObject, eventdata, handles)
+% hObject    handle to edit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit2 as text
+%        str2double(get(hObject,'String')) returns contents of edit2 as a double
+
+end
+% --- Executes during object creation, after setting all properties.
+function edit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
