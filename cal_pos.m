@@ -4,7 +4,7 @@ function cal_pos(cur_index)
     global  cfg
     
     %% 先选出三个信号最好的
-    
+    % TODO
     
     
     %% 解方程
@@ -14,15 +14,16 @@ function cal_pos(cur_index)
     cfg.pos3 = [cfg.pos3; pos3];
     
     po = (pos1+pos2)/2;
-%     fa_v = fa_vector(pos1, pos2, pos3);
-    fa_v = [0 0 0];
+    fa_v = fa_vector(pos1, pos2, pos3);
+%     fa_v = [0 0 0];
     cfg.fa_v = [cfg.fa_v; fa_v];
     
-    send_time = tic;
-    send_data = [num2str(fa_v(1)),' ',num2str(fa_v(2)),' ',num2str(fa_v(3))];
-    udp_client(send_data);
-    t = toc(send_time);
-    fprintf("发送数据用时：%.4f\n", vpa(t));
+    %% 发送数据
+%     send_time = tic;
+%     send_data = [num2str(fa_v(1)),' ',num2str(fa_v(2)),' ',num2str(fa_v(3))];
+%     udp_client(send_data);
+%     t = toc(send_time);
+%     fprintf("发送数据用时：%.4f\n", vpa(t));
     
 %     arrows = [ po; po+fa_v/100*15];
 %     if cfg.drawVec == 1

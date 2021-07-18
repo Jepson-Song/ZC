@@ -75,7 +75,7 @@ cfg.figure8=handles.axes8;
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
-    set(handles.edit1, 'string', "20210518_193646");
+    set(handles.edit1, 'string', "20210717_212807");
 %     set(handles.edit2, 'string', "20210518_193646");
 end
 
@@ -485,7 +485,7 @@ global  cfg
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
         t = toc;
-        fprintf("【正在计算位置...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+        fprintf("【计算完位置】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束离线计算】-----\n");
     
@@ -507,7 +507,7 @@ global  cfg
     save(address, 'pos_cor', '-ascii')
     % 保存修正后的法向量
     fileName = [prefix, '_fav_cor.txt'];
-    fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
+    fprintf("【创建文件保存修正后法向量】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     fav_cor = cfg.fa_v;
     save(address, 'fav_cor', '-ascii')

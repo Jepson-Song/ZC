@@ -5,33 +5,25 @@ function draw(cur_index)
         global cfg
         if cfg.drawDis == 1
 
-        dis1 = [zeros(cfg.dislen, cfg.nin); cfg.dis1];
-        dis2 = [zeros(cfg.dislen, cfg.nin); cfg.dis2];
+            dis1 = [zeros(cfg.dislen, cfg.nin); cfg.dis1];
+            dis2 = [zeros(cfg.dislen, cfg.nin); cfg.dis2];
 
-    
-        %fprintf("【正在画图...】 Dataseg index: %d\n",cur_index);
-        % dis
-        for i=1:1:cfg.nin
-            if cfg.dis1(cur_index, i)~=-1
-            plot(cfg.figure(1, 2),[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, i),cfg.color(i));
-            hold(cfg.figure(1, 2),'on');
+            for i=1:1:cfg.nin
+                if cfg.dis1(cur_index, i)~=-1
+                plot(cfg.figure(1, 2),[1:1:cfg.dislen],dis1(1+cur_index:cfg.dislen+cur_index, i),cfg.color(i));
+                hold(cfg.figure(1, 2),'on');
+                end
             end
-        end
-        hold(cfg.figure(1, 2),'off')
-        for i=1:1:cfg.nin
-            if cfg.dis2(cur_index, i)~=-1
-            plot(cfg.figure(2, 2),[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, i),cfg.color(i));
-            hold(cfg.figure(2, 2),'on');
+            hold(cfg.figure(1, 2),'off')
+            for i=1:1:cfg.nin
+                if cfg.dis2(cur_index, i)~=-1
+                plot(cfg.figure(2, 2),[1:1:cfg.dislen],dis2(1+cur_index:cfg.dislen+cur_index, i),cfg.color(i));
+                hold(cfg.figure(2, 2),'on');
+                end
             end
-        end
-        hold(cfg.figure(2, 2),'off')
-%         plot(cfg.figure(1, 2),[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, 1),cfg.color(1) ...
-%                         ,[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, 2),cfg.color(2)...
-%                         ,[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, 3),cfg.color(3));
-%         plot(cfg.figure(2, 2),[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 1),cfg.color(1) ...
-%                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 2),cfg.color(2)...
-%                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 3),cfg.color(3));
-%         size(cfg.pos1)
+            hold(cfg.figure(2, 2),'off')
+            drawnow();
+
         end
 
         if cfg.drawPos == 1
@@ -52,6 +44,8 @@ function draw(cur_index)
                 plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
 
                 plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+                
+%                 drawnow();
             elseif cfg.drawStyle == 2
                 
                 %plot3(cfg.figure5, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1),cfg.O(1),cfg.pos1(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2),cfg.O(2),cfg.pos1(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3),cfg.O(3),cfg.pos1(cur_index, 3)]);
@@ -65,9 +59,9 @@ function draw(cur_index)
                 plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
-            xlim(cfg.figure5, [-cfg.lim cfg.lim])
-            ylim(cfg.figure5, [-cfg.lim cfg.lim])
-            zlim(cfg.figure5, [-cfg.lim cfg.lim])
+%             xlim(cfg.figure5, [-cfg.lim cfg.lim])
+%             ylim(cfg.figure5, [-cfg.lim cfg.lim])
+%             zlim(cfg.figure5, [-cfg.lim cfg.lim])
             set(cfg.figure5,  'XGrid', 'on')
             set(cfg.figure5,  'YGrid', 'on')
             set(cfg.figure5,  'ZGrid', 'on')
