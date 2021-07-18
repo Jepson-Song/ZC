@@ -8,13 +8,14 @@ function cal_pos(cur_index)
     
     
     %% 解方程
-    [pos1, pos2, pos3] = solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
+    [pos1, pos2, pos3] = solve_equations(cur_index); %solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
     cfg.pos3 = [cfg.pos3; pos3];
     
     po = (pos1+pos2)/2;
-    fa_v = fa_vector(pos1, pos2, pos3);
+%     fa_v = fa_vector(pos1, pos2, pos3);
+    fa_v = [0 0 0];
     cfg.fa_v = [cfg.fa_v; fa_v];
     
     send_time = tic;

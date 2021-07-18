@@ -10,16 +10,20 @@ function cal_dis(cur_index)
     cir1=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
     dis1 = zeros(1, cfg.nin);
     SIGQUAL1 = zeros(1, cfg.nin);
+    chose1 = zeros(1, 3);
     m1 = zeros(1, cfg.nin);
     peak1 = zeros(1, cfg.nin);
+    
     cir2=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
     dis2 = zeros(1, cfg.nin);
     SIGQUAL2 = zeros(1, cfg.nin);
+    chose2 = zeros(1, 3);
     m2 = zeros(1, cfg.nin);
     peak2 = zeros(1, cfg.nin);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 开始奇偶插值
 
-    for i=1:1:cfg.nin/2                  %for each mic
+    for i=1:1:3                 %for each mic
+        
         data=reshape(dataseg(:,i),cfg.zclen,cfg.zcrep );  %make the data to be 1920*10
         data_fft=fft(data,[],1);                 %FFT
 
@@ -64,6 +68,8 @@ function cal_dis(cur_index)
         
         SIGQUAL1(i) = tm1/(sum(abs(cir1(i,1:cfg.zclen/2,1)))-tm1)*(cfg.zclen/2-1);
         
+        chose1(i) = i;
+        
         % 更新初始距离
         if SIGQUAL1(i) > cfg.SIG_LOS && dis1(i) < cfg.init_dis(1, i)
             cfg.init_dis(1, i) = dis1(i);
@@ -71,7 +77,7 @@ function cal_dis(cur_index)
         
         if i==cfg.nin/2
 %             dis1
-            SIGQUAL1
+%             SIGQUAL1
         end
 
 
@@ -120,6 +126,8 @@ function cal_dis(cur_index)
         
         SIGQUAL2(i) = tm2/(sum(abs(cir2(i,1:cfg.zclen/2,1)))-tm2)*(cfg.zclen/2-1);
         
+        chose2(i-3) = i;
+        
         % 更新初始距离
         if SIGQUAL2(i) > cfg.SIG_LOS && dis2(i) < cfg.init_dis(2, i)
             cfg.init_dis(2, i) = dis2(i);
@@ -127,7 +135,7 @@ function cal_dis(cur_index)
         
         if i==cfg.nin
 %             dis2
-            SIGQUAL2
+%             SIGQUAL2
         end
         
         
@@ -150,12 +158,19 @@ function cal_dis(cur_index)
     % 零点校准
 %     cfg.dis1 = [cfg.dis1; dis1-cfg.shift_dis(1, :)+cfg.init_dis(1, :)];
 %     cfg.dis2 = [cfg.dis2; dis2-cfg.shift_dis(2, :)+cfg.init_dis(2, :)];
-    
+    dis1 = dis1-cfg.init_dis(1, :);
+    dis2 = dis2-cfg.init_dis(2, :);
     % 不校准直接用计算出来的坐绝对距离
+    notchose1 = [4, 5, 6];
+    notchose2 = [1, 2, 3];
+    dis1(notchose1) = ones(1, 3)*-1;
+    dis2(notchose2) = ones(1, 3)*-1;
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
+    cfg.chose1 = [cfg.chose1, chose1];
+    cfg.chose2 = [cfg.chose2, chose2];
     
  
     

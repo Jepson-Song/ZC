@@ -1,29 +1,58 @@
-function [pos1, pos2, pos3] = solve_equations(dis1, dis2)
-    %% 计算坐标
+function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, dis2)
+
     global  cfg
+    
+%     chose1 = cfg.chose1(cur_index, :);
+    chose1 = find(cfg.dis1(cur_index, :)~=-1);
+%     whos chose1
+    qos1 = cfg.Q(chose1, :)
+%     whos qos1
+    dis1 = cfg.dis1(cur_index, chose1)
+%     whos dis1
+%     dis1 = zeros(1, 3);
+%     for i=1:1:3
+%         dis1(i) = cfg.dis1(cur_index, )
+%     chose2 = cfg.chose2(cur_index, :);
+    chose2 = find(cfg.dis2(cur_index, :)~=-1);
+    qos2 = cfg.Q(chose2, :);
+    dis2 = cfg.dis2(cur_index, chose2);
+    
+    %% 计算坐标
     
     equations = tic;
     syms x1 y1 z1 x2 y2 z2
     
-    eq1 = (x1-cfg.A(1))^2+(y1-cfg.A(2))^2+(z1-cfg.A(3))^2==dis1(1)^2;
-    eq2 = (x1-cfg.B(1))^2+(y1-cfg.B(2))^2+(z1-cfg.B(3))^2==dis1(2)^2;
-    eq3 = (x1-cfg.C(1))^2+(y1-cfg.C(2))^2+(z1-cfg.C(3))^2==dis1(3)^2;
-    eq4 = (x2-cfg.A(1))^2+(y2-cfg.A(2))^2+(z2-cfg.A(3))^2==dis2(1)^2;
-    eq5 = (x2-cfg.B(1))^2+(y2-cfg.B(2))^2+(z2-cfg.B(3))^2==dis2(2)^2;
-    eq6 = (x2-cfg.C(1))^2+(y2-cfg.C(2))^2+(z2-cfg.C(3))^2==dis2(3)^2;
+%     eq1 = (x1-cfg.A(1))^2+(y1-cfg.A(2))^2+(z1-cfg.A(3))^2==dis1(1)^2;
+%     eq2 = (x1-cfg.B(1))^2+(y1-cfg.B(2))^2+(z1-cfg.B(3))^2==dis1(2)^2;
+%     eq3 = (x1-cfg.C(1))^2+(y1-cfg.C(2))^2+(z1-cfg.C(3))^2==dis1(3)^2;
+%     eq4 = (x2-cfg.A(1))^2+(y2-cfg.A(2))^2+(z2-cfg.A(3))^2==dis2(1)^2;
+%     eq5 = (x2-cfg.B(1))^2+(y2-cfg.B(2))^2+(z2-cfg.B(3))^2==dis2(2)^2;
+%     eq6 = (x2-cfg.C(1))^2+(y2-cfg.C(2))^2+(z2-cfg.C(3))^2==dis2(3)^2;
+%     eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
+
+    eq1 = (x1-qos1(1, 1))^2+(y1-qos1(1, 2))^2+(z1-qos1(1, 3))^2==dis1(1)^2;
+    eq2 = (x1-qos1(2, 1))^2+(y1-qos1(2, 2))^2+(z1-qos1(2, 3))^2==dis1(2)^2;
+    eq3 = (x1-qos1(3, 1))^2+(y1-qos1(3, 2))^2+(z1-qos1(3, 3))^2==dis1(3)^2;
+    eq4 = (x2-qos2(1, 1))^2+(y2-qos2(1, 2))^2+(z2-qos2(1, 3))^2==dis2(1)^2;
+    eq5 = (x2-qos2(2, 1))^2+(y2-qos2(2, 2))^2+(z2-qos2(2, 3))^2==dis2(2)^2;
+    eq6 = (x2-qos2(3, 1))^2+(y2-qos2(3, 2))^2+(z2-qos2(3, 3))^2==dis2(3)^2;
     eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
+    
     t = toc(equations);
     fprintf("列方程用时：%.4f\n", vpa(t));
     
     solve = tic;
-    [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1]);
+    [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1])
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
     t = toc(solve);
     fprintf("解方程用时：%.4f\n", vpa(t));
     
-    rem = 1;
-    pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
-    pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
+%     rem = 1;
+%     pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
+%     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
+    
+    pos1 = double(real([x1, y1, z1]))
+    pos2 = double(real([x2, y2, z2]));
     
     
     

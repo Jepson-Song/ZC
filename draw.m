@@ -12,13 +12,17 @@ function draw(cur_index)
         %fprintf("【正在画图...】 Dataseg index: %d\n",cur_index);
         % dis
         for i=1:1:cfg.nin
+            if cfg.dis1(cur_index, i)~=-1
             plot(cfg.figure(1, 2),[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, i),cfg.color(i));
             hold(cfg.figure(1, 2),'on');
+            end
         end
         hold(cfg.figure(1, 2),'off')
         for i=1:1:cfg.nin
+            if cfg.dis2(cur_index, i)~=-1
             plot(cfg.figure(2, 2),[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, i),cfg.color(i));
             hold(cfg.figure(2, 2),'on');
+            end
         end
         hold(cfg.figure(2, 2),'off')
 %         plot(cfg.figure(1, 2),[1:1:cfg.dislen],dis1(cur_index:cfg.dislen+cur_index-1, 1),cfg.color(1) ...
@@ -122,6 +126,12 @@ function draw(cur_index)
             drawnow();
         end
         
+%         %% test draw
+%          plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+%                 plot(cfg.figure6, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
+%                 plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
+% 
+%                 plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
         
         t = double(toc(draw_tim));
         fprintf("画图用时：%.4f\n", vpa(t));

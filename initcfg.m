@@ -170,12 +170,12 @@ niconfig.width = sqrt(sum((niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2)))
 
 niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
-niconfig.Q = [0 -0.05 0;
-              -0.1 0.1 0;
-              0.1 0.1 0;
-              0 -0.05 0;
-              -0.1 0.1 0;
-              0.1 0.1 0];
+niconfig.Q = [0 0 1.2;
+              0 0.3 1.2;
+              0 0.6 1.2;
+              4 0 1.2;
+              4 0.3 1.2;
+              4 0.6 1.2];
 niconfig.P = [niconfig.P1; niconfig.P2];
 
 niconfig.ear2neck = [0 -0.09 0];
@@ -194,6 +194,9 @@ niconfig.fa_v = [];
 
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
 niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
+
+niconfig.chose1 = [1, 2, 3];
+niconfig.chose2 = [4, 5, 6];
 
 
 % 初始距离
@@ -222,15 +225,15 @@ niconfig.ifCalAloneRead = 1;
 % niconfig.ifCalAfterRead = 1;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 1;
-niconfig.drawCir = 1;
+niconfig.drawCir = 0;
 niconfig.drawDis = 1;
-niconfig.drawPos = 0;
+niconfig.drawPos = 1;
+niconfig.drawStyle = 1;
 niconfig.drawVec = 0;
 
-niconfig.lim = 0.4;
+niconfig.lim = 0.5;
 % niconfig.time = 0;
 % niconfig.prefix = 0;
-niconfig.drawStyle = 2;
 
 % niconfig.dataAddress = 'C:\Users\Dell\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 niconfig.dataAddress = 'C:\Users\Jepson\seadrive_root\宋金鹏 MF20\我的资料库\Data\';

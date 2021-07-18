@@ -22,7 +22,7 @@ function varargout = pulse(varargin)
 
 % Edit the above text to modify the response to help pulse
 
-% Last Modified by GUIDE v2.5 16-Jul-2021 16:45:42
+% Last Modified by GUIDE v2.5 17-Jul-2021 20:41:24
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -105,7 +105,8 @@ function init_para()
     cfg.fa_v = [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
-    cfg.init_dis = ones(cfg.nout, cfg.nin)*100;
+    cfg.init_dis = [0.069 0.069 0.060 100 100 100;
+                    100 100 100 0.077 0.069 0.075];%ones(cfg.nout, cfg.nin)*100;
     if strcmp(cfg.signal, 'zc')==1
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
@@ -204,7 +205,7 @@ function processData(src,event)
 %         set(cfg.handles.edit2, 'string', "20210518_193646");
 
         % 计算坐标 
-%         cal_pos(cur_index);
+        cal_pos(cur_index);
         cfg.cur_index = cur_index;
     end
         
@@ -267,7 +268,7 @@ delete(cfg.outputlistener);
 end
 
 
-%% Calculate
+%% Calculate distance
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
@@ -300,7 +301,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     for cur_index = 1:1:cfg.index
         % 计算距离
         tic
-        cal_dis(cur_index);
+%         cal_dis(cur_index);
+        
+        cal_dis_2O6I(cur_index);
+        
         t = toc;
         fprintf("【正在计算距离...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
 
@@ -358,7 +362,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 end
 
 
-%% Draw after calculate
+%% Draw after calculate distance
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
@@ -381,8 +385,8 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %size(dis)
     %size(dis, 1)
     cfg.index = size(dis, 1);
-    cfg.dis1 = dis(:, 1:3);
-    cfg.dis2 = dis(:, 4:6);
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
 %     % 读取位置
 %     fileName = [prefix, '_pos.txt'];
 %     fprintf("【从文件读取位置】 "+fileName+"\n");
@@ -407,7 +411,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 end
 
 
-%% Correct the error
+%% Calculate position
 % --- Executes on button press in pushbutton5.
 function pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
@@ -428,42 +432,43 @@ global  cfg
     fprintf("【从文件读取距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dis = load(address);
+%     whos dis
     cfg.index = size(dis, 1);
-    cfg.dis1 = dis(:, 1:3);
-    cfg.dis2 = dis(:, 4:6);
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
     
     
     %% 修正距离
-    fprintf("\n-----【开始修正距离】-----\n");
-    
-    dis = [cfg.dis1,cfg.dis2];
-    for cur_index = 1+1:1:cfg.index-1
-        fprintf("【正在进行单个凸点修正...】 Dataseg index: %d\n",cur_index);
-        for i=1:1:6
-            if dis(cur_index, i)>dis(cur_index-1, i) && dis(cur_index, i)>dis(cur_index+1, i)...
-                || dis(cur_index, i)<dis(cur_index-1, i) && dis(cur_index, i)<dis(cur_index+1, i)
-                dis(cur_index, i) = (dis(cur_index-1, i)+dis(cur_index+1, i))/2;
-            end
-        end
-    end
-    threhold = cfg.wavelength;
-    for cur_index = 1+1:1:cfg.index
-        fprintf("【正在进行距离大幅度变化修正...】 Dataseg index: %d\n",cur_index);
-        for i=1:1:6
-            if dis(cur_index, i)-dis(cur_index-1, i) > threhold
-                dis(cur_index, i) = dis(cur_index, i) - cfg.wavelength;
-            elseif dis(cur_index, i)-dis(cur_index-1, i) < -threhold
-                dis(cur_index, i) = dis(cur_index, i) + cfg.wavelength;
-            end
-        end
-    end
-    cfg.dis1 = dis(:, 1:3);
-    cfg.dis2 = dis(:, 4:6);
-%     % 均值滤波
-%     cfg.dis1(i,:) = smooth(cfg.dis1(i,:),5,'lowess');
-%     cfg.dis2(i,:) = smooth(cfg.dis2(i,:),5,'lowess');
-    fprintf("-----【结束修正距离】-----\n");
+%     fprintf("\n-----【开始修正距离】-----\n");
+%     
+%     dis = [cfg.dis1,cfg.dis2];
+%     for cur_index = 1+1:1:cfg.index-1
+%         fprintf("【正在进行单个凸点修正...】 Dataseg index: %d\n",cur_index);
+%         for i=1:1:6
+%             if dis(cur_index, i)>dis(cur_index-1, i) && dis(cur_index, i)>dis(cur_index+1, i)...
+%                 || dis(cur_index, i)<dis(cur_index-1, i) && dis(cur_index, i)<dis(cur_index+1, i)
+%                 dis(cur_index, i) = (dis(cur_index-1, i)+dis(cur_index+1, i))/2;
+%             end
+%         end
+%     end
+%     threhold = cfg.wavelength;
+%     for cur_index = 1+1:1:cfg.index
+%         fprintf("【正在进行距离大幅度变化修正...】 Dataseg index: %d\n",cur_index);
+%         for i=1:1:6
+%             if dis(cur_index, i)-dis(cur_index-1, i) > threhold
+%                 dis(cur_index, i) = dis(cur_index, i) - cfg.wavelength;
+%             elseif dis(cur_index, i)-dis(cur_index-1, i) < -threhold
+%                 dis(cur_index, i) = dis(cur_index, i) + cfg.wavelength;
+%             end
+%         end
+%     end
+%     cfg.dis1 = dis(:, 1:cfg*nin);
+%     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+% %     % 均值滤波
+% %     cfg.dis1(i,:) = smooth(cfg.dis1(i,:),5,'lowess');
+% %     cfg.dis2(i,:) = smooth(cfg.dis2(i,:),5,'lowess');
+%     fprintf("-----【结束修正距离】-----\n");
     
     
     %% 离线计算
@@ -523,7 +528,7 @@ global  cfg
     
 end
 
-%% Draw after correction
+%% Draw after calculate position
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton6 (see GCBO)
@@ -548,8 +553,8 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     address = [cfg.dataAddress,fileName];
     dis_cor = load(address);
     cfg.index = size(dis_cor, 1);
-    cfg.dis1 = dis_cor(:, 1:3);
-    cfg.dis2 = dis_cor(:, 4:6);
+    cfg.dis1 = dis_cor(:, 1:cfg.nin);
+    cfg.dis2 = dis_cor(:, cfg.nin+1:cfg.nin*2);
     % 读取位置
     fileName = [prefix, '_pos_cor.txt'];
     fprintf("【从文件读取修正后的位置】 "+fileName+"\n");
