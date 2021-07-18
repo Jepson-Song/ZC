@@ -76,7 +76,7 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
     set(handles.edit1, 'string', "20210518_193646");
-    set(handles.edit2, 'string', "20210518_193646");
+%     set(handles.edit2, 'string', "20210518_193646");
 end
 
 %% Play
