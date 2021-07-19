@@ -168,6 +168,7 @@ end
 %% 处理数据
 function processData(src,event)
     global  cfg
+    cfg.drawPos = 0;
     
     %% read data
     cfg.datain = [cfg.datain; event.Data];
@@ -183,31 +184,31 @@ function processData(src,event)
     end
 
     %% online 边读数据边计算
-    if cfg.ifCalAloneRead
-        cur_index = cfg.index;
-        fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
-        % 计算距离
-        if strcmp(cfg.signal, 'fmcw')==1
-            fmcw_cal_dis(cur_index);
-        elseif strcmp(cfg.signal, 'zc')==1
-%             cal_dis(cur_index);
-            cal_dis_2O6I(cur_index);
-        end
-        
-        str = '';
-        for o = 1:1:cfg.nout
-            for i = 1:1:cfg.nin
-                str = [str, sprintf('%.4f ', cfg.init_dis(o, i))];
-            end
-            str = [str, '\n'];
-        end
-        set(cfg.handles.edit2, 'string', str);
-%         set(cfg.handles.edit2, 'string', "20210518_193646");
-
-        % 计算坐标 
-        cal_pos(cur_index);
-        cfg.cur_index = cur_index;
-    end
+%     if cfg.ifCalAloneRead
+%         cur_index = cfg.index;
+%         fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
+%         % 计算距离
+%         if strcmp(cfg.signal, 'fmcw')==1
+%             fmcw_cal_dis(cur_index);
+%         elseif strcmp(cfg.signal, 'zc')==1
+% %             cal_dis(cur_index);
+%             cal_dis_2O6I(cur_index);
+%         end
+%         
+%         str = '';
+%         for o = 1:1:cfg.nout
+%             for i = 1:1:cfg.nin
+%                 str = [str, sprintf('%.4f ', cfg.init_dis(o, i))];
+%             end
+%             str = [str, '\n'];
+%         end
+%         set(cfg.handles.edit2, 'string', str);
+% %         set(cfg.handles.edit2, 'string', "20210518_193646");
+% 
+%         % 计算坐标 
+%         cal_pos(cur_index);
+%         cfg.cur_index = cur_index;
+%     end
         
 end
 

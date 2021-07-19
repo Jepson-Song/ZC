@@ -11,7 +11,7 @@ niconfig.nout=2;
 niconfig.output={'ao0', 'ao1'};  %NI output ports
 
 niconfig.nin=6;
-niconfig.input={'ai0','ai1','ai2','ai7','ai6','ai5'};%{'ai0','ai4','ai2'}; %NI input ports
+niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
 niconfig.figure2=[];
@@ -221,8 +221,7 @@ niconfig.shift_dis = zeros(3, 2)';
 niconfig.datain = [];
 niconfig.data_len = 0;
 niconfig.seg_index = 0;
-niconfig.ifCalAloneRead = 1;
-% niconfig.ifCalAfterRead = 1;
+niconfig.ifCalAloneRead = 0;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 0;
 niconfig.drawCir = 0;
