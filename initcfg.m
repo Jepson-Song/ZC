@@ -11,7 +11,7 @@ niconfig.nout=2;
 niconfig.output={'ao0', 'ao1'};  %NI output ports
 
 niconfig.nin=6;
-niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
+niconfig.input={'ai0','ai1','ai2','ai7','ai6','ai5'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
 niconfig.figure2=[];
@@ -171,10 +171,10 @@ niconfig.width = sqrt(sum((niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2)))
 niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
 niconfig.Q = [0 0 1.2;
-              0 0.3 1.2;
+              0 0.3 1.1;
               0 0.6 1.2;
               4 0 1.2;
-              4 0.3 1.2;
+              4 0.3 1.1;
               4 0.6 1.2];
 niconfig.P = [niconfig.P1; niconfig.P2];
 

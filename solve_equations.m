@@ -47,12 +47,12 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     t = toc(solve);
     fprintf("解方程用时：%.4f\n", vpa(t));
     
-%     rem = 1;
-%     pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
-%     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
+    rem = 2;
+    pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
+    pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
     
-    pos1 = double(real([x1, y1, z1]))
-    pos2 = double(real([x2, y2, z2]));
+%     pos1 = double(real([x1, y1, z1]))
+%     pos2 = double(real([x2, y2, z2]));
     
     
     
