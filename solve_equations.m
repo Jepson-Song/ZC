@@ -5,17 +5,17 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
 %     chose1 = cfg.chose1(cur_index, :);
     chose1 = find(cfg.dis1(cur_index, :)~=-1);
 %     whos chose1
-    qos1 = cfg.Q(chose1, :)
+    qos1 = cfg.Q(chose1, :);
 %     whos qos1
-    dis1 = cfg.dis1(cur_index, chose1)
-%     whos dis1
-%     dis1 = zeros(1, 3);
-%     for i=1:1:3
-%         dis1(i) = cfg.dis1(cur_index, )
-%     chose2 = cfg.chose2(cur_index, :);
+    dis1 = cfg.dis1(cur_index, chose1);
     chose2 = find(cfg.dis2(cur_index, :)~=-1);
     qos2 = cfg.Q(chose2, :);
     dis2 = cfg.dis2(cur_index, chose2);
+    
+%     qos1 = [1 0 0;
+%             0 1 0;
+%             0 0 1]
+%     dis1 = [sqrt(2) sqrt(2) sqrt(2)]
     
     %% 计算坐标
     
@@ -42,7 +42,7 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     fprintf("列方程用时：%.4f\n", vpa(t));
     
     solve = tic;
-    [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1])
+    [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1]);
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
     t = toc(solve);
     fprintf("解方程用时：%.4f\n", vpa(t));
@@ -51,7 +51,9 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
     
-%     pos1 = double(real([x1, y1, z1]))
+%     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
+    
+%     pos1 = double(real([x1, y1, z1]));
 %     pos2 = double(real([x2, y2, z2]));
     
     

@@ -224,7 +224,7 @@ niconfig.seg_index = 0;
 niconfig.ifCalAloneRead = 1;
 % niconfig.ifCalAfterRead = 1;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
-niconfig.ifDrawAfterCal = 1;
+niconfig.ifDrawAfterCal = 0;
 niconfig.drawCir = 0;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
@@ -235,7 +235,7 @@ niconfig.lim = 0.5;
 % niconfig.time = 0;
 % niconfig.prefix = 0;
 
-% niconfig.dataAddress = 'C:\Users\Dell\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
-niconfig.dataAddress = 'C:\Users\Jepson\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
+niconfig.dataAddress = 'E:\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
+% niconfig.dataAddress = 'C:\Users\Jepson\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 
 end

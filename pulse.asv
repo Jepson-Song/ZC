@@ -1,4 +1,4 @@
-   function varargout = pulse(varargin)
+  function varargout = pulse(varargin)
 % PULSE MATLAB code for pulse.fig
 %      PULSE, by itself, creates a new PULSE or raises the existing
 %      singleton*.
