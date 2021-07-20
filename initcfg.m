@@ -173,13 +173,13 @@ niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 niconfig.Q = [0 0 1.2;
               0 0.3 1.1;
               0 0.6 1.2;
-              4 0 1.2;
-              4 0.3 1.1;
-              4 0.6 1.2];
+              3.865 0 1.2;
+              3.865 0.3 1.1;
+              3.865 0.6 1.2];
 niconfig.P = [niconfig.P1; niconfig.P2];
 
 niconfig.ear2neck = [0 -0.09 0];
-niconfig.O = (niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
+niconfig.O = [1.5 0.3 1]%(niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
 niconfig.cur_index = 0;
 % 
 % niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength
@@ -227,7 +227,7 @@ niconfig.ifDrawAfterCal = 0;
 niconfig.drawCir = 0;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
-niconfig.drawStyle = 1;
+niconfig.drawStyle = 2;
 niconfig.drawVec = 0;
 
 niconfig.choseCorrect = 0;

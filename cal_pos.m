@@ -8,7 +8,7 @@ function cal_pos(cur_index)
     
     
     %% 解方程
-    [pos1, pos2, pos3] = solve_equations(cur_index); %solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
+    [pos1, pos2, pos3] = solve_equations(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
     cfg.pos3 = [cfg.pos3; pos3];
@@ -25,6 +25,7 @@ function cal_pos(cur_index)
 %     t = toc(send_time);
 %     fprintf("发送数据用时：%.4f\n", vpa(t));
     
+    %%
 %     arrows = [ po; po+fa_v/100*15];
 %     if cfg.drawVec == 1
 % %         fig = figure
@@ -47,7 +48,7 @@ function cal_pos(cur_index)
 %     fprintf("求法向量用时：%.4f\n", vpa(t));
 %     size(cfg.fa_v)
     
-    draw(cur_index);
+%     draw(cur_index);
     
 end
 

@@ -51,22 +51,17 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     pos1 = double(real([x1(rem), y1(rem), z1(rem)]));
     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
     
-%     pos2 = double(real([x2(rem), y2(rem), z2(rem)]));
     
-%     pos1 = double(real([x1, y1, z1]));
-%     pos2 = double(real([x2, y2, z2]));
-    
-    
-    
-    len = size(cfg.pos1, 1);
-    if (len==0)
-        pos3 = (pos1+pos2)/2 - [0 0 0.08];
+    if (cur_index==0)
+        pos3 = (pos1+pos2)/2 - [0 0 0.08]
+        cfg.O = pos3;
     else
 %         pos3 = (cfg.pos1(1, :)+cfg.pos2(1, :))/2 - [0 0 0.08];
 %         pos3 = cfg.pos3(1, :);
         pos3 = cfg.O;
 %         pos3 = (pos1+pos2)/2 - [0 0 0.08];
     end
+%     pos = [pos1; pos2; pos3]
     
     
 

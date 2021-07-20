@@ -78,6 +78,10 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
     set(handles.edit1, 'string', "20210717_212807");
 %     set(handles.edit2, 'string', "20210518_193646");
+
+    set(handles.radiobutton1,'value',0);
+	set(handles.radiobutton2,'value',1);
+    cfg.choseCorrect = 1;
 end
 
 %% Play
@@ -694,7 +698,16 @@ function pushbutton8_Callback(hObject, eventdata, handles)
 %     cfg.dis2(i,:) = smooth(cfg.dis2(i,:),5,'lowess');
     fprintf("-----【结束修正距离】-----\n");
     
-    
+    %% xi修正后画图
+    fprintf("\n-----【开始画图】-----\n");
+    for cur_index=1:1:cfg.index
+        tic
+%         draw(cur_index);
+        draw_dis(cur_index);
+        t = toc;
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    fprintf("-----【结束画图】-----\n");
     
     
     %% 保存结果

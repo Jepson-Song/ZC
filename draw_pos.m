@@ -37,9 +37,12 @@ function draw(cur_index)
                 plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
-%             xlim(cfg.figure5, [-cfg.lim cfg.lim])
-%             ylim(cfg.figure5, [-cfg.lim cfg.lim])
-%             zlim(cfg.figure5, [-cfg.lim cfg.lim])
+            myxlim = [0 2.5];
+            myylim = [-0.2 0.4];
+            myzlim = [0.5 1.5];
+            xlim(cfg.figure5, myxlim)
+            ylim(cfg.figure5, myylim)
+            zlim(cfg.figure5, myzlim)
             set(cfg.figure5,  'XGrid', 'on')
             set(cfg.figure5,  'YGrid', 'on')
             set(cfg.figure5,  'ZGrid', 'on')
@@ -47,27 +50,31 @@ function draw(cur_index)
             ylabel(cfg.figure5, 'Y')
             zlabel(cfg.figure5, 'Z')
             title(cfg.figure5,'3D')
-%             xlim(cfg.figure6, [-cfg.lim cfg.lim])
-%             ylim(cfg.figure6, [-cfg.lim cfg.lim])
+            
+            xlim(cfg.figure6, myxlim)
+            ylim(cfg.figure6, myzlim)
             set(cfg.figure6,  'XGrid', 'on')
             set(cfg.figure6,  'YGrid', 'on')
             xlabel(cfg.figure6, 'X')
             ylabel(cfg.figure6, 'Z')
             title(cfg.figure6,'XZ平面 - 俯视图')
-%             xlim(cfg.figure7, [-cfg.lim cfg.lim])
-%             ylim(cfg.figure7, [-cfg.lim cfg.lim])
+            
+            xlim(cfg.figure7, myxlim)
+            ylim(cfg.figure7, myylim)
             set(cfg.figure7,  'XGrid', 'on')
             set(cfg.figure7,  'YGrid', 'on')
             xlabel(cfg.figure7, 'X')
             ylabel(cfg.figure7, 'Y')
             title(cfg.figure7,'XY平面 - 正视图')
-%             xlim(cfg.figure8, [-cfg.lim cfg.lim])
-%             ylim(cfg.figure8, [-cfg.lim cfg.lim])
+            
+            xlim(cfg.figure8, myylim)
+            ylim(cfg.figure8, myzlim)
             set(cfg.figure8,  'XGrid', 'on')
             set(cfg.figure8,  'YGrid', 'on')
             xlabel(cfg.figure8, 'Y')
             ylabel(cfg.figure8, 'Z')
             title(cfg.figure8,'YZ平面 - 侧视图')
+            
             drawnow();
         end
         end
