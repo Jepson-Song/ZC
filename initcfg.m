@@ -78,7 +78,7 @@ niconfig.zc_u2=7;       %ZC u
 
 
 niconfig.zclen=960*2;   %FFT size 
-niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = 5 ; %4*1920/niconfig.zclen; % 16
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    

@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 17-Jul-2021 20:41:24
+% Last Modified by GUIDE v2.5 20-Jul-2021 11:16:51
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -307,8 +307,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
         
         cal_dis_2O6I(cur_index);
         
+        draw_dis(cur_index);
+        
         t = toc;
-        fprintf("【正在计算距离...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
 
     end
     fprintf("-----【结束计算距离】-----\n");
@@ -404,9 +406,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
         tic
-        draw(cur_index);
+%         draw(cur_index);
+        draw_dis(cur_index);
         t = toc;
-        fprintf("【正在计算画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束画图】-----\n");
 
@@ -420,7 +423,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-global  cfg
+    global  cfg
     
     %save_var(fileName)
     
@@ -430,7 +433,7 @@ global  cfg
     fprintf("\n-----【开始读取距离】-----\n");
     prefix = get(handles.edit1, 'string');
     % 读取距离
-    fileName = [prefix, '_dis.txt'];
+    fileName = [prefix, '_dis_cor.txt'];
     fprintf("【从文件读取距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dis = load(address);
@@ -486,8 +489,11 @@ global  cfg
         tic
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
+        
+        draw_pos(cur_index);
+        
         t = toc;
-        fprintf("【计算完位置】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
     fprintf("-----【结束离线计算】-----\n");
     
@@ -495,12 +501,12 @@ global  cfg
     %% 保存结果
     fprintf("\n-----【开始保存修正后结果】-----\n");
     prefix = get(handles.edit1, 'string');
-    % 保存修正后的距离
-    fileName = [prefix, '_dis_cor.txt'];
-    fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
-    address = [cfg.dataAddress,fileName];
-    dis_cor = [cfg.dis1,cfg.dis2];
-    save(address, 'dis_cor', '-ascii')
+%     % 保存修正后的距离
+%     fileName = [prefix, '_dis_cor.txt'];
+%     fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
+%     address = [cfg.dataAddress,fileName];
+%     dis_cor = [cfg.dis1,cfg.dis2];
+%     save(address, 'dis_cor', '-ascii')
     % 保存修正后的位置
     fileName = [prefix, '_pos_cor.txt'];
     fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
@@ -637,6 +643,116 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 end
 
 
+
+%% Correct distance
+% --- Executes on button press in pushbutton8.
+function pushbutton8_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    global  cfg
+    
+    %save_var(fileName)
+    
+    init_para();
+    
+    %% 从文件中读取距离
+    fprintf("\n-----【开始读取距离】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+    fileName = [prefix, '_dis.txt'];
+    fprintf("【从文件读取距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis = load(address);
+%     whos dis
+    cfg.index = size(dis, 1);
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    fprintf("-----【完成读取距离】-----\n");
+    
+    
+    %% 修正距离
+    fprintf("\n-----【开始修正距离】-----\n");
+    
+    dis = [cfg.dis1,cfg.dis2];
+    for cur_index = 1+1:1:cfg.index-1
+        fprintf("【正在进行单个凸点修正...】 Dataseg index: %d\n",cur_index);
+        for i=1:1:6
+            if dis(cur_index, i)>dis(cur_index-1, i) && dis(cur_index, i)>dis(cur_index+1, i)...
+                || dis(cur_index, i)<dis(cur_index-1, i) && dis(cur_index, i)<dis(cur_index+1, i)
+                dis(cur_index, i) = (dis(cur_index-1, i)+dis(cur_index+1, i))/2;
+            end
+        end
+    end
+    threhold = cfg.wavelength;
+    for cur_index = 1+1:1:cfg.index
+        fprintf("【正在进行距离大幅度变化修正...】 Dataseg index: %d\n",cur_index);
+        for i=1:1:6
+            if dis(cur_index, i)-dis(cur_index-1, i) > threhold
+                dis(cur_index, i) = dis(cur_index, i) - cfg.wavelength;
+            elseif dis(cur_index, i)-dis(cur_index-1, i) < -threhold
+                dis(cur_index, i) = dis(cur_index, i) + cfg.wavelength;
+            end
+        end
+    end
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+%     % 均值滤波
+%     cfg.dis1(i,:) = smooth(cfg.dis1(i,:),5,'lowess');
+%     cfg.dis2(i,:) = smooth(cfg.dis2(i,:),5,'lowess');
+    fprintf("-----【结束修正距离】-----\n");
+    
+    
+    
+    
+    %% 保存结果
+    prefix = get(handles.edit1, 'string');
+    % 保存修正后的距离
+    fileName = [prefix, '_dis_cor.txt'];
+    fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis_cor = [cfg.dis1,cfg.dis2];
+    save(address, 'dis_cor', '-ascii')
+    fprintf("-----【完成保存修正后距离】-----\n");
+
+
+end
+
+%% Draw correct distance
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+    init_para();
+    
+    global cfg
+    %% 从文件中读取结果
+    fprintf("\n-----【开始读取结果】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+    fileName = [prefix, '_dis_cor.txt'];
+    fprintf("【从文件读取距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis = load(address);
+    %size(dis)
+    %size(dis, 1)
+    cfg.index = size(dis, 1);
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    fprintf("-----【完成读取结果】-----\n");
+    
+    %% 读取结果后画图
+    fprintf("\n-----【开始画图】-----\n");
+    for cur_index=1:1:cfg.index
+        tic
+        draw_dis(cur_index);
+        t = toc;
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    fprintf("-----【结束画图】-----\n");
+end
 
 
 
