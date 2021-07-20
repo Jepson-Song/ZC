@@ -11,7 +11,7 @@ niconfig.nout=2;
 niconfig.output={'ao0', 'ao1'};  %NI output ports
 
 niconfig.nin=6;
-niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
+niconfig.input={'ai0','ai3','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
 niconfig.figure2=[];
@@ -229,6 +229,8 @@ niconfig.drawDis = 1;
 niconfig.drawPos = 1;
 niconfig.drawStyle = 1;
 niconfig.drawVec = 0;
+
+niconfig.choseCorrect = 0;
 
 niconfig.lim = 0.5;
 % niconfig.time = 0;
