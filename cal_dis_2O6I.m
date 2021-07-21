@@ -56,10 +56,10 @@ function cal_dis(cur_index)
         % 整数倍波长
         dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength;
         
-        real_part1 = real(m1(i))
-        imag_part1 = imag(m1(i))
+        real_part1 = real(m1(i));
+        imag_part1 = imag(m1(i));
 
-        phase1 = atan(imag_part1/real_part1)
+        phase1 = atan(imag_part1/real_part1);
     %         phase = angle(imag_part1/real_part1);
 
         % 用相位计算细粒度距离
