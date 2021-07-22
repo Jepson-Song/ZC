@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 20-Jul-2021 19:28:48
+% Last Modified by GUIDE v2.5 21-Jul-2021 12:21:10
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -76,7 +76,7 @@ cfg.figure8=handles.axes8;
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 
-    set(handles.edit1, 'string', "20210717_212807");
+    set(handles.edit1, 'string', "20210720_213700");
 %     set(handles.edit2, 'string', "20210518_193646");
 
     set(handles.radiobutton1,'value',0);
@@ -263,7 +263,11 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     %save_var(fileName)
     
     init_para();
-    
+    cfg.temp = str2num(get(handles.edit3, 'string'));
+    cfg.soundspeed = (331.3+0.606*cfg.temp);
+    cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
+    fprintf("\n【温度设置为%d摄氏度】\n",cfg.temp);
+%     set(handles.edit2, 'string', num2str(cfg.temp));
     
     %% 从文件中读取数据
     fprintf("\n-----【开始读取数据】-----\n");
@@ -758,4 +762,28 @@ function radiobutton2_Callback(hObject, eventdata, handles)
     cfg.choseCorrect = 1;
 
 
+end
+
+
+
+function edit3_Callback(hObject, eventdata, handles)
+% hObject    handle to edit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit3 as text
+%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function edit3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 end
