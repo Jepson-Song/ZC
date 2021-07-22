@@ -101,7 +101,7 @@ end
 function init_para()
     global cfg
     cfg.index = 0;
-%     cfg.datain = [];
+    cfg.datain = [];
     cfg.dis1 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.pos1 = [];
@@ -164,7 +164,6 @@ fprintf("\n-----【开始读入数据】-----\n");
     %save_var(fileName)
     
     init_para();
-    cfg.datain = [];
     cfg.handles = handles;
         
     
@@ -264,7 +263,9 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 
     global  cfg
 
-    %save_var(fileName
+    %save_var(fileName)
+    
+    init_para();
     cfg.temp = str2num(get(handles.edit3, 'string'));
     cfg.soundspeed = (331.3+0.606*cfg.temp);
     cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
@@ -273,13 +274,8 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     
     prefix = get(handles.edit1, 'string');
-    
     if strcmp(prefix,cfg.lastDataNum)~=1
-        set(handles.radiobutton3,'value',0);
-        init_para();
-        cfg.datain = [];
-    else
-        init_para();
+        set(handles.radiobutton3,'value',1);
     end
     cfg.lastDataNum = prefix;
         
@@ -291,11 +287,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     fprintf("【从文件读取数据】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     cfg.datain = load(address);
+    cfg.data_len = size(cfg.datain,1);
     fprintf("-----【完成读取数据】-----\n");
     set(handles.radiobutton3,'value',1);
     end
-    cfg.data_len = size(cfg.datain,1);
-    a = cfg.data_len
     
     
     %% 计算距离
@@ -408,6 +403,8 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
+    set(handles.radiobutton5,'value',1);
+    end
     
     %% 离线计算位置
     fprintf("\n-----【开始离线计算】-----\n");
@@ -457,6 +454,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     fav_cor = cfg.fa_v;
     save(address, 'fav_cor', '-ascii')
     fprintf("-----【完成保存修正后结果】-----\n");
+%     set(handles.radiobutton6,'value',1);
 
     
     %% 计算完成后画图
@@ -490,6 +488,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     init_para();
     
     %% 从文件中读取修正后的结果
+    if get(handles.radiobutton5,'value') == 0
     prefix = get(handles.edit1, 'string');
     if cfg.choseCorrect == 0
         fprintf("\n-----【开始读取原始结果】-----\n");
@@ -523,6 +522,8 @@ function pushbutton6_Callback(hObject, eventdata, handles)
         fprintf("-----【完成读取原始结果】-----\n");
     else
         fprintf("-----【完成读取修正后的结果】-----\n");
+    end
+    set(handles.radiobutton5,'value',1);
     end
     
     %% 读取结果后画图
