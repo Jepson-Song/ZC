@@ -250,6 +250,7 @@ delete(cfg.outputlistener);
     
     
     set(handles.radiobutton3,'value',1);
+    cfg.lastDataNum = prefix;
     
 
 end
