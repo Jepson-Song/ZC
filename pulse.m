@@ -79,8 +79,8 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
     set(handles.edit1, 'string', "20210720_213700");
 %     set(handles.edit2, 'string', "20210518_193646");
 
-    set(handles.radiobutton1,'value',0);
-	set(handles.radiobutton2,'value',1);
+    set(handles.radiobutton1,'value',1);
+	set(handles.radiobutton2,'value',0);
     cfg.choseCorrect = 1;
 end
 

@@ -16,6 +16,9 @@ function cal_pos(cur_index)
     po = (pos1+pos2)/2;
     fa_v = fa_vector(pos1, pos2, pos3);
 %     fa_v = [0 0 0];
+    if fa_v(2)<0
+        fa_v = -1*fa_v;
+    end
     cfg.fa_v = [cfg.fa_v; fa_v];
     
     %% 发送数据
