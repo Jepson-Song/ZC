@@ -247,29 +247,6 @@ delete(cfg.outputlistener);
 %     whos datain
     fprintf("-----【完成保存数据】-----\n");
     
-%     %% 保存结果并画图,如果实时计算的话
-%     if cfg.ifCalAloneRead
-%         % 保存结果
-%         fprintf("\n-----【开始保存结果】-----\n");
-%         prefix = get(handles.edit1, 'string');
-%         fileName = [prefix, '_result.txt'];
-%         % 新建文件
-%         fprintf("【创建文件保存结果】 "+fileName+"\n");
-% 
-%         address = [cfg.dataAddress,fileName];
-%         result = [cfg.dis1(cfg.dislen+1:end,:),cfg.dis2(cfg.dislen+1:end,:),cfg.pos1,cfg.pos2];
-%         save(address, 'result', '-ascii')
-%         fprintf("-----【完成保存结果】-----\n");
-%         
-%         % 画图
-%         fprintf("\n-----【开始离线画图】-----\n");
-%         for cur_index=1:1:cfg.index
-%            draw(cur_index);
-%         end
-%         fprintf("-----【结束离线画图】-----\n");
-%     end
-    
-% save dataout.mat cfg
 
 end
 
@@ -331,42 +308,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     save(address, 'dis', '-ascii')
     fprintf("-----【完成保存距离】-----\n");
     
-    
-%     %% 计算位置
-%     fprintf("\n-----【开始计算位置】-----\n");
-%     fprintf('Total Data length: %d\n',cfg.data_len)
-%     cfg.index = floor(cfg.data_len/cfg.seglen);
-% 
-%     for cur_index = 1:1:cfg.index
-%         fprintf("【正在计算位置...】 Dataseg index: %d\n",cur_index);
-% 
-%         % 计算坐标
-%         cal_pos(cur_index);
-%     end
-%     fprintf("-----【结束计算位置】-----\n");
-% 
-%     
-%     %% 保存位置
-%     fprintf("\n-----【开始保存位置】-----\n");
-%     prefix = get(handles.edit1, 'string');
-%     fileName = [prefix, '_pos.txt'];
-%     % 新建文件
-%     fprintf("【创建文件保存位置】 "+fileName+"\n");
-%     
-%     address = [cfg.dataAddress,fileName];
-%     pos = [cfg.pos1,cfg.pos2];
-%     save(address, 'pos', '-ascii')
-%     fprintf("-----【完成保存位置】-----\n");
-%     
-%         
-%     %% 计算完成后画图
-%     if cfg.ifDrawAfterCal
-%         fprintf("\n-----【开始离线画图】-----\n");
-%         for cur_index=1:1:cfg.index
-%            draw(cur_index);
-%         end
-%         fprintf("-----【结束离线画图】-----\n");
-%     end
+  
 end
 
 
@@ -395,15 +337,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
-%     % 读取位置
-%     fileName = [prefix, '_pos.txt'];
-%     fprintf("【从文件读取位置】 "+fileName+"\n");
-%     address = [cfg.dataAddress,fileName];
-%     pos = load(address);
-%     size(pos)
-%     size(pos, 1)
-%     cfg.pos1 = pos(:, 1:3);
-%     cfg.pos2 = pos(:, 4:6);
+
     fprintf("-----【完成读取结果】-----\n");
     
     %% 读取结果后画图
@@ -478,12 +412,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     %% 保存结果
     fprintf("\n-----【开始保存修正后结果】-----\n");
     prefix = get(handles.edit1, 'string');
-%     % 保存修正后的距离
-%     fileName = [prefix, '_dis_cor.txt'];
-%     fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
-%     address = [cfg.dataAddress,fileName];
-%     dis_cor = [cfg.dis1,cfg.dis2];
-%     save(address, 'dis_cor', '-ascii')
+
     % 保存修正后的位置
     if cfg.choseCorrect == 0
         fileName = [prefix, '_pos.txt'];
