@@ -78,7 +78,7 @@ niconfig.zc_u2=7;       %ZC u
 
 
 niconfig.zclen=960*2;   %FFT size 
-niconfig.zcrep = 5 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
@@ -226,13 +226,14 @@ niconfig.seg_index = 0;
 niconfig.ifCalAloneRead = 0;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 0;
-niconfig.drawCir = 0;
+niconfig.drawCir = 1;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
 niconfig.drawStyle = 2;
 niconfig.drawVec = 0;
 
 niconfig.choseCorrect = 0;
+niconfig.lastDataNum = '0';
 
 niconfig.lim = 0.5;
 % niconfig.time = 0;

@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 21-Jul-2021 12:21:10
+% Last Modified by GUIDE v2.5 22-Jul-2021 20:40:39
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,8 +79,8 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
     set(handles.edit1, 'string', "20210720_213700");
 %     set(handles.edit2, 'string', "20210518_193646");
 
-    set(handles.radiobutton1,'value',0);
-	set(handles.radiobutton2,'value',1);
+    set(handles.radiobutton1,'value',1);
+	set(handles.radiobutton2,'value',0);
     cfg.choseCorrect = 1;
 end
 
@@ -101,7 +101,7 @@ end
 function init_para()
     global cfg
     cfg.index = 0;
-    cfg.datain = [];
+%     cfg.datain = [];
     cfg.dis1 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.pos1 = [];
@@ -164,6 +164,7 @@ fprintf("\n-----【开始读入数据】-----\n");
     %save_var(fileName)
     
     init_para();
+    cfg.datain = [];
     cfg.handles = handles;
         
     
@@ -247,29 +248,10 @@ delete(cfg.outputlistener);
 %     whos datain
     fprintf("-----【完成保存数据】-----\n");
     
-%     %% 保存结果并画图,如果实时计算的话
-%     if cfg.ifCalAloneRead
-%         % 保存结果
-%         fprintf("\n-----【开始保存结果】-----\n");
-%         prefix = get(handles.edit1, 'string');
-%         fileName = [prefix, '_result.txt'];
-%         % 新建文件
-%         fprintf("【创建文件保存结果】 "+fileName+"\n");
-% 
-%         address = [cfg.dataAddress,fileName];
-%         result = [cfg.dis1(cfg.dislen+1:end,:),cfg.dis2(cfg.dislen+1:end,:),cfg.pos1,cfg.pos2];
-%         save(address, 'result', '-ascii')
-%         fprintf("-----【完成保存结果】-----\n");
-%         
-%         % 画图
-%         fprintf("\n-----【开始离线画图】-----\n");
-%         for cur_index=1:1:cfg.index
-%            draw(cur_index);
-%         end
-%         fprintf("-----【结束离线画图】-----\n");
-%     end
     
-% save dataout.mat cfg
+    set(handles.radiobutton3,'value',1);
+    cfg.lastDataNum = prefix;
+    
 
 end
 
@@ -283,24 +265,38 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 
     global  cfg
 
-    %save_var(fileName)
-    
-    init_para();
+    %save_var(fileName
     cfg.temp = str2num(get(handles.edit3, 'string'));
     cfg.soundspeed = (331.3+0.606*cfg.temp);
     cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
     fprintf("\n【温度设置为%d摄氏度】\n",cfg.temp);
 %     set(handles.edit2, 'string', num2str(cfg.temp));
     
-    %% 从文件中读取数据
-    fprintf("\n-----【开始读取数据】-----\n");
+    
     prefix = get(handles.edit1, 'string');
+    
+    if strcmp(prefix,cfg.lastDataNum)~=1
+        set(handles.radiobutton3,'value',0);
+        init_para();
+        cfg.datain = [];
+    else
+        init_para();
+    end
+    cfg.lastDataNum = prefix;
+        
+    
+    %% 从文件中读取数据
+    if get(handles.radiobutton3,'value') == 0
+    fprintf("\n-----【开始读取数据】-----\n");
     fileName = [prefix, '.txt'];
     fprintf("【从文件读取数据】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     cfg.datain = load(address);
-    cfg.data_len = size(cfg.datain,1);
     fprintf("-----【完成读取数据】-----\n");
+    set(handles.radiobutton3,'value',1);
+    end
+    cfg.data_len = size(cfg.datain,1);
+    a = cfg.data_len
     
     
     %% 计算距离
@@ -336,41 +332,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     fprintf("-----【完成保存距离】-----\n");
     
     
-%     %% 计算位置
-%     fprintf("\n-----【开始计算位置】-----\n");
-%     fprintf('Total Data length: %d\n',cfg.data_len)
-%     cfg.index = floor(cfg.data_len/cfg.seglen);
-% 
-%     for cur_index = 1:1:cfg.index
-%         fprintf("【正在计算位置...】 Dataseg index: %d\n",cur_index);
-% 
-%         % 计算坐标
-%         cal_pos(cur_index);
-%     end
-%     fprintf("-----【结束计算位置】-----\n");
-% 
-%     
-%     %% 保存位置
-%     fprintf("\n-----【开始保存位置】-----\n");
-%     prefix = get(handles.edit1, 'string');
-%     fileName = [prefix, '_pos.txt'];
-%     % 新建文件
-%     fprintf("【创建文件保存位置】 "+fileName+"\n");
-%     
-%     address = [cfg.dataAddress,fileName];
-%     pos = [cfg.pos1,cfg.pos2];
-%     save(address, 'pos', '-ascii')
-%     fprintf("-----【完成保存位置】-----\n");
-%     
-%         
-%     %% 计算完成后画图
-%     if cfg.ifDrawAfterCal
-%         fprintf("\n-----【开始离线画图】-----\n");
-%         for cur_index=1:1:cfg.index
-%            draw(cur_index);
-%         end
-%         fprintf("-----【结束离线画图】-----\n");
-%     end
+  
 end
 
 
@@ -399,15 +361,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
-%     % 读取位置
-%     fileName = [prefix, '_pos.txt'];
-%     fprintf("【从文件读取位置】 "+fileName+"\n");
-%     address = [cfg.dataAddress,fileName];
-%     pos = load(address);
-%     size(pos)
-%     size(pos, 1)
-%     cfg.pos1 = pos(:, 1:3);
-%     cfg.pos2 = pos(:, 4:6);
+
     fprintf("-----【完成读取结果】-----\n");
     
     %% 读取结果后画图
@@ -456,7 +410,6 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
     
-    
     %% 离线计算位置
     fprintf("\n-----【开始离线计算】-----\n");
 
@@ -482,12 +435,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     %% 保存结果
     fprintf("\n-----【开始保存修正后结果】-----\n");
     prefix = get(handles.edit1, 'string');
-%     % 保存修正后的距离
-%     fileName = [prefix, '_dis_cor.txt'];
-%     fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
-%     address = [cfg.dataAddress,fileName];
-%     dis_cor = [cfg.dis1,cfg.dis2];
-%     save(address, 'dis_cor', '-ascii')
+
     % 保存修正后的位置
     if cfg.choseCorrect == 0
         fileName = [prefix, '_pos.txt'];
@@ -657,6 +605,7 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     init_para();
     
     %% 从文件中读取距离
+    if get(handles.radiobutton4,'value') == 0
     fprintf("\n-----【开始读取距离】-----\n");
     prefix = get(handles.edit1, 'string');
     % 读取距离
@@ -669,6 +618,8 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
+    set(handles.radiobutton4,'value',1);
+    end
     
     
     %% 修正距离
@@ -723,6 +674,7 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     dis_cor = [cfg.dis1,cfg.dis2];
     save(address, 'dis_cor', '-ascii')
     fprintf("-----【完成保存修正后距离】-----\n");
+    set(handles.radiobutton5,'value',1);
 
 
 end
@@ -738,6 +690,7 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     
     global cfg
     %% 从文件中读取结果
+    if get(handles.radiobutton5,'value') == 0
     fprintf("\n-----【开始读取结果】-----\n");
     prefix = get(handles.edit1, 'string');
     % 读取距离
@@ -749,6 +702,8 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取结果】-----\n");
+    set(handles.radiobutton5,'value',1);
+    end
     
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
@@ -857,4 +812,32 @@ function edit3_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+end
+
+
+% --- Executes on button press in radiobutton3.
+function radiobutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton3
+end
+
+% --- Executes on button press in radiobutton4.
+function radiobutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton4
+end
+
+% --- Executes on button press in radiobutton5.
+function radiobutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton5
 end

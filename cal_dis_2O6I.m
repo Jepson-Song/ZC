@@ -1,4 +1,4 @@
-function cal_dis(cur_index)
+function cal_dis_2O6I(cur_index)
 
 %         fprintf("【cal_dis...】 Dataseg index: %d\n",cur_index);
     global cfg
@@ -52,10 +52,12 @@ function cal_dis(cur_index)
 %         cfg.right_bd(1, i) = min([peak1(i) + cfg.windows/2, cfg.zclen/2]);
 
         % 用采样点粗粒度计算距离
-        dis1(i) = peak1(i)*cfg.soundspeed/cfg.fs
+        dis1(i) = peak1(i)*cfg.soundspeed/cfg.fs;
         
+        
+        % 用相位计算细粒度距离
         % 整数倍波长
-        dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength
+        dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength;
         
         real_part1 = real(m1(i));
         imag_part1 = imag(m1(i));
@@ -63,8 +65,7 @@ function cal_dis(cur_index)
         phase1 = atan(imag_part1/real_part1);
     %         phase = angle(imag_part1/real_part1);
 
-        % 用相位计算细粒度距离
-        dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength
+        dis1(i) = dis1(i) - phase1/(2*pi)*cfg.wavelength;
         
         
         SIGQUAL1(i) = tm1/(sum(abs(cir1(i,1:cfg.zclen/2,1)))-tm1)*(cfg.zclen/2-1);
@@ -122,7 +123,7 @@ function cal_dis(cur_index)
 
         phase2 = atan(imag_part2/real_part2);
 
-        dis2(i) = dis2(i) + phase2/(2*pi)*cfg.wavelength;
+        dis2(i) = dis2(i) - phase2/(2*pi)*cfg.wavelength;
         
         
         SIGQUAL2(i) = tm2/(sum(abs(cir2(i,1:cfg.zclen/2,1)))-tm2)*(cfg.zclen/2-1);
@@ -228,7 +229,6 @@ function cal_dis(cur_index)
 
         drawnow();
         t = toc(draw_tim);
-        draw(cur_index)
         fprintf("画图用时：%.4f\n", vpa(t));
     end
     

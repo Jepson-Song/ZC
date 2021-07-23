@@ -37,8 +37,8 @@ function draw(cur_index)
                 plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
-            myxlim = [0 2.5];
-            myylim = [-0.2 0.4];
+            myxlim = [1.2 1.8];
+            myylim = [0.1 0.6];
             myzlim = [0.5 1.5];
             xlim(cfg.figure5, myxlim)
             ylim(cfg.figure5, myylim)
