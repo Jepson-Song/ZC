@@ -105,15 +105,9 @@ niconfig.rightpoint = niconfig.startpoint+(niconfig.zc_l-1)/2;
 % u不同
 ofdm1(niconfig.leftpoint+1:2:niconfig.rightpoint-1)=niconfig.zc_fft1(2:2:end-1);%(2:2:end); % modulate, copy ZC to OFDM subcarrier
 ofdm2(niconfig.leftpoint:2:niconfig.rightpoint)=niconfig.zc_fft2(1:2:end);%(1:2:end-1); % modulate, copy ZC to OFDM subcarrier
-% 实部对称虚部反对称
-ofdm1(end:-1:(niconfig.zclen/2+1+1))=conj(ofdm1(2:niconfig.zclen/2)) %image of the spectrum 
-% plot(abs(imag(ofdm1)))
-% ofdm1(1+921)
-% ofdm1(end-921)
-% for i=1:1:niconfig.zclen/2+1
-%     ofdm1(niconfig.zclen-i+1) = real(ofdm1(i)) + j*imag(ofdm1(i));
-% end
 
+% 实部对称虚部反对称
+ofdm1(end:-1:(niconfig.zclen/2+1+1))=conj(ofdm1(2:niconfig.zclen/2)); %image of the spectrum 
 ofdm2(end:-1:(niconfig.zclen/2+1+1))=conj(ofdm2(2:niconfig.zclen/2)); %image of the spectrum 
  
 niconfig.zcseq1=ifft(ofdm1);   
