@@ -37,6 +37,7 @@ function draw(cur_index)
                 plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
+            
             myxlim = [1.2 1.8];
             myylim = [0.1 0.6];
             myzlim = [0.5 1.5];
@@ -58,7 +59,7 @@ function draw(cur_index)
             xlabel(cfg.figure6, 'X')
             ylabel(cfg.figure6, 'Z')
             title(cfg.figure6,'XZ平面 - 俯视图')
-            
+
             xlim(cfg.figure7, myxlim)
             ylim(cfg.figure7, myylim)
             set(cfg.figure7,  'XGrid', 'on')
@@ -66,7 +67,7 @@ function draw(cur_index)
             xlabel(cfg.figure7, 'X')
             ylabel(cfg.figure7, 'Y')
             title(cfg.figure7,'XY平面 - 正视图')
-            
+
             xlim(cfg.figure8, myylim)
             ylim(cfg.figure8, myzlim)
             set(cfg.figure8,  'XGrid', 'on')
@@ -74,6 +75,7 @@ function draw(cur_index)
             xlabel(cfg.figure8, 'Y')
             ylabel(cfg.figure8, 'Z')
             title(cfg.figure8,'YZ平面 - 侧视图')
+            
             
             drawnow();
         end

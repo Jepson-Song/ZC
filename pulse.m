@@ -73,6 +73,7 @@ cfg.figure5=handles.axes5;
 cfg.figure6=handles.axes6;
 cfg.figure7=handles.axes7;
 cfg.figure8=handles.axes8;
+
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
 cfg.handles = handles;
@@ -122,6 +123,17 @@ function init_para()
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
     end
+end
+
+function toobar()
+    
+    global cfg
+            axtoolbar(cfg.figure2,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure4,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure5,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure6,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure7,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure8,{'zoomin','zoomout','restoreview'});
 end
 
 
@@ -316,6 +328,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     for cur_index = 1:1:cfg.index
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -334,6 +347,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
 
     end
+    toobar();
     fprintf("-----【结束计算距离】-----\n");
 
     %% 保存距离
@@ -385,6 +399,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -396,6 +411,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         t = toc;
         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    toobar();
     fprintf("-----【结束画图】-----\n");
 
 end
@@ -442,6 +458,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -458,6 +475,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
         t = toc;
         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    toobar();
     fprintf("-----【结束离线计算】-----\n");
     
     
@@ -559,6 +577,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -569,6 +588,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
         t = toc;
         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    toobar();
     fprintf("-----【结束画图】-----\n");
 
 end
@@ -656,6 +676,7 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -667,6 +688,7 @@ function pushbutton8_Callback(hObject, eventdata, handles)
         t = toc;
         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    toobar();
     fprintf("-----【结束画图】-----\n");
     
     
@@ -710,6 +732,7 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
         if cfg.pause
+            toobar();
             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
             while cfg.pause
                 pause(0.1)
@@ -720,6 +743,7 @@ function pushbutton9_Callback(hObject, eventdata, handles)
         t = toc;
         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    toobar();
     fprintf("-----【结束画图】-----\n");
 end
 
