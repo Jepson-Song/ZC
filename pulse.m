@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 24-Jul-2021 16:35:44
+% Last Modified by GUIDE v2.5 24-Jul-2021 17:15:49
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -75,13 +75,15 @@ cfg.figure7=handles.axes7;
 cfg.figure8=handles.axes8;
 cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 
+cfg.handles = handles;
+
 
     set(handles.edit1, 'string', "20210720_213700");
 %     set(handles.edit2, 'string', "20210518_193646");
 
-    cfg.choseCorrect = 1;
-    set(handles.radiobutton1,'value',cfg.choseCorrect);
-	set(handles.radiobutton2,'value',~cfg.choseCorrect);
+%     cfg.choseCorrect = 0;
+    set(handles.radiobutton1,'value',~cfg.choseCorrect);
+	set(handles.radiobutton2,'value',cfg.choseCorrect);
 	set(handles.radiobutton3,'value',0);
     set(handles.radiobutton4,'value',cfg.drawCir);
     set(handles.radiobutton5,'value',cfg.drawDis);
@@ -169,7 +171,6 @@ fprintf("\n-----【开始读入数据】-----\n");
     
     init_para();
     cfg.datain = [];
-    cfg.handles = handles;
         
     
 end
@@ -274,6 +275,12 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     cfg.soundspeed = (331.3+0.606*cfg.temp);
     cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
     fprintf("\n【温度设置为%d摄氏度】\n",cfg.temp);
+    
+    cfg.rate = str2num(get(cfg.handles.edit4, 'string'));
+    cfg.zcrep = cfg.fs/cfg.zclen/cfg.rate;
+    cfg.seglen = cfg.zclen*cfg.zcrep;
+    fprintf("\n【刷新率设置为%d】\n",cfg.rate);
+    
 %     set(handles.edit2, 'string', num2str(cfg.temp));
     
     
@@ -300,15 +307,21 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     set(handles.radiobutton3,'value',1);
     end
     cfg.data_len = size(cfg.datain,1);
-    a = cfg.data_len
     
     
     %% 计算距离
     fprintf("\n-----【开始计算距离】-----\n");
     fprintf('Total Data length: %d\n',cfg.data_len)
     cfg.index = floor(cfg.data_len/cfg.seglen);
-
+    
     for cur_index = 1:1:cfg.index
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
+        
         % 计算距离
         tic
 %         cal_dis(cur_index);
@@ -371,6 +384,12 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
         tic
 %         draw(cur_index);
         draw_dis(cur_index);
@@ -422,6 +441,12 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     % 把data划分成dataseg
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
 
         % 计算坐标
         tic
@@ -533,6 +558,12 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
         tic
         draw_pos(cur_index);
         t = toc;
@@ -609,7 +640,6 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     init_para();
     
     %% 从文件中读取距离
-    if get(handles.radiobutton4,'value') == 0
     fprintf("\n-----【开始读取距离】-----\n");
     prefix = get(handles.edit1, 'string');
     % 读取距离
@@ -617,13 +647,11 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     fprintf("【从文件读取距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dis = load(address);
-%     whos dis
+    whos dis
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
-    set(handles.radiobutton4,'value',1);
-    end
     
     
     %% 修正距离
@@ -660,6 +688,12 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     %% xi修正后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
         tic
 %         draw(cur_index);
         draw_dis(cur_index);
@@ -678,7 +712,6 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     dis_cor = [cfg.dis1,cfg.dis2];
     save(address, 'dis_cor', '-ascii')
     fprintf("-----【完成保存修正后距离】-----\n");
-    set(handles.radiobutton5,'value',1);
 
 
 end
@@ -694,7 +727,6 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     
     global cfg
     %% 从文件中读取结果
-    if get(handles.radiobutton5,'value') == 0
     fprintf("\n-----【开始读取结果】-----\n");
     prefix = get(handles.edit1, 'string');
     % 读取距离
@@ -706,12 +738,16 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取结果】-----\n");
-    set(handles.radiobutton5,'value',1);
-    end
     
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
     for cur_index=1:1:cfg.index
+        if cfg.pause
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
         tic
         draw_dis(cur_index);
         t = toc;
@@ -870,5 +906,48 @@ function radiobutton6_Callback(hObject, eventdata, handles)
     
     cfg.drawPos = ~cfg.drawPos;
 	set(handles.radiobutton6,'value',cfg.drawPos);
+
+end
+
+
+
+function edit4_Callback(hObject, eventdata, handles)
+% hObject    handle to edit4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit4 as text
+%        str2double(get(hObject,'String')) returns contents of edit4 as a double
+
+end
+
+% --- Executes during object creation, after setting all properties.
+function edit4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
+
+
+% --- Executes on button press in pushbutton10.
+function pushbutton10_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+    global cfg
+    
+    cfg.pause = ~cfg.pause;
+    if cfg.pause
+        set(handles.pushbutton10,'String','Continue')
+    else
+        set(handles.pushbutton10,'String','Pause')
+    end
 
 end

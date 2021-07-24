@@ -3,9 +3,6 @@ function draw_dis(cur_index)
         draw_tim = tic;
         
         
-%         figure(1)
-%         plot(cfg.dis1)
-%         zoom on
         
         
         global cfg
@@ -15,6 +12,10 @@ function draw_dis(cur_index)
             dis2 = [zeros(cfg.dislen, cfg.nin); cfg.dis2];
             
             
+        figure(1)
+        plot(dis1,'.-')
+%         zoom on
+        grid on
     
             for i=1:1:cfg.nin
                 if cfg.dis1(cur_index, i)~=-1

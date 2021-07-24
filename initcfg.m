@@ -76,10 +76,12 @@ niconfig.zc_l=307;%253;  %253   %ZC length must be odd
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
 
-
+niconfig.rate = 1;
 niconfig.zclen=960*2;   %FFT size 
-niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
+% niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
+niconfig.zcrep = niconfig.fs/niconfig.zclen/niconfig.rate;
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
+% niconfig.rate = niconfig.fs/niconfig.seglen;
 niconfig.notifysample = niconfig.seglen;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    
 
@@ -234,6 +236,8 @@ niconfig.drawVec = 0;
 
 niconfig.choseCorrect = 0;
 niconfig.lastDataNum = '0';
+
+niconfig.pause = 0;
 
 niconfig.lim = 0.5;
 % niconfig.time = 0;

@@ -65,7 +65,7 @@ function cal_dis_2O6I(cur_index)
         phase1 = atan(imag_part1/real_part1);
     %         phase = angle(imag_part1/real_part1);
 
-        dis1(i) = dis1(i) - phase1/(2*pi)*cfg.wavelength;
+        dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength;
         
         
         SIGQUAL1(i) = tm1/(sum(abs(cir1(i,1:cfg.zclen/2,1)))-tm1)*(cfg.zclen/2-1);
