@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 22-Jul-2021 20:40:39
+% Last Modified by GUIDE v2.5 24-Jul-2021 16:35:44
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,9 +79,13 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
     set(handles.edit1, 'string', "20210720_213700");
 %     set(handles.edit2, 'string', "20210518_193646");
 
-    set(handles.radiobutton1,'value',1);
-	set(handles.radiobutton2,'value',0);
     cfg.choseCorrect = 1;
+    set(handles.radiobutton1,'value',cfg.choseCorrect);
+	set(handles.radiobutton2,'value',~cfg.choseCorrect);
+	set(handles.radiobutton3,'value',0);
+    set(handles.radiobutton4,'value',cfg.drawCir);
+    set(handles.radiobutton5,'value',cfg.drawDis);
+    set(handles.radiobutton6,'value',cfg.drawPos);
 end
 
 %% Play
@@ -831,6 +835,12 @@ function radiobutton4_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton4
+
+    global cfg
+    
+    cfg.drawCir = ~cfg.drawCir;
+	set(handles.radiobutton4,'value',cfg.drawCir);
+
 end
 
 % --- Executes on button press in radiobutton5.
@@ -840,4 +850,25 @@ function radiobutton5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton5
+
+    global cfg
+    
+    cfg.drawDis = ~cfg.drawDis;
+	set(handles.radiobutton5,'value',cfg.drawDis);
+end
+
+
+% --- Executes on button press in radiobutton6.
+function radiobutton6_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton6
+
+    global cfg
+    
+    cfg.drawPos = ~cfg.drawPos;
+	set(handles.radiobutton6,'value',cfg.drawPos);
+
 end
