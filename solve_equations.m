@@ -56,7 +56,7 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     pos2 = double(real([x2(rem2), y2(rem2), z2(rem2)]));
     
     
-    if (cur_index==0)
+    if (cur_index==1)
         pos3 = (pos1+pos2)/2 - [0 0 0.08];
         cfg.O = pos3;
     else

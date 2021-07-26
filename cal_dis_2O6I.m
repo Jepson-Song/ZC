@@ -8,7 +8,7 @@ function cal_dis_2O6I(cur_index)
     dataseg = cfg.datain((cur_index-1)*cfg.seglen+1:cur_index*cfg.seglen, :);
 %     whos dataseg
 
-%     cir1=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
+    cir1=zeros(cfg.zclen, cfg.nin);  %we have 3 frames 960*3 points for 3 mics
     dis1 = zeros(1, cfg.nin);
     SIGQUAL1 = zeros(1, cfg.nin);
     chose1 = zeros(1, 3);
@@ -31,7 +31,7 @@ function cal_dis_2O6I(cur_index)
 
         cir = ifft(fftshift(temp_fft,1));  %ifft and get the CIR
         cir = conj(cir);
-
+        cir1(:, i) = cir;
         %% 处理左声道
         [tm, p] = max(abs(cir(cfg.left_bd(1, i):cfg.right_bd(1, i))));
         peak = cfg.left_bd(1, i) + p - 1;
@@ -107,6 +107,7 @@ function cal_dis_2O6I(cur_index)
         
         cir = ifft(fftshift(temp_fft,1));  %ifft and get the CIR
         cir = conj(cir);
+        cir2(:, i) = cir;
 
         %% 处理左声道
         [tm, p] = max(abs(cir(cfg.left_bd(2, i):cfg.right_bd(2, i))));
@@ -169,8 +170,8 @@ function cal_dis_2O6I(cur_index)
         
         legend_line = [];
         for i=1:1:cfg.nin/2
-            h = plot(cfg.figure(1, 1),[1:1:cfg.zclen/2],abs(cir1(i,1:end/2,1)),cfg.color(i),...
-                [peak1(i), peak1(i)],[0, abs(m1(i))], strcat('--*',cfg.color(i)));
+            h = plot(cfg.figure(1, 1),[1:1:cfg.zclen/2],abs(cir1(1:end/2,i)),cfg.color(i));
+%                 [peak1(i), peak1(i)],[0, abs(m1(i))], strcat('--*',cfg.color(i)));
             hold(cfg.figure(1, 1),'on');
 %             legend_str = [legend_str, ['距离',num2str(i)]];
             legend_line = [legend_line, h(1)];
@@ -183,8 +184,8 @@ function cal_dis_2O6I(cur_index)
         
         legend_line = [];
         for i=cfg.nin/2+1:1:cfg.nin
-            h = plot(cfg.figure(2, 1),[1:1:cfg.zclen/2],abs(cir2(i,1:end/2,1)),cfg.color(i),...
-                [peak2(i), peak2(i)],[0, abs(m2(i))], strcat('--*',cfg.color(i)));
+            h = plot(cfg.figure(2, 1),[1:1:cfg.zclen/2],abs(cir2(1:end/2,i)),cfg.color(i));
+%                 [peak2(i), peak2(i)],[0, abs(m2(i))], strcat('--*',cfg.color(i)));
             hold(cfg.figure(2, 1),'on');
             legend_line = [legend_line, h(1)];
             legend_str{i-cfg.nin/2} = ['距离',num2str(i)];

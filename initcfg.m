@@ -184,7 +184,7 @@ niconfig.Q = [0 0 1.2;
 niconfig.P = [niconfig.P1; niconfig.P2];
 
 niconfig.ear2neck = [0 -0.09 0];
-niconfig.O = [1.5 0.3 1];%(niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
+niconfig.O = [1.3 0.3 0.8];%(niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
 niconfig.cur_index = 0;
 % 
 % niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength

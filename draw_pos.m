@@ -38,7 +38,7 @@ function draw(cur_index)
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
             
-            myxlim = [1.2 1.8];
+            myxlim = [1.0 1.6];
             myylim = [0.1 0.6];
             myzlim = [0.5 1.5];
             xlim(cfg.figure5, myxlim)
@@ -51,6 +51,7 @@ function draw(cur_index)
             ylabel(cfg.figure5, 'Y')
             zlabel(cfg.figure5, 'Z')
             title(cfg.figure5,'3D')
+            rotate3d(cfg.figure5, 'on')
             
             xlim(cfg.figure6, myxlim)
             ylim(cfg.figure6, myzlim)
