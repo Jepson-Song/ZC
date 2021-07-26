@@ -80,7 +80,6 @@ cfg.handles = handles;
 
 
     set(handles.edit1, 'string', "20210720_213700");
-%     set(handles.edit2, 'string', "20210518_193646");
 
 %     cfg.choseCorrect = 0;
     set(handles.radiobutton1,'value',~cfg.choseCorrect);
@@ -89,6 +88,10 @@ cfg.handles = handles;
     set(handles.radiobutton4,'value',cfg.drawCir);
     set(handles.radiobutton5,'value',cfg.drawDis);
     set(handles.radiobutton6,'value',cfg.drawPos);
+    
+    set(handles.edit3,'string',num2str(cfg.temp));
+    set(handles.edit4,'string',num2str(cfg.rate));
+   
 end
 
 %% Play
@@ -128,12 +131,12 @@ end
 function toobar()
     
     global cfg
-            axtoolbar(cfg.figure2,{'zoomin','zoomout','restoreview'});
-            axtoolbar(cfg.figure4,{'zoomin','zoomout','restoreview'});
-            axtoolbar(cfg.figure5,{'zoomin','zoomout','restoreview'});
-            axtoolbar(cfg.figure6,{'zoomin','zoomout','restoreview'});
-            axtoolbar(cfg.figure7,{'zoomin','zoomout','restoreview'});
-            axtoolbar(cfg.figure8,{'zoomin','zoomout','restoreview'});
+            axtoolbar(cfg.figure2,{'zoomin','zoomout','pan','datacursor','restoreview'});
+            axtoolbar(cfg.figure4,{'zoomin','zoomout','pan','datacursor','restoreview'});
+            axtoolbar(cfg.figure5,{'zoomin','zoomout','pan','datacursor','restoreview'});
+            axtoolbar(cfg.figure6,{'zoomin','zoomout','pan','datacursor','restoreview'});
+            axtoolbar(cfg.figure7,{'zoomin','zoomout','pan','datacursor','restoreview'});
+            axtoolbar(cfg.figure8,{'zoomin','zoomout','pan','datacursor','restoreview'});
 end
 
 
@@ -857,8 +860,6 @@ function radiobutton5_Callback(hObject, eventdata, handles)
 	set(handles.radiobutton5,'value',cfg.drawDis);
 end
 
-
-
 % --- Executes on button press in radiobutton6.
 function radiobutton6_Callback(hObject, eventdata, handles)
 % hObject    handle to radiobutton6 (see GCBO)
@@ -886,7 +887,6 @@ function edit1_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of edit1 as text
 %        str2double(get(hObject,'String')) returns contents of edit1 as a double
 end
-
 % --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -900,7 +900,6 @@ function edit1_CreateFcn(hObject, eventdata, handles)
     end
 end
 
-
 function edit2_Callback(hObject, eventdata, handles)
 % hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -911,7 +910,6 @@ function edit2_Callback(hObject, eventdata, handles)
 
 end
 % --- Executes during object creation, after setting all properties.
-
 function edit2_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -932,7 +930,6 @@ function edit3_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of edit3 as text
 %        str2double(get(hObject,'String')) returns contents of edit3 as a double
 end
-
 % --- Executes during object creation, after setting all properties.
 function edit3_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit3 (see GCBO)
@@ -946,7 +943,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 end
 
-
 function edit4_Callback(hObject, eventdata, handles)
 % hObject    handle to edit4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -956,7 +952,6 @@ function edit4_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit4 as a double
 
 end
-
 % --- Executes during object creation, after setting all properties.
 function edit4_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit4 (see GCBO)

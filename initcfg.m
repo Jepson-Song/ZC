@@ -70,7 +70,7 @@ if strcmp(niconfig.signal, 'fmcw')==1
 
 elseif strcmp(niconfig.signal, 'zc')==1
 niconfig.freq =40000;%[32000, 42500];%[40000, 27000];  %27000 %central frequency %39000
-niconfig.zclen=960*2;   %FFT size 
+% niconfig.zclen=960*2;   %FFT size 
 niconfig.zc_l=307;%253;  %253   %ZC length must be odd 
 % niconfig.zc_u=1;       %ZC u
 niconfig.zc_u1=5;       %ZC u
@@ -79,7 +79,8 @@ niconfig.zc_u2=7;       %ZC u
 niconfig.rate = 1;
 niconfig.zclen=960*2;   %FFT size 
 % niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
-niconfig.zcrep = niconfig.fs/niconfig.zclen/niconfig.rate;
+niconfig.maxrate = niconfig.fs/niconfig.zclen;
+niconfig.zcrep = niconfig.maxrate/niconfig.rate;
 niconfig.seglen = niconfig.zclen*niconfig.zcrep;
 % niconfig.rate = niconfig.fs/niconfig.seglen;
 niconfig.notifysample = niconfig.seglen;
