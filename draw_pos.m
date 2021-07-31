@@ -5,6 +5,7 @@ function draw(cur_index)
         global cfg
 
         if cfg.drawPos == 1
+%         if get(cfg.handles.radiobutton6,'value')%没啥用
         if cur_index<=size(cfg.pos1, 1)
 
             fa_v = cfg.fa_v(cur_index, :);
@@ -64,6 +65,7 @@ function draw(cur_index)
             zlabel(cfg.figure5, 'Z')
             title(cfg.figure5,'3D')
             rotate3d(cfg.figure5, 'on')
+            set(cfg.figure5,'ydir','reverse','xaxislocation','top');
             
             xlim(cfg.figure6, myxlim)
             ylim(cfg.figure6, myzlim)
@@ -80,6 +82,7 @@ function draw(cur_index)
             xlabel(cfg.figure7, 'X')
             ylabel(cfg.figure7, 'Y')
             title(cfg.figure7,'XY平面 - 正视图')
+            set(cfg.figure7,'ydir','reverse','xaxislocation','top');
 
             xlim(cfg.figure8, myylim)
             ylim(cfg.figure8, myzlim)

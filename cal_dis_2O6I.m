@@ -197,7 +197,7 @@ function cal_dis_2O6I(cur_index)
 
         drawnow();
         t = toc(draw_tim);
-        fprintf("画图用时：%.4f\n", vpa(t));
+        fprintf("画cir图用时：%.4f\n", vpa(t));
     end
     
 
@@ -215,6 +215,6 @@ function cal_dis_2O6I(cur_index)
 %                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 2),cfg.color(2)...
 %                         ,[1:1:cfg.dislen],dis2(cur_index:cfg.dislen+cur_index-1, 3),cfg.color(3));
 % %             ylim(cfg.figure(2, 2), [0 0.2])
-    drawnow();
+%     drawnow();
     
 end

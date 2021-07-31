@@ -194,6 +194,7 @@ end
 
 %% 处理数据
 function processData(src,event)
+    tim = tic;
     global  cfg
 %     cfg.drawPos = 0;
     
@@ -236,9 +237,10 @@ function processData(src,event)
         cfg.cur_index = cur_index;
     end
     
+    t = double(toc(tim));
     cfg.data_len = size(cfg.datain,1);
     if(mod(cfg.data_len,cfg.fs)==0)
-        fprintf('Dataseg index: %d, New seg length: %d, Total data length: %d \n',cfg.index,datalen,cfg.data_len)
+        fprintf('Dataseg index: %d, New seg length: %d, Total data length: %d 一共用时：%.4f\n',cfg.index,datalen,cfg.data_len,vpa(t))
     end
         
 end
