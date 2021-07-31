@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 24-Jul-2021 17:15:49
+% Last Modified by GUIDE v2.5 31-Jul-2021 15:11:34
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -88,6 +88,7 @@ cfg.handles = handles;
     set(handles.radiobutton4,'value',cfg.drawCir);
     set(handles.radiobutton5,'value',cfg.drawDis);
     set(handles.radiobutton6,'value',cfg.drawPos);
+    set(handles.radiobutton9,'value',cfg.ifRealTime);
     
     set(handles.edit3,'string',num2str(cfg.temp));
     set(handles.edit4,'string',num2str(cfg.rate));
@@ -204,23 +205,21 @@ function processData(src,event)
     
     datalen = size(event.Data,1);
     
-    cfg.data_len = size(cfg.datain,1);
-    if(mod(cfg.data_len,cfg.fs)==0)
-        fprintf('Dataseg index: %d, New seg length: %d, Total data length: %d \n',cfg.index,datalen,cfg.data_len)
-    end
+    
 
     %% online 边读数据边计算
-%     if cfg.ifCalAloneRead
-%         cur_index = cfg.index;
-%         fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
-%         % 计算距离
-%         if strcmp(cfg.signal, 'fmcw')==1
-%             fmcw_cal_dis(cur_index);
-%         elseif strcmp(cfg.signal, 'zc')==1
-% %             cal_dis(cur_index);
-%             cal_dis_2O6I(cur_index);
-%         end
-%         
+    if cfg.ifRealTime
+        cur_index = cfg.index;
+        fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
+        % 计算距离
+        if strcmp(cfg.signal, 'fmcw')==1
+            fmcw_cal_dis(cur_index);
+        elseif strcmp(cfg.signal, 'zc')==1
+%             cal_dis(cur_index);
+            cal_dis_2O6I(cur_index);
+        end
+        draw_dis(cur_index);
+        
 %         str = '';
 %         for o = 1:1:cfg.nout
 %             for i = 1:1:cfg.nin
@@ -230,11 +229,17 @@ function processData(src,event)
 %         end
 %         set(cfg.handles.edit2, 'string', str);
 % %         set(cfg.handles.edit2, 'string', "20210518_193646");
-% 
-%         % 计算坐标 
-%         cal_pos(cur_index);
-%         cfg.cur_index = cur_index;
-%     end
+
+        % 计算坐标 
+        cal_pos(cur_index);
+        draw_pos(cur_index);
+        cfg.cur_index = cur_index;
+    end
+    
+    cfg.data_len = size(cfg.datain,1);
+    if(mod(cfg.data_len,cfg.fs)==0)
+        fprintf('Dataseg index: %d, New seg length: %d, Total data length: %d \n',cfg.index,datalen,cfg.data_len)
+    end
         
 end
 
@@ -876,6 +881,19 @@ function radiobutton6_Callback(hObject, eventdata, handles)
 end
 
 
+% --- Executes on button press in radiobutton9.
+function radiobutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton9
+
+    global cfg
+    
+    cfg.ifRealTime = ~cfg.ifRealTime;
+	set(handles.radiobutton9,'value',cfg.ifRealTime);
+end
 
 
 
@@ -964,4 +982,3 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 end
-

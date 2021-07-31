@@ -23,6 +23,13 @@ function draw(cur_index)
 
                 plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
                 
+%                 drawnow();                
+                plot3(cfg.figure5, cfg.pos2(1:cur_index, 1),  cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+                plot(cfg.figure6, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
+                plot(cfg.figure7, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
+
+                plot(cfg.figure8, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+                
 %                 drawnow();
             elseif cfg.drawStyle == 2
                 
@@ -37,10 +44,15 @@ function draw(cur_index)
                 plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
                                    arrows(:, 2), arrows(:, 3), 'r--')
             end
+%             % 会议室
+%             myxlim = [1.0 1.6];
+%             myylim = [0.1 0.6];
+%             myzlim = [0.5 1.5];
+            % 工位
+            myxlim = [0 1.3];
+            myylim = [0 1.4];
+            myzlim = [-0.5 0.1];
             
-            myxlim = [1.0 1.6];
-            myylim = [0.1 0.6];
-            myzlim = [0.5 1.5];
             xlim(cfg.figure5, myxlim)
             ylim(cfg.figure5, myylim)
             zlim(cfg.figure5, myzlim)

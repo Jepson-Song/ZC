@@ -69,6 +69,7 @@ function cal_dis_2O6I(cur_index)
 % 
 %         cir = ifft(fftshift(temp_fft,1));  %ifft and get the CIR
 %         cir = conj(cir);
+% %         cir2(:, i) = cir;
 % 
 %         %% 处理左声道
 %         [tm, p] = max(abs(cir(cfg.left_bd(1, i):cfg.right_bd(1, i))));
@@ -78,11 +79,11 @@ function cal_dis_2O6I(cur_index)
 %         % 用采样点粗粒度计算距离
 %         dis = peak*cfg.soundspeed/cfg.fs;
 % 
-% %         % 用相位计算细粒度距离
-% %         % 整数倍波长
-% %         dis = fix(dis/cfg.wavelength)*cfg.wavelength;
-% %         phase = atan(imag(m)/real(m));
-% %         dis = dis + phase/(2*pi)*cfg.wavelength;
+%         % 用相位计算细粒度距离
+%         % 整数倍波长
+%         dis = fix(dis/cfg.wavelength)*cfg.wavelength;
+%         phase = atan(imag(m)/real(m));
+%         dis = dis + phase/(2*pi)*cfg.wavelength;
 % 
 %         dis2(i+3) = dis;
 %         

@@ -41,7 +41,7 @@ niconfig.notifytime = niconfig.notifysample/niconfig.fs;
 
 niconfig.duration = 120; %Total testing time in seconds
 
-niconfig.temp=21;
+niconfig.temp=26;
 niconfig.soundspeed=(331.3+0.606*niconfig.temp);%*100;
 
 niconfig.dislen = 300;
@@ -175,19 +175,25 @@ niconfig.width = sqrt(sum((niconfig.P1-niconfig.P2).*(niconfig.P1-niconfig.P2)))
 
 niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 
+% niconfig.Q = [0 0 1.2;
+%               0 0.3 1.1;
+%               0 0.6 1.2;
+%               3.865 0 1.2;
+%               3.865 0.3 1.1;
+%               3.865 0.6 1.2];
 niconfig.Q = [0 0 1.2;
               0 0.3 1.1;
               0 0.6 1.2;
-              3.865 0 1.2;
-              3.865 0.3 1.1;
-              3.865 0.6 1.2];
+              0.622 0 0;
+              1.012 0 -0.1295;
+              1.3 0.39 0];
 niconfig.P = [niconfig.P1; niconfig.P2];
 
 niconfig.ear2neck = [0 -0.09 0];
 niconfig.O = [1.3 0.3 0.8];%(niconfig.P1+ niconfig.P2)/2 + niconfig.ear2neck;
 niconfig.cur_index = 0;
 % 
-% niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength
+niconfig.wavelength= niconfig.soundspeed/niconfig.freq;  %temperature and wavelength
 
 % niconfig.init_peak = ones(niconfig.nout, niconfig.nin)*0;
 niconfig.dis1 = [];%zeros(niconfig.nin, niconfig.dislen);
@@ -226,13 +232,13 @@ niconfig.shift_dis = zeros(3, 2)';
 niconfig.datain = [];
 niconfig.data_len = 0;
 niconfig.seg_index = 0;
-niconfig.ifCalAloneRead = 0;
+niconfig.ifRealTime = 0;
 niconfig.ifDrawAloneCal = 1; % 实时画图花费的时间
 niconfig.ifDrawAfterCal = 0;
 niconfig.drawCir = 1;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
-niconfig.drawStyle = 2;
+niconfig.drawStyle = 1;
 niconfig.drawVec = 0;
 
 niconfig.choseCorrect = 0;
