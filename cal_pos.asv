@@ -15,8 +15,6 @@ function cal_pos(cur_index)
     
     po = (pos1+pos2)/2;
     fa_v = fa_vector(pos1, pos2, pos3);
-    
-    % 调整向量方向
     if cur_index == 1
         init_vec = [-1 -1 0];
         if fa_v.*init_vec < 0
@@ -24,12 +22,15 @@ function cal_pos(cur_index)
         end
         
     else
-        if fa_v.*cfg.fa_v(cur_index-1, :) < 0
+        if fa_v.*cfg.fa_ < 0
             fa_v = -1*fa_v;
         end
         
     end
-    
+%     fa_v = [0 0 0];
+    if fa_v(2)<0
+        fa_v = -1*fa_v;
+    end
     cfg.fa_v = [cfg.fa_v; fa_v];
     
     %% 发送数据
