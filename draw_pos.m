@@ -58,9 +58,9 @@ function draw(cur_index)
 %             myylim = [0.1 0.6];
 %             myzlim = [0.5 1.5];
             % 工位
-            myxlim = [0 1.3];
+            myxlim = [0 1.4];
             myylim = [0 1.4];
-            myzlim = [-0.4 0.2];
+            myzlim = [-0.3 0.3];
             
             xlim(cfg.figure5, myxlim)
             ylim(cfg.figure5, myylim)
