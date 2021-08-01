@@ -181,13 +181,24 @@ startBackground(dev);
 % fprintf('\nstart test\n');
 
 
+
+    cfg.temp = str2num(get(handles.edit3, 'string'));
+    cfg.soundspeed = (331.3+0.606*cfg.temp);
+    cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
+    fprintf("\n【温度设置为%d摄氏度】\n",cfg.temp);
+    
+    cfg.rate = str2num(get(cfg.handles.edit4, 'string'));
+    cfg.zcrep = cfg.fs/cfg.zclen/cfg.rate;
+    cfg.seglen = cfg.zclen*cfg.zcrep;
+    fprintf("\n【刷新率设置为%d】\n",cfg.rate);
+
+
 fprintf("\n-----【开始读入数据】-----\n");
     
     %save_var(fileName)
     
     init_para();
     cfg.datain = [];
-        
     
 end
 
@@ -620,7 +631,7 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
     
     global cfg
-    cfg.O = (cfg.pos1(cfg.cur_index, :)+cfg.pos2(cfg.cur_index, :))/2 + cfg.ear2neck;
+    cfg.O = (cfg.pos1(cfg.cur_index, :)+cfg.pos2(cfg.cur_index, :))/2 - cfg.ear2neck;
     
 end
 

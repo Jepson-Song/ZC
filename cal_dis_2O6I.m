@@ -19,6 +19,7 @@ function cal_dis_2O6I(cur_index)
     chose2 = zeros(1, 3);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 开始奇偶插值
 
+    %% 左发射端
     for i=1:1:3                 %for each mic
         
         data = dataseg(1:cfg.zclen, i);
@@ -96,6 +97,7 @@ function cal_dis_2O6I(cur_index)
 %         
 %     end
     
+    %% 右发射端
     for i=cfg.nin/2+1:1:cfg.nin                  %for each mic
         
         data = dataseg(1:cfg.zclen, i);
@@ -135,6 +137,44 @@ function cal_dis_2O6I(cur_index)
         
     end
     
+%     for i=cfg.nin/2+1:1:cfg.nin                  %for each mic
+%         
+%         data = dataseg(1:cfg.zclen, i);
+%         
+%         data_fft=fft(data);                 %FFT
+% 
+%         temp_fft=zeros(size(data));         
+%         
+%         temp_fft((cfg.zclen/2-(cfg.zc_l-1)/2):2:(cfg.zclen/2+(cfg.zc_l-1)/2))=data_fft(cfg.leftpoint:2:cfg.rightpoint).*cfg.zc_fft2(1:2:end)';
+%         
+%         cir = ifft(fftshift(temp_fft,1));  %ifft and get the CIR
+%         cir = conj(cir);
+%         cir2(:, i) = cir;
+% 
+%         %% 处理左声道
+%         [tm, p] = max(abs(cir(cfg.left_bd(2, i):cfg.right_bd(2, i))));
+%         peak = cfg.left_bd(2, i) + p - 1;
+%         m = cir(peak);
+% 
+%         % 用采样点粗粒度计算距离
+%         dis = peak*cfg.soundspeed/cfg.fs;
+% 
+%         % 用相位计算细粒度距离
+%         % 整数倍波长
+%         dis = fix(dis/cfg.wavelength)*cfg.wavelength;
+%         phase = atan(imag(m)/real(m));
+%         dis = dis + phase/(2*pi)*cfg.wavelength;
+% 
+%         dis1(i-3) = dis;
+%         
+%         chose1(i-3) = i;
+%         
+%         % 更新初始距离
+%         if SIGQUAL2(i) > cfg.SIG_LOS && dis2(i) < cfg.init_dis(2, i)
+%             cfg.init_dis(2, i) = dis2(i);
+%         end
+%         
+%     end
     
     t = toc(dis_tim);
     fprintf("计算距离用时：%.4f\n", vpa(t));

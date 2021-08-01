@@ -57,7 +57,7 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     
     
     if (cur_index==1)
-        pos3 = (pos1+pos2)/2 - [0 0 0.08];
+        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
         cfg.O = pos3;
     else
 %         pos3 = (cfg.pos1(1, :)+cfg.pos2(1, :))/2 - [0 0 0.08];
