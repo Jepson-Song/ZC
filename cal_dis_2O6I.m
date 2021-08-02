@@ -243,6 +243,7 @@ function cal_dis_2O6I(cur_index)
         legend(cfg.figure(2, 1),legend_line, legend_str)
 
         drawnow();
+        
         t = toc(draw_tim);
         cfg.timeTree = cfg.timeTree - 1;
         for i=1:1:cfg.timeTree

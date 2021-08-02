@@ -17,6 +17,8 @@ function cal_pos(cur_index)
     cfg.pos3 = [cfg.pos3; pos3];
     
     cal_dir(cur_index);
+    
+    draw_dir(cur_index);
 
     
     %%
