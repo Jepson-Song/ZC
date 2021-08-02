@@ -23,7 +23,7 @@
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 31-Jul-2021 15:11:34
+% Last Modified by GUIDE v2.5 02-Aug-2021 11:17:15
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,7 +79,7 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 cfg.handles = handles;
 
 
-    set(handles.edit1, 'string', "20210720_213700");
+    set(handles.edit1, 'string', "20210801_185446");
 
 %     cfg.choseCorrect = 0;
     set(handles.radiobutton1,'value',~cfg.choseCorrect);
@@ -787,6 +787,97 @@ function pushbutton10_Callback(hObject, eventdata, handles)
 end
 
 
+% --- Executes on button press in pushbutton11.
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+    global  cfg
+    
+    %save_var(fileName)
+    
+    init_para();
+    
+    %% 从文件中读取距离
+    fprintf("\n-----【开始读取位置】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+    if cfg.choseCorrect == 0
+        fileName = [prefix, '_pos.txt'];
+    else
+        fileName = [prefix, '_pos_cor.txt'];
+    end
+    fprintf("【从文件读取位置】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    pos = load(address);
+%     whos dis
+    cfg.index = size(pos, 1);
+    cfg.pos1 = pos(:, 1:3);
+    cfg.pos2 = pos(:, 4:6);
+    cfg.pos3 = pos(:, 7:9);
+    fprintf("-----【完成读取距离】-----\n");
+    
+    %% 离线计算位置
+    fprintf("\n-----【开始离线计算】-----\n");
+
+%     cfg.pos1 = [];
+%     cfg.pos2 = [];
+    % 把data划分成dataseg
+    for cur_index = 1:1:cfg.index
+        %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
+        if cfg.pause
+            toobar();
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
+
+        % 计算坐标
+        tic
+        cal_dir(cur_index);
+        cfg.cur_index = cur_index;
+        
+        draw_dir(cur_index);
+        
+        t = toc;
+        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    toobar();
+    fprintf("-----【结束离线计算】-----\n");
+    
+    
+    %% 保存结果
+    fprintf("\n-----【开始保存方向】-----\n");
+    prefix = get(handles.edit1, 'string');
+
+    % 保存修正后的法向量
+%     fileName = [prefix, '_dir_cor.txt'];
+    if cfg.choseCorrect == 0
+        fileName = [prefix, '_dir.txt'];
+    else
+        fileName = [prefix, '_dir_cor.txt'];
+    end
+    fprintf("【创建文件保存方向】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dir = cfg.dir;
+    save(address, 'dir', '-ascii')
+    fprintf("-----【完成保存方向】-----\n");
+
+    
+end
+
+% --- Executes on button press in pushbutton12.
+function pushbutton12_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+end
+
+
+
 
 
 
@@ -996,3 +1087,4 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 end
+

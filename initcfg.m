@@ -238,7 +238,7 @@ niconfig.ifDrawAfterCal = 0;
 niconfig.drawCir = 1;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
-niconfig.drawDir = 0;
+niconfig.drawDir = 1;
 niconfig.drawVec = 0;
 
 niconfig.choseCorrect = 0;
