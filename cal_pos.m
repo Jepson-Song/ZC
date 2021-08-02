@@ -14,33 +14,33 @@ function cal_pos(cur_index)
     cfg.pos3 = [cfg.pos3; pos3];
     
     po = (pos1+pos2)/2;
-    fa_v = fa_vector(pos1, pos2, pos3);
+    dir = director(pos1, pos2, pos3);
     
     % 调整向量方向
     if cur_index == 1
         init_vec = [-1 -1 0];
-        if fa_v.*init_vec < 0
-            fa_v = -1*fa_v;
+        if dir.*init_vec < 0
+            dir = -1*dir;
         end
         
     else
-        if fa_v.*cfg.fa_v(cur_index-1, :) < 0
-            fa_v = -1*fa_v;
+        if dir.*cfg.dir(cur_index-1, :) < 0
+            dir = -1*dir;
         end
         
     end
     
-    cfg.fa_v = [cfg.fa_v; fa_v];
+    cfg.dir = [cfg.dir; dir];
     
     %% 发送数据
 %     send_time = tic;
-%     send_data = [num2str(fa_v(1)),' ',num2str(fa_v(2)),' ',num2str(fa_v(3))];
+%     send_data = [num2str(dir(1)),' ',num2str(dir(2)),' ',num2str(dir(3))];
 %     udp_client(send_data);
 %     t = toc(send_time);
 %     fprintf("发送数据用时：%.4f\n", vpa(t));
     
     %%
-%     arrows = [ po; po+fa_v/100*15];
+%     arrows = [ po; po+dir/100*15];
 %     if cfg.drawVec == 1
 % %         fig = figure
 %         plot3(cfg.figure5, arrows(:, 1), arrows(:, 2), arrows(:, 3), 'r')
@@ -60,7 +60,7 @@ function cal_pos(cur_index)
     
 %     t = toc(fa);
 %     fprintf("求法向量用时：%.4f\n", vpa(t));
-%     size(cfg.fa_v)
+%     size(cfg.dir)
     
 %     draw(cur_index);
     
@@ -68,7 +68,7 @@ end
 
 
 %求三角形法向量
-function res=fa_vector(p1, p2, p3)
+function res=director(p1, p2, p3)
     % size(p1)
     % size(p2)
     % size(p3)

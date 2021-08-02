@@ -8,13 +8,13 @@ function draw(cur_index)
 %         if get(cfg.handles.radiobutton6,'value')%没啥用
         if cur_index<=size(cfg.pos1, 1)
 
-            fa_v = cfg.fa_v(cur_index, :);
+            dir = cfg.dir(cur_index, :);
             
             p1 = cfg.pos1(cur_index, :);
             p2 = cfg.pos2(cur_index, :);
             p3 = cfg.pos3(cur_index, :);
             po = (p1+p2)/2;
-            arrows = [ po; po+fa_v/100*15];
+            arrows = [ po; po+dir/100*15];
             triangle = [p3; p1; p2; p3;];
             
             head = [p1; p2;];

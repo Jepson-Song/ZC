@@ -118,7 +118,7 @@ function init_para()
     cfg.pos1 = [];
     cfg.pos2 = [];
     cfg.pos3 = [];
-    cfg.fa_v = [];
+    cfg.dir = [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
     cfg.init_dis = [0.069 0.069 0.060 100 100 100;
@@ -515,16 +515,16 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     pos_cor = [cfg.pos1,cfg.pos2,cfg.pos3];
     save(address, 'pos_cor', '-ascii')
     % 保存修正后的法向量
-%     fileName = [prefix, '_fav_cor.txt'];
+%     fileName = [prefix, '_dir_cor.txt'];
     if cfg.choseCorrect == 0
-        fileName = [prefix, '_fav.txt'];
+        fileName = [prefix, '_dir.txt'];
     else
-        fileName = [prefix, '_fav_cor.txt'];
+        fileName = [prefix, '_dir_cor.txt'];
     end
     fprintf("【创建文件保存修正后法向量】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
-    fav_cor = cfg.fa_v;
-    save(address, 'fav_cor', '-ascii')
+    dir_cor = cfg.dir;
+    save(address, 'dir_cor', '-ascii')
     fprintf("-----【完成保存修正后结果】-----\n");
 
     
@@ -579,14 +579,14 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     cfg.pos3 = pos(:, 7:9);  
     % 读取法向量
     if cfg.choseCorrect == 0
-        fileName = [prefix, '_fav.txt'];
+        fileName = [prefix, '_dir.txt'];
         fprintf("【从文件读取原始法向量】 "+fileName+"\n");
     else
-        fileName = [prefix, '_fav_cor.txt'];
+        fileName = [prefix, '_dir_cor.txt'];
         fprintf("【从文件读取修正后的法向量】 "+fileName+"\n");
     end
     address = [cfg.dataAddress,fileName];
-    cfg.fa_v = load(address);
+    cfg.dir = load(address);
     
     if cfg.choseCorrect == 0
         fprintf("-----【完成读取原始结果】-----\n");
