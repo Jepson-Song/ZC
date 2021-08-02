@@ -1,8 +1,9 @@
 function draw(cur_index)
 
-        draw_tim = tic;
-        
         global cfg
+        
+        draw_tim = tic;
+        cfg.timeTree = cfg.timeTree + 1;
 
         if cfg.drawPos == 1
 %         if get(cfg.handles.radiobutton6,'value')%没啥用
@@ -106,6 +107,10 @@ function draw(cur_index)
         end
         
         t = double(toc(draw_tim));
+        cfg.timeTree = cfg.timeTree - 1;
+        for i=1:1:cfg.timeTree
+            fprintf(" # ");
+        end
         fprintf("画pos图用时：%.4f\n", vpa(t));
     
 end

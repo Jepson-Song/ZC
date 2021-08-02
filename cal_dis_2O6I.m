@@ -4,6 +4,8 @@ function cal_dis_2O6I(cur_index)
     global cfg
     
     dis_tim = tic;
+    cfg.timeTree = cfg.timeTree + 1;
+    
     % 截取dataseg
     dataseg = cfg.datain((cur_index-1)*cfg.seglen+1:cur_index*cfg.seglen, :);
 %     whos dataseg
@@ -177,6 +179,10 @@ function cal_dis_2O6I(cur_index)
 %     end
     
     t = toc(dis_tim);
+    cfg.timeTree = cfg.timeTree - 1;
+    for i=1:1:cfg.timeTree
+        fprintf(" # ");
+    end
     fprintf("计算距离用时：%.4f\n", vpa(t));
     
     %dis = [dis1, dis2];
@@ -208,6 +214,7 @@ function cal_dis_2O6I(cur_index)
     %% 实时画图，画cir
     if cfg.drawCir
         draw_tim = tic;
+        cfg.timeTree = cfg.timeTree + 1;
         
         legend_line = [];
         for i=1:1:cfg.nin/2
@@ -237,6 +244,10 @@ function cal_dis_2O6I(cur_index)
 
         drawnow();
         t = toc(draw_tim);
+        cfg.timeTree = cfg.timeTree - 1;
+        for i=1:1:cfg.timeTree
+            fprintf(" # ");
+        end
         fprintf("画cir图用时：%.4f\n", vpa(t));
     end
     

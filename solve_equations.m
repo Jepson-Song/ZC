@@ -20,6 +20,7 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     %% 计算坐标
     
     equations = tic;
+    cfg.timeTree = cfg.timeTree + 1;
     syms x1 y1 z1 x2 y2 z2
     
 %     eq1 = (x1-cfg.A(1))^2+(y1-cfg.A(2))^2+(z1-cfg.A(3))^2==dis1(1)^2;
@@ -39,12 +40,23 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
     
     t = toc(equations);
+    cfg.timeTree = cfg.timeTree - 1;
+    for i=1:1:cfg.timeTree
+        fprintf(" # ");
+    end
     fprintf("列方程用时：%.4f\n", vpa(t));
     
     solve = tic;
+    cfg.timeTree = cfg.timeTree + 1;
+    
     [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1]);
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
+    
     t = toc(solve);
+    cfg.timeTree = cfg.timeTree - 1;
+    for i=1:1:cfg.timeTree
+        fprintf(" # ");
+    end
     fprintf("解方程用时：%.4f\n", vpa(t));
     
     rem1 = 2;

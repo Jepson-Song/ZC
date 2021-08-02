@@ -1,10 +1,11 @@
 function cal_pos(cur_index)
 
-    pos_tim = tic;
-
     %% 计算坐标
     global  cfg
     
+    pos_tim = tic;
+    cfg.timeTree = cfg.timeTree + 1;
+
     %% 先选出三个信号最好的
     % TODO
     
@@ -44,5 +45,9 @@ function cal_pos(cur_index)
 %     draw(cur_index);
     
     t = toc(pos_tim);
+    cfg.timeTree = cfg.timeTree - 1;
+    for i=1:1:cfg.timeTree
+        fprintf(" # ");
+    end
     fprintf("计算位置用时：%.4f\n", vpa(t));
 end
