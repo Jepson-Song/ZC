@@ -104,8 +104,6 @@ function cal_dis(cur_index)
         
     end
     
-    t = toc(dis_tim);
-    fprintf("计算距离用时：%.4f\n", vpa(t));
     
     %dis = [dis1, dis2];
     %% 计算shift_dis
@@ -128,6 +126,8 @@ function cal_dis(cur_index)
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
     
+    t = toc(dis_tim);
+    fprintf("计算距离用时：%.4f\n", vpa(t));
  
     
     %% 实时画图，画cir
