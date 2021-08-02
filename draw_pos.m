@@ -6,54 +6,15 @@ function draw_pos(cur_index)
         cfg.timeTree = cfg.timeTree + 1;
 
         if cfg.drawPos == 1
-%         if get(cfg.handles.radiobutton6,'value')%没啥用
-        if cur_index<=size(cfg.pos1, 1)
-
-            dir = cfg.dir(cur_index, :);
-            
             p1 = cfg.pos1(cur_index, :);
             p2 = cfg.pos2(cur_index, :);
-            p3 = cfg.pos3(cur_index, :);
-            po = (p1+p2)/2;
-            arrows = [ po; po+dir/100*15];
-            triangle = [p3; p1; p2; p3;];
             
             head = [p1; p2;];
-
-            if cfg.drawStyle == 1
-%                 plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
-%                 plot(cfg.figure6, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
-%                 plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
-% 
-%                 plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
-%                 
-%                 drawnow();                
-                plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
-                plot(cfg.figure6, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
-                plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b', cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
-
-                plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b', cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
-                
-%                 drawnow();
-            elseif cfg.drawStyle == 3
-                
-                %plot3(cfg.figure5, [cfg.pos1(cur_index, 1),cfg.pos2(cur_index, 1),cfg.O(1),cfg.pos1(cur_index, 1)],[cfg.pos1(cur_index, 2),cfg.pos2(cur_index, 2),cfg.O(2),cfg.pos1(cur_index, 2)],[cfg.pos1(cur_index, 3),cfg.pos2(cur_index, 3),cfg.O(3),cfg.pos1(cur_index, 3)]);
-                
-                plot3(cfg.figure5, triangle(:, 1), triangle(:, 2), triangle(:, 3), 'b.-',...
-                                   arrows(:, 1), arrows(:, 2), arrows(:, 3), 'r--')
-                plot(cfg.figure6, triangle(:, 1), triangle(:, 3), 'b.-',...
-                                   arrows(:, 1), arrows(:, 3), 'r--')
-                plot(cfg.figure7, triangle(:, 1), triangle(:, 2), 'b.-',...
-                                   arrows(:, 1), arrows(:, 2), 'r--')
-                plot(cfg.figure8, triangle(:, 2), triangle(:, 3), 'b.-',...
-                                   arrows(:, 2), arrows(:, 3), 'r--')
-            elseif cfg.drawStyle == 2
-                
                 plot3(cfg.figure5, head(:, 1), head(:, 2), head(:, 3), 'b.-');
                 plot(cfg.figure6, head(:, 1), head(:, 3), 'b.-');
                 plot(cfg.figure7, head(:, 1), head(:, 2), 'b.-');
                 plot(cfg.figure8, head(:, 2), head(:, 3), 'b.-');
-            end
+                
 %             % 会议室
 %             myxlim = [1.0 1.6];
 %             myylim = [0.1 0.6];
@@ -103,7 +64,6 @@ function draw_pos(cur_index)
             
             
             drawnow();
-        end
         end
         
         t = double(toc(draw_tim));
