@@ -474,7 +474,6 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
     cfg.pos1 = [];
     cfg.pos2 = [];
-    cfg.pos3 = [];
     % 把data划分成dataseg
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
@@ -513,7 +512,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
         fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     end
     address = [cfg.dataAddress,fileName];
-    pos_cor = [cfg.pos1,cfg.pos2,cfg.pos3];
+    pos_cor = [cfg.pos1,cfg.pos2];
     save(address, 'pos_cor', '-ascii')
     % 保存修正后的法向量
 %     fileName = [prefix, '_dir_cor.txt'];
@@ -565,7 +564,7 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);  
-    cfg.pos3 = pos(:, 7:9);  
+%     cfg.pos3 = pos(:, 7:9);  
     % 读取法向量
     if cfg.choseCorrect == 0
         fileName = [prefix, '_dir.txt'];
