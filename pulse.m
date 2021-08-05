@@ -874,6 +874,65 @@ function pushbutton12_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+    global cfg
+    
+    init_para();
+    
+    %% 从文件中读取位置和方向
+    prefix = get(handles.edit1, 'string');
+    % 读取位置
+    if cfg.choseCorrect == 0
+        fprintf("\n-----【开始读取原始位置】-----\n");
+        fileName = [prefix, '_pos.txt'];
+        fprintf("【从文件读取原始位置】 "+fileName+"\n");
+    else
+        fprintf("\n-----【开始读取修正后的位置】-----\n");
+        fileName = [prefix, '_pos_cor.txt'];
+        fprintf("【从文件读取修正后的位置】 "+fileName+"\n");
+    end
+    address = [cfg.dataAddress,fileName];
+    pos = load(address);
+    cfg.index = size(pos, 1);
+    
+    cfg.pos1 = pos(:, 1:3);
+    cfg.pos2 = pos(:, 4:6);  
+    cfg.pos3 = pos(:, 7:9);  
+    
+    % 读取方向
+    if cfg.choseCorrect == 0
+        fileName = [prefix, '_dir.txt'];
+        fprintf("【从文件读取原始方向】 "+fileName+"\n");
+    else
+        fileName = [prefix, '_dir_cor.txt'];
+        fprintf("【从文件读取修正后的方向性】 "+fileName+"\n");
+    end
+    address = [cfg.dataAddress,fileName];
+    cfg.dir = load(address);
+    
+    if cfg.choseCorrect == 0
+        fprintf("-----【完成读取原始结果】-----\n");
+    else
+        fprintf("-----【完成读取修正后的结果】-----\n");
+    end
+    
+    %% 读取结果后画图
+    fprintf("\n-----【开始画图】-----\n");
+    for cur_index=1:1:cfg.index
+        if cfg.pause
+            toobar();
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
+        tic
+        draw_dir(cur_index);
+        t = toc;
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    toobar();
+    fprintf("-----【结束画图】-----\n");
+
 end
 
 
