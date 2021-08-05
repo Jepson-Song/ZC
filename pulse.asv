@@ -500,17 +500,16 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     
     
     %% 保存结果
-    fprintf("\n-----【开始保存位置】-----\n");
+    fprintf("\n-----【开始保存修正后结果】-----\n");
     prefix = get(handles.edit1, 'string');
 
     % 保存修正后的位置
     if cfg.choseCorrect == 0
         fileName = [prefix, '_pos.txt'];
-        fprintf("【创建文件保存位置】 "+fileName+"\n");
     else
         fileName = [prefix, '_pos_cor.txt'];
-        fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     end
+    fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     pos_cor = [cfg.pos1,cfg.pos2,cfg.pos3];
     save(address, 'pos_cor', '-ascii')
@@ -518,15 +517,27 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 %     fileName = [prefix, '_dir_cor.txt'];
     if cfg.choseCorrect == 0
         fileName = [prefix, '_dir.txt'];
-        fprintf("【创建文件保存法向量】 "+fileName+"\n");
     else
         fileName = [prefix, '_dir_cor.txt'];
-        fprintf("【创建文件保存修正后法向量】 "+fileName+"\n");
     end
+    fprintf("【创建文件保存修正后法向量】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     dir_cor = cfg.dir;
     save(address, 'dir_cor', '-ascii')
-    fprintf("-----【完成保存位置】-----\n");
+    fprintf("-----【完成保存修正后结果】-----\n");
+
+    
+    %% 计算完成后画图
+    if cfg.ifDrawAfterCal
+        fprintf("\n-----【开始离线画图】-----\n");
+        for cur_index=1:1:cfg.index
+            tic
+            draw(cur_index);
+            t = toc;
+            fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+        end
+        fprintf("-----【结束离线画图】-----\n");
+    end
     
 end
 
@@ -774,7 +785,6 @@ function pushbutton10_Callback(hObject, eventdata, handles)
 end
 
 
-%% Calculate dir
 % --- Executes on button press in pushbutton11.
 function pushbutton11_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton11 (see GCBO)
@@ -803,7 +813,7 @@ function pushbutton11_Callback(hObject, eventdata, handles)
     cfg.index = size(pos, 1);
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);
-%     cfg.pos3 = pos(:, 7:9);
+    cfg.pos3 = pos(:, 7:9);
     fprintf("-----【完成读取距离】-----\n");
     
     %% 离线计算位置
