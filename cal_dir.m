@@ -7,9 +7,17 @@ function cal_dir(cur_index)
     
     pos1 = cfg.pos1(cur_index, :);
     pos2 = cfg.pos2(cur_index, :);
-    pos3 = cfg.pos3(cur_index, :);
+%     pos3 = cfg.pos3(cur_index, :);
+
+    if (cur_index==1)
+        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
+        cfg.O = pos3;
+    else
+        pos3 = cfg.O;
+    end
+    cfg.pos3 = [cfg.pos3; pos3];
     
-    po = (pos1+pos2)/2;
+%     po = (pos1+pos2)/2;
     dir = get_dir(pos1, pos2, pos3);
     
     % 调整向量方向

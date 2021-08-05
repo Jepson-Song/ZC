@@ -474,6 +474,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
     cfg.pos1 = [];
     cfg.pos2 = [];
+    cfg.pos3 = [];
     % 把data划分成dataseg
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
@@ -837,7 +838,7 @@ function pushbutton11_Callback(hObject, eventdata, handles)
     
     
     %% 保存结果
-    fprintf("\n-----【开始保存方向】-----\n");
+    fprintf("\n-----【开始保存位置3和方向】-----\n");
     prefix = get(handles.edit1, 'string');
 
     % 保存修正后的法向量
@@ -847,11 +848,11 @@ function pushbutton11_Callback(hObject, eventdata, handles)
     else
         fileName = [prefix, '_dir_cor.txt'];
     end
-    fprintf("【创建文件保存方向】 "+fileName+"\n");
+    fprintf("【创建文件保存位置3和方向】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
-    dir = cfg.dir;
+    dir = [cfg.pos3, cfg.dir];
     save(address, 'dir', '-ascii')
-    fprintf("-----【完成保存方向】-----\n");
+    fprintf("-----【完成保存位置3和方向】-----\n");
 
     
 end
@@ -884,7 +885,7 @@ function pushbutton12_Callback(hObject, eventdata, handles)
     
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);  
-    cfg.pos3 = pos(:, 7:9);  
+%     cfg.pos3 = pos(:, 7:9);  
     
     % 读取方向
     if cfg.choseCorrect == 0
@@ -895,7 +896,9 @@ function pushbutton12_Callback(hObject, eventdata, handles)
         fprintf("【从文件读取修正后的方向性】 "+fileName+"\n");
     end
     address = [cfg.dataAddress,fileName];
-    cfg.dir = load(address);
+    dir = load(address);
+    cfg.pos3 = dir(:, 1:3);
+    cfg.dir = dir(:, 4:6);  
     
     if cfg.choseCorrect == 0
         fprintf("-----【完成读取原始结果】-----\n");

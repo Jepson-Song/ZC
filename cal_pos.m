@@ -15,37 +15,7 @@ function cal_pos(cur_index)
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
     cfg.pos3 = [cfg.pos3; pos3];
-    
-    cal_dir(cur_index);
-    
-    draw_dir(cur_index);
 
-    
-    %%
-%     arrows = [ po; po+dir/100*15];
-%     if cfg.drawVec == 1
-% %         fig = figure
-%         plot3(cfg.figure5, arrows(:, 1), arrows(:, 2), arrows(:, 3), 'r')
-%             xlim(cfg.figure5, [-cfg.lim cfg.lim])
-%             ylim(cfg.figure5, [-cfg.lim cfg.lim])
-%             zlim(cfg.figure5, [-cfg.lim cfg.lim])
-%             set(cfg.figure5,  'XGrid', 'on')
-%             set(cfg.figure5,  'YGrid', 'on')
-%             set(cfg.figure5,  'ZGrid', 'on')
-%             xlabel(cfg.figure5, 'X')
-%             ylabel(cfg.figure5, 'Y')
-%             zlabel(cfg.figure5, 'Z')
-%             title(cfg.figure5,'3D')
-% %             quiver3(cfg.figure5, arrows(1,1),arrows(1,2),arrows(1,3),arrows(2,1),arrows(2,2),arrows(2,3))
-%             drawnow();
-%     end
-    
-%     t = toc(fa);
-%     fprintf("求法向量用时：%.4f\n", vpa(t));
-%     size(cfg.dir)
-    
-%     draw(cur_index);
-    
     t = toc(pos_tim);
     cfg.timeTree = cfg.timeTree - 1;
     for i=1:1:cfg.timeTree
