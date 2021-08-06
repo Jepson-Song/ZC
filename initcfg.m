@@ -201,7 +201,8 @@ niconfig.dis2 = [];%zeros(niconfig.nin, niconfig.dislen);
 niconfig.pos1 = [];
 niconfig.pos2 = [];
 niconfig.pos3 = [];
-niconfig.dir = [];
+niconfig.dir = []; % direction
+niconfig.mov = []; % movement
 
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
 niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);

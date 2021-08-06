@@ -119,6 +119,7 @@ function init_para()
     cfg.pos2 = [];
     cfg.pos3 = [];
     cfg.dir = [];
+    cfg.mov = [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
     cfg.init_dis = [0.069 0.069 0.060 100 100 100;
