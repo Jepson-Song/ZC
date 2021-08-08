@@ -82,9 +82,20 @@ function cal_dir(cur_index)
                 
             else % 方向不一致，旋转或者倾斜
                 mov = cfg.rotation;
-            end
-            
+            end 
         end
+
+%         %% 思路3
+%         m = (pos1 + pos2)/2;
+%         n = cfg.O;
+%         m_n_dis = get_distance(m,n);
+%         fix_dis = get_distance(cfg.ear2neck, [0,0,0]);
+%         diff = abs(m_n_dis-fix_dis);
+%         if diff > 0.05
+%             mov = cfg.translation;
+%         else
+%             mov = cfg.rotation;
+%         end
         
     end
     
@@ -200,4 +211,12 @@ function [div, angle] = get_angle(a, b)
         div = 1;
         angle = acos(dot(a,b)/(na*nb))*180/pi;
     end
+end
+
+%% 求两点间距离
+function res = get_distance(a, b)
+
+    c = a-b;
+    res = sqrt(sum(c.*c));
+
 end

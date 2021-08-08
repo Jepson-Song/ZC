@@ -1036,6 +1036,7 @@ function radiobutton6_Callback(hObject, eventdata, handles)
     global cfg
     
     cfg.drawPos = ~cfg.drawPos;
+    cfg.drawDir = ~cfg.drawDir;
 	set(handles.radiobutton6,'value',cfg.drawPos);
 
 end

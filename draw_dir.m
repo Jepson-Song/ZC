@@ -5,7 +5,7 @@ function draw_dir(cur_index)
         draw_tim = tic;
         cfg.timeTree = cfg.timeTree + 1;
 
-        if cfg.drawDir == 1
+        if cfg.drawDir == 1 
             
             dir = cfg.dir(cur_index, :);
             

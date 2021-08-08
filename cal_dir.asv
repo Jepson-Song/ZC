@@ -13,6 +13,8 @@ function cal_dir(cur_index)
     if (cur_index==1)
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
         cfg.O = pos3;
+        l_r_angle = -1;
+        l_d_angle = -1;
         mov = 0;
     else
         last_index = cur_index - 1; % 上一帧
@@ -20,46 +22,46 @@ function cal_dir(cur_index)
         r_vec = pos2 - cfg.pos2(last_index, :); % 右耳机移动方向
         [div, l_r_angle] = get_angle(l_vec, r_vec);
         last_dir = cfg.dir(last_index, :); % 上一帧的视线方向
-        [, l_d_angle] = get_angle(l_vec, last_dir);
+        [div2, l_d_angle] = get_angle(l_vec, last_dir);
         
         
-        %% 分类思路1
-        % 根据移动向量长度是否为零判断是否有动作
-        if div==0 % 长度为零，没动作。
-            mov = cfg.mov(last_index);
-        else % 长度不为零，有动作。
-            
-            % 根据两个移动向量是否一致将动作分为两类：一致是旋转动作和倾斜动作；不一致是三种平移动作和俯仰动作。
-            if l_r_angle < 10 % 一致，旋转动作和倾斜动作。
-                
-                % 根据耳机移动方向与视线方向是否垂直来分类：垂直是倾斜动作，不垂直是旋转动作。
-                if l_d_angle>=85 && l_d_angle <=95 % 垂直，倾斜动作。
-                    mov = cfg.roll;
-                else % 不垂直，旋转动作。
-                    mov = cfg.yaw;
-                end
-            else % 不一致，三种平移动作和俯仰动作。
-                
-                % 根据耳机移动方向与视线方向是否垂直来分类：垂直是左右移动或上下移动，不垂直是前后移动或俯仰动作。
-                if l_d_angle>=85 && l_d_angle <=95 % 垂直，左右移动或上下移动。
-                    
-                    % 根据耳机移动向量竖直方向分量是否最大来分类，最大则是上下移动，不是最大则是左右移动。
-                    if abs(l_vec(3))>=abs(l_vec(2)) && abs(l_vec(3))>=abs(l_vec(1)) % 是，上下移动。
-                        mov = cfg.heave;
-                    else % 不是，左右移动
-                        mov = cfg.sway;
-                    end
-                else % 不垂直，前后移动或俯仰动作。
-                    
-                    % 根据耳机移动向量竖直方向分量是否最大来分类，最大则是俯仰动作，不是最大则是前后移动。
-                    if abs(l_vec(3))>=abs(l_vec(2)) && abs(l_vec(3))>=abs(l_vec(1)) % 是，俯仰动作。
-                        mov = cfg.heave;
-                    else % 不是，前后移动
-                        mov = cfg.surge;
-                    end
-                end
-            end
-        end
+%         %% 分类思路1
+%         % 根据移动向量长度是否为零判断是否有动作
+%         if div==0 % 长度为零，没动作。
+%             mov = cfg.mov(last_index);
+%         else % 长度不为零，有动作。
+%             
+%             % 根据两个移动向量是否一致将动作分为两类：一致是旋转动作和倾斜动作；不一致是三种平移动作和俯仰动作。
+%             if l_r_angle < 10 % 一致，旋转动作和倾斜动作。
+%                 
+%                 % 根据耳机移动方向与视线方向是否垂直来分类：垂直是倾斜动作，不垂直是旋转动作。
+%                 if l_d_angle>=85 && l_d_angle <=95 % 垂直，倾斜动作。
+%                     mov = cfg.roll;
+%                 else % 不垂直，旋转动作。
+%                     mov = cfg.yaw;
+%                 end
+%             else % 不一致，三种平移动作和俯仰动作。
+%                 
+%                 % 根据耳机移动方向与视线方向是否垂直来分类：垂直是左右移动或上下移动，不垂直是前后移动或俯仰动作。
+%                 if l_d_angle>=85 && l_d_angle <=95 % 垂直，左右移动或上下移动。
+%                     
+%                     % 根据耳机移动向量竖直方向分量是否最大来分类，最大则是上下移动，不是最大则是左右移动。
+%                     if abs(l_vec(3))>=abs(l_vec(2)) && abs(l_vec(3))>=abs(l_vec(1)) % 是，上下移动。
+%                         mov = cfg.heave;
+%                     else % 不是，左右移动
+%                         mov = cfg.sway;
+%                     end
+%                 else % 不垂直，前后移动或俯仰动作。
+%                     
+%                     % 根据耳机移动向量竖直方向分量是否最大来分类，最大则是俯仰动作，不是最大则是前后移动。
+%                     if abs(l_vec(3))>=abs(l_vec(2)) && abs(l_vec(3))>=abs(l_vec(1)) % 是，俯仰动作。
+%                         mov = cfg.heave;
+%                     else % 不是，前后移动
+%                         mov = cfg.surge;
+%                     end
+%                 end
+%             end
+%         end
         
         %% 分类思路2
         if div == 0 % 耳机移动距离为0，没动作
@@ -80,14 +82,14 @@ function cal_dir(cur_index)
                 
             else % 方向不一致，旋转或者倾斜
                 mov = cfg.rotation;
-            end
-            
+            end 
         end
         
     end
     
     if mov == cfg.static % 静止
         str = "静止";
+        pos3 = cfg.O;
     elseif mov == cfg.surge % 前后移动
         str = "前后移动";
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
@@ -99,27 +101,30 @@ function cal_dir(cur_index)
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
     elseif mov == cfg.roll % 左右倾斜
         str = "左右倾斜";
-        pos3 = cfg.pos2(cur_index-1, :);
+        pos3 = cfg.O;
     elseif mov ==  cfg.pitch % 前后俯仰
         str = "前后俯仰";
-        pos3 = cfg.pos2(cur_index-1, :);
+        pos3 = cfg.O;
     elseif mov == cfg.yaw % 左右旋转
         str = "左右旋转";
-        pos3 = cfg.pos2(cur_index-1, :);
+        pos3 = cfg.O;
     elseif mov == cfg.translation % 移动
         str = "移动";
-        pos3 = cfg.pos2(cur_index-1, :);
-    elseif mov == cfg.yaw % 左右旋转
-        str = "左右旋转";
-        pos3 = cfg.pos2(cur_index-1, :);
-    elseif mov == cfg.yaw % 左右旋转
-        str = "左右旋转";
-        pos3 = cfg.pos2(cur_index-1, :);
+        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
+    elseif mov == cfg.rotation % 转动
+        str = "转动";
+        pos3 = cfg.O;
+    elseif mov == cfg.pitch_surge % 俯仰或前后移动
+        str = "俯仰或前后移动";
+        pos3 = cfg.O;
     else
         str = "未定义动作";
-        pos3 = cfg.pos2(cur_index-1, :);
+        pos3 = cfg.O;
     end
-    set(cfg.handles.edit2,'string', str);%num2str(mov));
+    cfg.O = pos3;
+    set(cfg.handles.edit5,'string', num2str(l_r_angle));
+    set(cfg.handles.edit6,'string', num2str(l_d_angle));
+    set(cfg.handles.edit7,'string', str);%num2str(mov));
     cfg.pos3 = [cfg.pos3; pos3];
     cfg.mov = [cfg.mov; mov];
     

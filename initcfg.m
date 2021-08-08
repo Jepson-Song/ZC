@@ -266,5 +266,5 @@ niconfig.pitch = 5; % 前后俯仰
 niconfig.yaw = 6; % 左右旋转
 niconfig.translation = -1; % 平移/移动
 niconfig.rotation = -2; % 转动
-niconfig.pitch_surge = -3; % 转动
+niconfig.pitch_surge = -3; % 
 end
