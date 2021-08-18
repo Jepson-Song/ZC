@@ -63,27 +63,27 @@ function cal_dir(cur_index)
 %             end
 %         end
         
-        %% 分类思路2
-        if div == 0 % 耳机移动距离为0，没动作
-            mov = 0;
-        else
-            % 两耳机移动方向是否一致
-            if l_r_angle < 90 % 方向一致，平移或者俯仰
-%                 if l_d_angle > 90
-%                     l_d_angle = 180 - l_d_angle;
+%         %% 分类思路2
+%         if div == 0 % 耳机移动距离为0，没动作
+%             mov = 0;
+%         else
+%             % 两耳机移动方向是否一致
+%             if l_r_angle < 90 % 方向一致，平移或者俯仰
+% %                 if l_d_angle > 90
+% %                     l_d_angle = 180 - l_d_angle;
+% %                 end
+%                 
+%                 % 耳机移动方向和视线方向的关系
+%                 if l_d_angle > 45 && l_d_angle <135 % 垂直关系，左右或上下移动
+%                     mov = cfg.translation;
+%                 else % 平行关系，可能是前后移动也可能是俯仰
+%                     mov = cfg.pitch_surge;
 %                 end
-                
-                % 耳机移动方向和视线方向的关系
-                if l_d_angle > 45 && l_d_angle <135 % 垂直关系，左右或上下移动
-                    mov = cfg.translation;
-                else % 平行关系，可能是前后移动也可能是俯仰
-                    mov = cfg.pitch_surge;
-                end
-                
-            else % 方向不一致，旋转或者倾斜
-                mov = cfg.rotation;
-            end 
-        end
+%                 
+%             else % 方向不一致，旋转或者倾斜
+%                 mov = cfg.rotation;
+%             end 
+%         end
 
 %         %% 思路3
 %         m = (pos1 + pos2)/2;
@@ -96,6 +96,9 @@ function cal_dir(cur_index)
 %         else
 %             mov = cfg.rotation;
 %         end
+
+        %% 思路4，默认为转动，特殊情况下认为是移动
+        mov = cfg.rotation;
         
     end
     

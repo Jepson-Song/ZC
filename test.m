@@ -106,7 +106,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 global  cfg
 
 dev = daq.createSession('ni');
-dev.DurationInSeconds = cfg.duration;
+dev.DurationInSeconds = 120;%cfg.duration;
 dev.IsContinuous = 1;
 
 fprintf('\ncfg.nout\n');
@@ -187,6 +187,7 @@ function test_cal_dis(cur_index)
 
     
     i = cfg.testRcv;                 %for each mic
+    out = 0;
     if cfg.testSnd == 1
         
     cir1=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
@@ -224,17 +225,16 @@ function test_cal_dis(cur_index)
         % 用采样点粗粒度计算距离
         dis1(i) = peak1(i)*cfg.soundspeed/cfg.fs;
         
-        % 整数倍波长
-        dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength;
+%         % 整数倍波长
+%         dis1(i) = fix(dis1(i)/cfg.wavelength)*cfg.wavelength;
+%         
+%         real_part1 = real(m1(i));
+%         imag_part1 = imag(m1(i));
+% 
+%         phase1 = atan(imag_part1/real_part1);
+%         dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength;
         
-        real_part1 = real(m1(i));
-        imag_part1 = imag(m1(i));
-
-        phase1 = atan(imag_part1/real_part1);
-    %         phase = angle(imag_part1/real_part1);
-
-        % 用相位计算细粒度距离
-        dis1(i) = dis1(i) + phase1/(2*pi)*cfg.wavelength;
+        out = dis1(i);
         
         
     cfg.dis1 = [cfg.dis1; dis1];
@@ -279,15 +279,17 @@ function test_cal_dis(cur_index)
 
 
         dis2(i) = peak2(i)*cfg.soundspeed/cfg.fs;
-        dis2(i) = fix(dis2(i)/cfg.wavelength)*cfg.wavelength;
-
-        real_part2 = real(m2(i));
-        imag_part2 = imag(m2(i));
-
-        phase2 = atan(imag_part2/real_part2);
-
-        dis2(i) = dis2(i) + phase2/(2*pi)*cfg.wavelength;
         
+        
+%         dis2(i) = fix(dis2(i)/cfg.wavelength)*cfg.wavelength;
+%         
+%         real_part2 = real(m2(i));
+%         imag_part2 = imag(m2(i));
+% 
+%         phase2 = atan(imag_part2/real_part2);
+% 
+%         dis2(i) = dis2(i) + phase2/(2*pi)*cfg.wavelength;
+        out = dis2(i);
         
     cfg.dis2 = [cfg.dis2; dis2];
     
@@ -298,6 +300,7 @@ function test_cal_dis(cur_index)
             
     end
     
+        fprintf("【距离】: %.4f\n",vpa(out));
     
 end
 

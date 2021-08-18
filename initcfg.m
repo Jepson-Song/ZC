@@ -223,7 +223,9 @@ niconfig.chose2 = [4, 5, 6];
 %     end
 % end
 % niconfig.init_dis = niconfig.init_dis';
-niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
+% niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
+niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0;
+                        0 0 0 0.0759 0.0723 0.0723];
 niconfig.handles = [];
 niconfig.SIG_LOS = 4;
 
