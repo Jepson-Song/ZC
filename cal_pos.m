@@ -29,11 +29,13 @@ function [pos1, pos2, pos3] = solve_equations(cur_index) %solve_equations(dis1, 
     global  cfg
     
 %     chose1 = cfg.chose1(cur_index, :);
-    chose1 = find(cfg.dis1(cur_index, :)~=-1);
+    chose1 = find(cfg.dis1(cur_index, :)~=-1)
 %     whos chose1
     qos1 = cfg.Q(chose1, :);
 %     whos qos1
-    dis1 = cfg.dis1(cur_index, chose1);
+    alldis1 = cfg.dis1(cur_index, :)
+    dis1 = cfg.dis1(cur_index, chose1)
+%     chose2 = cfg.chose2(cur_index, :);
     chose2 = find(cfg.dis2(cur_index, :)~=-1);
     qos2 = cfg.Q(chose2, :);
     dis2 = cfg.dis2(cur_index, chose2);

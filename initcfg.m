@@ -207,8 +207,8 @@ niconfig.mov = []; % movement
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
 niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
 
-niconfig.chose1 = [1, 2, 3];
-niconfig.chose2 = [4, 5, 6];
+niconfig.chose1 = [];
+niconfig.chose2 = [];
 
 
 % 初始距离

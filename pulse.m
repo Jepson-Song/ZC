@@ -122,8 +122,8 @@ function init_para()
     cfg.mov = [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
-    cfg.init_dis = [0.069 0.069 0.060 100 100 100;
-                    100 100 100 0.077 0.069 0.075];%ones(cfg.nout, cfg.nin)*100;
+%     cfg.init_dis = [0.069 0.069 0.060 100 100 100;
+%                     100 100 100 0.077 0.069 0.075];%ones(cfg.nout, cfg.nin)*100;
     if strcmp(cfg.signal, 'zc')==1
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;

@@ -74,9 +74,9 @@ function cal_dis_2O6I(cur_index)
         end
         
     end
-    
+    dis1
     [val, index1] = sort(SIGQUAL1);
-    chose1 = index1(cfg.nin-2:cfg.nin)
+    chose1 = index1(cfg.nin-2:cfg.nin);
     [val, index2] = sort(SIGQUAL2);
     chose2 = index2(cfg.nin-2:cfg.nin);
     
@@ -95,21 +95,21 @@ function cal_dis_2O6I(cur_index)
     
     %% 真实距离
     % 零点校准
-    dis1 = dis1-cfg.init_dis(1, :);
+    dis1 = dis1-cfg.init_dis(1, :)
     dis2 = dis2-cfg.init_dis(2, :);
     
     % 不校准直接用计算出来的坐绝对距离
-    notchose1 = index1(1:cfg.nin-3)
+    notchose1 = index1(1:cfg.nin-3);
     notchose2 = index2(1:cfg.nin-3);
-    dis1(notchose1) = ones(1, 3)*-1;
+    dis1(notchose1) = ones(1, 3)*-1
     dis2(notchose2) = ones(1, 3)*-1;
     
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
-    cfg.chose1 = [cfg.chose1, chose1];
-    cfg.chose2 = [cfg.chose2, chose2];
+    cfg.chose1 = [cfg.chose1; chose1];
+    cfg.chose2 = [cfg.chose2; chose2];
     
  
     
