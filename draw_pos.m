@@ -6,14 +6,23 @@ function draw_pos(cur_index)
         cfg.timeTree = cfg.timeTree + 1;
 
         if cfg.drawPos == 1
-            p1 = cfg.pos1(cur_index, :);
-            p2 = cfg.pos2(cur_index, :);
             
-            head = [p1; p2;];
-                plot3(cfg.figure5, head(:, 1), head(:, 2), head(:, 3), 'b.-');
-                plot(cfg.figure6, head(:, 1), head(:, 3), 'b.-');
-                plot(cfg.figure7, head(:, 1), head(:, 2), 'b.-');
-                plot(cfg.figure8, head(:, 2), head(:, 3), 'b.-');
+            if cfg.drawStyle == 1
+                plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+                plot(cfg.figure6, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
+                plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
+                plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+            else
+            
+                p1 = cfg.pos1(cur_index, :);
+                p2 = cfg.pos2(cur_index, :);
+
+                head = [p1; p2;];
+                    plot3(cfg.figure5, head(:, 1), head(:, 2), head(:, 3), 'b.-');
+                    plot(cfg.figure6, head(:, 1), head(:, 3), 'b.-');
+                    plot(cfg.figure7, head(:, 1), head(:, 2), 'b.-');
+                    plot(cfg.figure8, head(:, 2), head(:, 3), 'b.-');
+            end
                 
 %             % 会议室
 %             myxlim = [1.0 1.6];

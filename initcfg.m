@@ -242,7 +242,8 @@ niconfig.drawCir = 1;
 niconfig.drawDis = 1;
 niconfig.drawPos = 1;
 niconfig.drawDir = 1;
-niconfig.drawVec = 0;
+% niconfig.drawVec = 0;
+niconfig.drawStyle = 1;
 
 niconfig.choseCorrect = 0;
 niconfig.lastDataNum = '0';

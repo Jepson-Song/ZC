@@ -246,11 +246,15 @@ function processData(src,event)
 
         % 计算坐标 
         cal_pos(cur_index);
-%         draw_pos(cur_index);
+        if cfg.drawStyle == 1
+        draw_pos(cur_index);
+        end
         
         % 计算方向
+        if cfg.drawStyle ~= 1
         cal_dir(cur_index);
         draw_dir(cur_index);
+        end
         
         cfg.cur_index = cur_index;
     end
