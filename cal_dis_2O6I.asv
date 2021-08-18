@@ -28,29 +28,29 @@ function cal_dis_2O6I(cur_index)
         
         data_fft=fft(data);                 %FFT
 
-        temp_fft1=zeros(size(data));     
+        temp_fft=zeros(size(data));     
         temp_fft2=zeros(size(data));       
         
-        temp_fft1((cfg.zclen/2-(cfg.zc_l-1)/2)+1:2:(cfg.zclen/2+(cfg.zc_l-1)/2-1))=data_fft(cfg.leftpoint+1:2:cfg.rightpoint-1).*cfg.zc_fft1(2:2:end-1)';
+        temp_fft((cfg.zclen/2-(cfg.zc_l-1)/2)+1:2:(cfg.zclen/2+(cfg.zc_l-1)/2-1))=data_fft(cfg.leftpoint+1:2:cfg.rightpoint-1).*cfg.zc_fft1(2:2:end-1)';
         temp_fft2((cfg.zclen/2-(cfg.zc_l-1)/2):2:(cfg.zclen/2+(cfg.zc_l-1)/2))=data_fft(cfg.leftpoint:2:cfg.rightpoint).*cfg.zc_fft2(1:2:end)';
  
-        cir1 = ifft(fftshift(temp_fft1,1));  %ifft and get the CIR
-        cir1 = conj(cir1);
+        cir = ifft(fftshift(temp_fft,1));  %ifft and get the CIR
+        cir = conj(cir);
 %         cir1(:, i) = cir;      
         
         cir2 = ifft(fftshift(temp_fft2,1));  %ifft and get the CIR
         cir2 = conj(cir2);
 %         cir2(:, i) = cir;
         
-        [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i))));
-        peak1 = cfg.left_bd(1, i) + p1 - 1;
+        [tm1, p] = max(abs(cir(cfg.left_bd(1, i):cfg.right_bd(1, i))));
+        peak = cfg.left_bd(1, i) + p - 1;
 %         m = cir(peak);
 
-        [tm2, p2] = max(abs(cir1(cfg.left_bd(2, i):cfg.right_bd(2, i))));
+        [tm2, p2] = max(abs(cir(cfg.left_bd(2, i):cfg.right_bd(2, i))));
         peak2 = cfg.left_bd(2, i) + p2 - 1;
 
         % 用采样点粗粒度计算距离
-        d1 = peak1*cfg.soundspeed/cfg.fs;
+        d1 = peak*cfg.soundspeed/cfg.fs;
         d2 = peak2*cfg.soundspeed/cfg.fs;
 
 %         % 用相位计算细粒度距离
@@ -65,8 +65,7 @@ function cal_dis_2O6I(cur_index)
 %         chose1(i) = i;
 %         chose2(i) = i;
 
-        SIGQUAL1(i) = tm1/(sum(abs(cir1(1:cfg.zclen/2)))-tm1)*(cfg.zclen/2-1);
-        SIGQUAL2(i) = tm2/(sum(abs(cir2(1:cfg.zclen/2)))-tm2)*(cfg.zclen/2-1);
+        SIGQUAL2(i) = tm2/(sum(abs(cir2(1:cfg.zclen/2)))-tm);
         
         % 更新初始距离
         if SIGQUAL2(i) > cfg.SIG_LOS && dis2(i) < cfg.init_dis(2, i)
@@ -74,8 +73,6 @@ function cal_dis_2O6I(cur_index)
         end
         
     end
-    
-%     SIGQUAL1
     
     t = toc(dis_tim);
     cfg.timeTree = cfg.timeTree - 1;
