@@ -16,6 +16,7 @@ function cal_dis_2O6I(cur_index)
     chose1 = zeros(1, 3);
     
 %     cir2=zeros(cfg.nin,cfg.zclen,cfg.zcrep);  %we have 3 frames 960*3 points for 3 mics
+    cir2=zeros(cfg.zclen, cfg.nin);  %we have 3 frames 960*3 points for 3 mics
     dis2 = zeros(1, cfg.nin);
     SIGQUAL2 = zeros(1, cfg.nin);
     chose2 = zeros(1, 3);
@@ -34,12 +35,12 @@ function cal_dis_2O6I(cur_index)
         temp_fft1((cfg.zclen/2-(cfg.zc_l-1)/2)+1:2:(cfg.zclen/2+(cfg.zc_l-1)/2-1))=data_fft(cfg.leftpoint+1:2:cfg.rightpoint-1).*cfg.zc_fft1(2:2:end-1)';
         temp_fft2((cfg.zclen/2-(cfg.zc_l-1)/2):2:(cfg.zclen/2+(cfg.zc_l-1)/2))=data_fft(cfg.leftpoint:2:cfg.rightpoint).*cfg.zc_fft2(1:2:end)';
  
-        cir1 = ifft(fftshift(temp_fft1,1));  %ifft and get the CIR
-        cir1 = conj(cir1);
+        cir = ifft(fftshift(temp_fft1,1));  %ifft and get the CIR
+        cir1(:, i) = conj(cir);
 %         cir1(:, i) = cir;      
         
-        cir2 = ifft(fftshift(temp_fft2,1));  %ifft and get the CIR
-        cir2 = conj(cir2);
+        cir = ifft(fftshift(temp_fft2,1));  %ifft and get the CIR
+        cir2(:, i) = conj(cir);
 %         cir2(:, i) = cir;
         
         [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i))));
@@ -119,7 +120,7 @@ function cal_dis_2O6I(cur_index)
         cfg.timeTree = cfg.timeTree + 1;
         
         legend_line = [];
-        for i=1:1:cfg.nin/2
+        for i=1:1:cfg.nin
             h = plot(cfg.figure(1, 1),[1:1:cfg.zclen/2],abs(cir1(1:end/2,i)),cfg.color(i));
 %                 [peak1(i), peak1(i)],[0, abs(m1(i))], strcat('--*',cfg.color(i)));
             hold(cfg.figure(1, 1),'on');
@@ -133,12 +134,12 @@ function cal_dis_2O6I(cur_index)
         
         
         legend_line = [];
-        for i=cfg.nin/2+1:1:cfg.nin
+        for i=1:1:cfg.nin
             h = plot(cfg.figure(2, 1),[1:1:cfg.zclen/2],abs(cir2(1:end/2,i)),cfg.color(i));
 %                 [peak2(i), peak2(i)],[0, abs(m2(i))], strcat('--*',cfg.color(i)));
             hold(cfg.figure(2, 1),'on');
             legend_line = [legend_line, h(1)];
-            legend_str{i-cfg.nin/2} = ['距离',num2str(i)];
+            legend_str{i} = ['距离',num2str(i)];
         end
         hold(cfg.figure(2, 1),'off')
         title(cfg.figure(2, 1),'右耳机CIR')

@@ -157,7 +157,7 @@ end
 
 
 
-niconfig.color = ["r", "g", "b","r", "g", "b"];
+niconfig.color = ["r", "g", "b","c", "m", "y"];
 
 
 niconfig.A = [0 -0.05 0];
