@@ -148,8 +148,7 @@ function cal_dir(cur_index)
     
     % 调整向量方向
     if cur_index == 1
-        init_dir = [-1 -1 0];
-        if dir.*init_dir < 0
+        if dir.*cfg.init_dir < 0
             dir = -1*dir;
         end
         

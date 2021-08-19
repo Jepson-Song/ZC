@@ -270,4 +270,8 @@ niconfig.yaw = 6; % 左右旋转
 niconfig.translation = -1; % 平移/移动
 niconfig.rotation = -2; % 转动
 niconfig.pitch_surge = -3; % 
+
+niconfig.init_dir = [-1 -1 0]; % 初始时大概视线方向
+niconfig.init_pos1 = [0 1 0]; % 初始时左耳机的大概位置
+niconfig.init_pos2 = [1 0 0]; % 初始时右耳机的大概位置
 end

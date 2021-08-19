@@ -70,7 +70,7 @@ function cal_dis_2O6I(cur_index)
         end
         
     end
-    dis1
+%     dis1
     [val, index1] = sort(SIGQUAL1);
     chose1 = index1(cfg.nin-2:cfg.nin);
     [val, index2] = sort(SIGQUAL2);
