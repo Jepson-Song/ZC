@@ -35,19 +35,14 @@ function cal_dis_2O6I(cur_index)
         temp_fft1((cfg.zclen/2-(cfg.zc_l-1)/2)+1:2:(cfg.zclen/2+(cfg.zc_l-1)/2-1))=data_fft(cfg.leftpoint+1:2:cfg.rightpoint-1).*cfg.zc_fft1(2:2:end-1)';
         temp_fft2((cfg.zclen/2-(cfg.zc_l-1)/2):2:(cfg.zclen/2+(cfg.zc_l-1)/2))=data_fft(cfg.leftpoint:2:cfg.rightpoint).*cfg.zc_fft2(1:2:end)';
  
-        cir = ifft(fftshift(temp_fft1,1));  %ifft and get the CIR
-        cir1(:, i) = conj(cir);
-%         cir1(:, i) = cir;      
+        cir1(:, i) = conj(ifft(fftshift(temp_fft1,1))); %ifft and get the CIR
+        cir2(:, i) = conj(ifft(fftshift(temp_fft2,1))); %ifft and get the CIR
         
-        cir = ifft(fftshift(temp_fft2,1));  %ifft and get the CIR
-        cir2(:, i) = conj(cir);
-%         cir2(:, i) = cir;
-        
-        [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i))));
+        [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i), i)));
         peak1 = cfg.left_bd(1, i) + p1 - 1;
 %         m = cir(peak);
 
-        [tm2, p2] = max(abs(cir1(cfg.left_bd(2, i):cfg.right_bd(2, i))));
+        [tm2, p2] = max(abs(cir2(cfg.left_bd(2, i):cfg.right_bd(2, i), i)));
         peak2 = cfg.left_bd(2, i) + p2 - 1;
 
         % 用采样点粗粒度计算距离
@@ -96,14 +91,14 @@ function cal_dis_2O6I(cur_index)
     
     %% 真实距离
     % 零点校准
-    dis1 = dis1-cfg.init_dis(1, :)
+    dis1 = dis1-cfg.init_dis(1, :);
     dis2 = dis2-cfg.init_dis(2, :);
     
     % 不校准直接用计算出来的坐绝对距离
     notchose1 = index1(1:cfg.nin-3);
     notchose2 = index2(1:cfg.nin-3);
-    dis1(notchose1) = ones(1, 3)*-1
-    dis2(notchose2) = ones(1, 3)*-1;
+    dis1(notchose1) = ones(1, 3)*0;
+    dis2(notchose2) = ones(1, 3)*0;
     
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
