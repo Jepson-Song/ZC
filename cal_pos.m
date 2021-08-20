@@ -28,9 +28,9 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
 
     global  cfg
     
-    chose1 = find(cfg.dis1(cur_index, :)~=0)
-    qos1 = cfg.Q(chose1, :)
-    dis1 = cfg.dis1(cur_index, chose1)
+    chose1 = find(cfg.dis1(cur_index, :)~=0);
+    qos1 = cfg.Q(chose1, :);
+    dis1 = cfg.dis1(cur_index, chose1);
     
 %     chose2 = cfg.chose2(cur_index, :);
     chose2 = find(cfg.dis2(cur_index, :)~=0);
@@ -88,6 +88,7 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     pos2_1 = double(real([x2(1), y2(1), z2(1)]));
     pos2_2 = double(real([x2(2), y2(2), z2(2)]));
     
+    % 从两个解里选择距离上一个位置更近的解作为新的位置
     if get_distance(last_pos1, pos1_1) < get_distance(last_pos1, pos1_2)
         pos1 = pos1_1;
     else
@@ -99,6 +100,17 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     else
         pos2 = pos2_2;
     end
+    
+    % 如果新的位置与上一个位置距离过大，则用上一个位置作为新的位置（主要是为了避免错误解，解决不了接收端切换时跳变的问题）
+    if cur_index ~= 1
+        if get_distance(pos1, last_pos1) > 0.5
+            pos1 = last_pos1;
+        end
+        if get_distance(pos2, last_pos2) > 0.5
+            pos2 = last_pos2;
+        end
+    end
+        
     
     
     
