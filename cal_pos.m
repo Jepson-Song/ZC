@@ -43,13 +43,31 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     cfg.timeTree = cfg.timeTree + 1;
     syms x1 y1 z1 x2 y2 z2
 
+    eq = tic;
     eq1 = (x1-qos1(1, 1))^2+(y1-qos1(1, 2))^2+(z1-qos1(1, 3))^2==dis1(1)^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+    eq = tic;
     eq2 = (x1-qos1(2, 1))^2+(y1-qos1(2, 2))^2+(z1-qos1(2, 3))^2==dis1(2)^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+    eq = tic;
     eq3 = (x1-qos1(3, 1))^2+(y1-qos1(3, 2))^2+(z1-qos1(3, 3))^2==dis1(3)^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+    eq = tic;
     eq4 = (x2-qos2(1, 1))^2+(y2-qos2(1, 2))^2+(z2-qos2(1, 3))^2==dis2(1)^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+    eq = tic;
     eq5 = (x2-qos2(2, 1))^2+(y2-qos2(2, 2))^2+(z2-qos2(2, 3))^2==dis2(2)^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+    eq = tic;
     eq6 = (x2-qos2(3, 1))^2+(y2-qos2(3, 2))^2+(z2-qos2(3, 3))^2==dis2(3)^2;
-    eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
+    t = toc(eq);
+    fprintf("方程1用时：%.4f\n", vpa(t));
+%     eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
     
     t = toc(equations);
     cfg.timeTree = cfg.timeTree - 1;
@@ -73,6 +91,13 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
         fprintf(" # ");
     end
     fprintf("解方程用时：%.4f\n", vpa(t));
+    
+    
+%     solve = tic;
+%     [x1, y1, z1] = fun(qos1, dis1)
+%     [x2, y2, z2] = fun(qos2, dis2);
+%     t = toc(solve);
+%     fprintf("解方程用时：%.4f\n", vpa(t));
     
     if cur_index == 1
         last_pos1 = cfg.init_pos1;
@@ -166,4 +191,49 @@ function res = get_distance(a, b)
     c = a-b;
     res = sqrt(sum(c.*c));
 
+end
+
+%% 化简方程求解
+function [rx, ry, rz] = fun(qos, d)
+
+%     x1 = qos(1, 1);    y1 = qos(1, 2);    z1 = qos(1, 2);
+%     x2 = qos(2, 1);    y2 = qos(2, 2);    z2 = qos(2, 2);
+%     x3 = qos(3, 1);    y3 = qos(3, 2);    z3 = qos(3, 2);
+    
+    x = qos(:, 1)'
+    y = qos(:, 2)';
+    z = qos(:, 3)';
+    
+%     a = x.*x + y.*y + z.*z - d.*d;
+%     X = zeros(3, 3);
+%     A = zeors(3, 3);
+%     for i=1:1:3
+%         for j=1:1:13
+%             X(i, j) = x(i) - x(j);
+%             A(i, j) = 0.5*(a(i) - a(j));
+%         end
+%     end
+
+    a = x.*x + y.*y + z.*z - d.*d
+    X21 = x(2) - x(1);
+    X31 = x(3) - x(1);
+    Y21 = y(2) - y(1);
+    Y31 = y(3) - y(1);
+    Z21 = z(2) - z(1);
+    Z31 = z(3) - z(1);
+    A21 = 0.5*(a(2) - a(1));
+    A31 = 0.5*(a(3) - a(1));
+    D = X21*Y31 - Y21*X31;
+    B0 = (A21*Y31 - A31*Y21)/D;
+    B1 = (Y21*Z31 - Y31*Z21)/D;
+    C0 = (A31*X21 - A21*X31)/D;
+    C1 = (X31*Z21 - X21*Z31)/D;
+    E = B1^2 + C1^2 + 1;
+    F = B1*(B0-x(1))+C1*(C0-y(1))-z(1);
+    G = (B0-x(1))^2+(C0-y(1))^2+z(1)^2-d(1)^2;
+    delta = 4*F^2 - 4*E*G
+    rz = (-F+sqrt(F^2-E*G))/E;
+    rx = B0 + B1*rz;
+    ry = C0 + C1*rz;
+    
 end
