@@ -275,6 +275,7 @@ niconfig.class_num = 6; % 分类的数目
 niconfig.angle_num = 18; % 观测值编码时角度划分的数量
 niconfig.iter_numm = 10; % hmm训练时迭代最大次数
 niconfig.cut_len = 20; % 数据集切分的长度
+niconfig.cut_step = 5; % 数据集切分的长度
 
 
 

@@ -8,22 +8,14 @@ function make_dataset()
     for k=1:1:6
         
          % 先清空数据集
-        address = [cfg.dataAddress,'data\train\'];
+        address = [cfg.dataAddress,'data\'];
+
         fileFolder=fullfile(address);
+
         dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
         fileNames={dirOutput.name};
-        for index=1:length(fileNames)
-            fileName = fileNames(index);
-            fileName = fileName{1};
-            delete([address,fileName])
-        end
-        
-        address = [cfg.dataAddress,'data\test\'];
-        fileFolder=fullfile(address);
-        dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
-        fileNames={dirOutput.name};
-        for index=1:length(fileNames)
-            fileName = fileNames(index);
+        for i=1:length(fileNames)
+            fileName = fileNames(i);
             fileName = fileName{1};
             delete([address,fileName])
         end
@@ -36,22 +28,18 @@ function make_dataset()
     len = size(data, 1);
     
     % 对数据进行切分和处理
-    for num=1:1:len
-        index = num*cfg.cut_step;
-        if index+cfg.cut_len-1 > len
-            break
-        end
+    for i=1:1:len-cfg.cut_len+1
 %         fileName = ['1',num2str(i,'%04d'), '_pos.txt'];
 %         fprintf("【创建文件保存子数据】 "+fileName+"\n");
 %         address = [cfg.dataAddress,'data\',fileName];
 %         sub_data = data(i:i+sub_len-1, :);
 %         save(address, 'sub_data', '-ascii')
         
-        fileName = [num2str(k),num2str(num,'%04d'), '.txt'];
+        fileName = [num2str(k),num2str(i,'%04d'), '.txt'];
         fprintf("【创建文件保存子数据】 "+fileName+"\n");
         train_address = [cfg.dataAddress,'data\train\',fileName];
         test_address = [cfg.dataAddress,'data\test\',fileName];
-        sub_data = data(index:index+cfg.cut_len-1, 1:3);
+        sub_data = data(i:i+cfg.cut_len-1, 1:3);
 %         sub_data = sub_data - sub_data(1, :);
 %         tmp = zeros(sub_len, 1);
 %         for j=1:1:sub_len
@@ -73,15 +61,13 @@ function make_dataset()
             
             tmp = [tmp; code1+code2];
         end
-        
-        % 以4:1的比例生成训练集和测试集
+        % 以4:1的比例生成训练集和
         r = rand;
         if r <= 0.8
             save(train_address, 'tmp', '-ascii')
         else
             save(test_address, 'tmp', '-ascii')
         end
-        
     end
     end
 

@@ -79,7 +79,7 @@ function hmm()
 %     whos a
     fileNames={dirOutput.name};
     len = length(fileNames);
-    test_num = 10000;
+    test_num = 1000;
     cnt = 0;
     label_list = [];
     pred_list = [];
