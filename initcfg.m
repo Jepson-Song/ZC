@@ -271,6 +271,13 @@ niconfig.translation = -1; % 平移/移动
 niconfig.rotation = -2; % 转动
 niconfig.pitch_surge = -3; % 
 
+niconfig.class_num = 6; % 分类的数目
+niconfig.angle_num = 18; % 观测值编码时角度划分的数量
+niconfig.iter_numm = 10; % hmm训练时迭代最大次数
+niconfig.cut_len = 20; % 数据集切分的长度
+
+
+
 niconfig.init_dir = [-1 -1 0]; % 初始时大概视线方向
 niconfig.init_pos1 = [0.3 1 0]; % 初始时左耳机的大概位置
 niconfig.init_pos2 = [1 0.3 0]; % 初始时右耳机的大概位置

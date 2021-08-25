@@ -1,16 +1,34 @@
 function make_dataset()
     
     global cfg
+    
+   
+    
+    % 遍历每个类别的数据
     for k=1:1:6
+        
+         % 先清空数据集
+        address = [cfg.dataAddress,'data\'];
+
+        fileFolder=fullfile(address);
+
+        dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
+        fileNames={dirOutput.name};
+        for i=1:length(fileNames)
+            fileName = fileNames(i);
+            fileName = fileName{1};
+            delete([address,fileName])
+        end
+        
+        
     fileName = [num2str(k), '_pos.txt'];
     fprintf("【从文件读取距离】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     data = load(address);
     len = size(data, 1);
     
-    sub_len = 10;
-    
-    for i=1:1:len-sub_len+1
+    % 对数据进行切分和处理
+    for i=1:1:len-cfg.cut_len+1
 %         fileName = ['1',num2str(i,'%04d'), '_pos.txt'];
 %         fprintf("【创建文件保存子数据】 "+fileName+"\n");
 %         address = [cfg.dataAddress,'data\',fileName];
@@ -20,23 +38,26 @@ function make_dataset()
         fileName = [num2str(k),num2str(i,'%04d'), '.txt'];
         fprintf("【创建文件保存子数据】 "+fileName+"\n");
         address = [cfg.dataAddress,'data\',fileName];
-        sub_data = data(i:i+sub_len-1, 1:3);
+        sub_data = data(i:i+cfg.cut_len-1, 1:3);
 %         sub_data = sub_data - sub_data(1, :);
 %         tmp = zeros(sub_len, 1);
 %         for j=1:1:sub_len
 %             tmp(j, 1) = get_distance(sub_data(j, :),sub_data(1, :));
 %         end
-        % Vector Quantization 观测值编码
-        div_num = 18;
-        div_sita = 2*pi/div_num;
+
+        % Vector Quantization 对数据进行观测值编码
+        angle_num = cfg.angle_num;
+        div_angel = 2*pi/angle_num;
         tmp = [];
-        for j=2:1:sub_len
-            dir = sub_data(j, :) - sub_data(j-1, :);
-%             whos dir
-            sita = get_angle(dir(1), dir(2));
-            code1 = floor(sita/div_sita)*div_num;
-            gamma = get_angle(sqrt(dir(1)^2+dir(2)^2),dir(3));
-            code2 = floor(gamma/div_sita)+1;
+        for j=2:1:cfg.cut_len
+            mov = sub_data(j, :) - sub_data(j-1, :);
+            
+            angle1 = get_angle(mov(1), mov(2));
+            code1 = floor(angle1/div_angel)*angle_num;
+            
+            angle2 = get_angle(sqrt(mov(1)^2+mov(2)^2),mov(3));
+            code2 = floor(angle2/div_angel)+1;
+            
             tmp = [tmp; code1+code2];
         end
         save(address, 'tmp', '-ascii')
