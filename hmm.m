@@ -19,7 +19,7 @@ function hmm()
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % training data
     fprintf("开始训练第1个HMM模型");
-    data = load_dataset(1);
+    data = load_dataset(1, 'train');
     % improve guess of parameters using EM
     [LL1, prior1, transmat1, obsmat1] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -27,7 +27,7 @@ function hmm()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fprintf("开始训练第2个HMM模型");
-    data = load_dataset(2);
+    data = load_dataset(2, 'train');
     % improve guess of parameters using EM
     [LL2, prior2, transmat2, obsmat2] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -35,7 +35,7 @@ function hmm()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fprintf("开始训练第3个HMM模型");
-    data = load_dataset(3);
+    data = load_dataset(3, 'train');
     % improve guess of parameters using EM
     [LL3, prior3, transmat3, obsmat3] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -43,7 +43,7 @@ function hmm()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fprintf("开始训练第4个HMM模型");
-    data = load_dataset(4);
+    data = load_dataset(4, 'train');
     % improve guess of parameters using EM
     [LL4, prior4, transmat4, obsmat4] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -51,7 +51,7 @@ function hmm()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fprintf("开始训练第5个HMM模型");
-    data = load_dataset(5);
+    data = load_dataset(5, 'train');
     % improve guess of parameters using EM
     [LL5, prior5, transmat5, obsmat5] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -59,7 +59,7 @@ function hmm()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fprintf("开始训练第6个HMM模型");
-    data = load_dataset(6);
+    data = load_dataset(6, 'train');
     % improve guess of parameters using EM
     [LL6, prior6, transmat6, obsmat6] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
@@ -70,7 +70,7 @@ function hmm()
 
 %% test
 
-    address = [cfg.dataAddress,'data\'];
+    address = [cfg.dataAddress,'data\test\'];
     
     fileFolder=fullfile(address);
 

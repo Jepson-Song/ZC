@@ -1,7 +1,7 @@
-function data = load_dataset(label)
+function data = load_dataset(label, str)
 %     label = 1;
     global cfg
-    address = [cfg.dataAddress,'data\'];
+    address = [cfg.dataAddress,'data\',str,'\'];
     
     fileFolder=fullfile(address);
 

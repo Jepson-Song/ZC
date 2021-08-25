@@ -22,7 +22,7 @@ function make_dataset()
         
         
     fileName = [num2str(k), '_pos.txt'];
-    fprintf("【从文件读取距离】 "+fileName+"\n");
+    fprintf("【从文件读取位置数据】 "+fileName+"\n");
     address = [cfg.dataAddress,fileName];
     data = load(address);
     len = size(data, 1);
@@ -37,7 +37,8 @@ function make_dataset()
         
         fileName = [num2str(k),num2str(i,'%04d'), '.txt'];
         fprintf("【创建文件保存子数据】 "+fileName+"\n");
-        address = [cfg.dataAddress,'data\',fileName];
+        train_address = [cfg.dataAddress,'data\train\',fileName];
+        test_address = [cfg.dataAddress,'data\test\',fileName];
         sub_data = data(i:i+cfg.cut_len-1, 1:3);
 %         sub_data = sub_data - sub_data(1, :);
 %         tmp = zeros(sub_len, 1);
@@ -60,7 +61,12 @@ function make_dataset()
             
             tmp = [tmp; code1+code2];
         end
-        save(address, 'tmp', '-ascii')
+        r = rand;
+        if r <= 0.8
+            save(train_address, 'tmp', '-ascii')
+        else
+            save(test_address, 'tmp', '-ascii')
+        end
     end
     end
 
