@@ -8,7 +8,7 @@ function make_dataset()
     for k=1:1:6
         
          % 先清空数据集
-        address = [cfg.dataAddress,'data\train\'];
+        address = [cfg.dataAddress,cfg.data_name,'\train\'];
         fileFolder=fullfile(address);
         dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
         fileNames={dirOutput.name};
@@ -18,7 +18,7 @@ function make_dataset()
             delete([address,fileName])
         end
         
-        address = [cfg.dataAddress,'data\test\'];
+        address = [cfg.dataAddress,cfg.data_name,'\test\'];
         fileFolder=fullfile(address);
         dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
         fileNames={dirOutput.name};
@@ -49,8 +49,8 @@ function make_dataset()
         
         fileName = [num2str(k),num2str(num,'%04d'), '.txt'];
         fprintf("【创建文件保存子数据】 "+fileName+"\n");
-        train_address = [cfg.dataAddress,'data\train\',fileName];
-        test_address = [cfg.dataAddress,'data\test\',fileName];
+        train_address = [cfg.dataAddress,cfg.data_name,'\train\',fileName];
+        test_address = [cfg.dataAddress,cfg.data_name,'\test\',fileName];
         sub_data = data(index:index+cfg.cut_len-1, 1:3);
 %         sub_data = sub_data - sub_data(1, :);
 %         tmp = zeros(sub_len, 1);

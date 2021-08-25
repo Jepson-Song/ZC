@@ -70,7 +70,7 @@ function hmm()
 
 %% test
 
-    address = [cfg.dataAddress,'data\test\'];
+    address = [cfg.dataAddress,cfg.data_name,'\test\'];
     
     fileFolder=fullfile(address);
 
