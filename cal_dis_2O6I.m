@@ -70,11 +70,7 @@ function cal_dis_2O6I(cur_index)
         end
         
     end
-%     dis1
-    [val, index1] = sort(SIGQUAL1);
-    chose1 = index1(cfg.nin-2:cfg.nin);
-    [val, index2] = sort(SIGQUAL2);
-    chose2 = index2(cfg.nin-2:cfg.nin);
+
     
     t = toc(dis_tim);
     cfg.timeTree = cfg.timeTree - 1;
@@ -94,9 +90,21 @@ function cal_dis_2O6I(cur_index)
     dis1 = dis1-cfg.init_dis(1, :);
     dis2 = dis2-cfg.init_dis(2, :);
     
+    %     dis1
+    [val, index1] = sort(SIGQUAL1);
+    chose1 = index1(cfg.nin-2:cfg.nin);
+    [val, index2] = sort(SIGQUAL2);
+    chose2 = index2(cfg.nin-2:cfg.nin);
+    
     % 不校准直接用计算出来的坐绝对距离
     notchose1 = index1(1:cfg.nin-3);
     notchose2 = index2(1:cfg.nin-3);
+
+    chose1 = [1 2 3];
+    chose2 = [4 5 6];
+    notchose1 = [4 5 6];
+    notchose2 = [1 2 3];
+    
     dis1(notchose1) = ones(1, 3)*0;
     dis2(notchose2) = ones(1, 3)*0;
     

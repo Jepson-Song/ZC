@@ -524,18 +524,6 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     address = [cfg.dataAddress,fileName];
     pos_cor = [cfg.pos1,cfg.pos2];
     save(address, 'pos_cor', '-ascii')
-    % 保存修正后的法向量
-%     fileName = [prefix, '_dir_cor.txt'];
-    if cfg.choseCorrect == 0
-        fileName = [prefix, '_dir.txt'];
-        fprintf("【创建文件保存法向量】 "+fileName+"\n");
-    else
-        fileName = [prefix, '_dir_cor.txt'];
-        fprintf("【创建文件保存修正后法向量】 "+fileName+"\n");
-    end
-    address = [cfg.dataAddress,fileName];
-    dir_cor = cfg.dir;
-    save(address, 'dir_cor', '-ascii')
     fprintf("-----【完成保存位置】-----\n");
     
 end

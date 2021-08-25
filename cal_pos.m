@@ -83,7 +83,7 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
     
 %     ans1 = [x1, y1, z1];
-%     ans2 = [x2, y2, z2];
+%     ans2 = [x2, y2, z2]
     
     t = toc(solve);
     cfg.timeTree = cfg.timeTree - 1;
