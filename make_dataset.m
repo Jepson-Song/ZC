@@ -59,17 +59,16 @@ function make_dataset()
 %         end
 
         % Vector Quantization 对数据进行观测值编码
-        angle_num = cfg.angle_num;
-        div_angel = 2*pi/angle_num;
+        div_angle = 2*pi/cfg.angle_num;
         tmp = [];
         for j=2:1:cfg.cut_len
             mov = sub_data(j, :) - sub_data(j-1, :);
             
             angle1 = get_angle(mov(1), mov(2));
-            code1 = floor(angle1/div_angel)*angle_num;
+            code1 = floor(angle1/div_angle)*cfg.angle_num;
             
             angle2 = get_angle(sqrt(mov(1)^2+mov(2)^2),mov(3));
-            code2 = floor(angle2/div_angel)+1;
+            code2 = floor(angle2/div_angle)+1;
             
             tmp = [tmp; code1+code2];
         end

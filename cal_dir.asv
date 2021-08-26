@@ -8,23 +8,23 @@ function cal_dir(cur_index)
     pos1 = cfg.pos1(cur_index, :);
     pos2 = cfg.pos2(cur_index, :);
 %     pos3 = cfg.pos3(cur_index, :);
-    mov_class = 0;
+    mov = 0;
 
-%     if (cur_index==1)
-%         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-%         cfg.O = pos3;
-%         l_r_angle = -1;
-%         l_d_angle = -1;
-%         mov = 0;
-%     else
-%         last_index = cur_index - 1; % 上一帧
-%         l_vec = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向
-%         r_vec = pos2 - cfg.pos2(last_index, :); % 右耳机移动方向
-%         [div, l_r_angle] = get_angle(l_vec, r_vec);
-%         last_dir = cfg.dir(last_index, :); % 上一帧的视线方向
-%         [div2, l_d_angle] = get_angle(l_vec, last_dir);
-%         
-%         
+    if (cur_index==1)
+        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
+        cfg.O = pos3;
+        l_r_angle = -1;
+        l_d_angle = -1;
+        mov = 0;
+    else
+        last_index = cur_index - 1; % 上一帧
+        l_vec = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向
+        r_vec = pos2 - cfg.pos2(last_index, :); % 右耳机移动方向
+        [div, l_r_angle] = get_angle(l_vec, r_vec);
+        last_dir = cfg.dir(last_index, :); % 上一帧的视线方向
+        [div2, l_d_angle] = get_angle(l_vec, last_dir);
+        
+        
 %         %% 分类思路1
 %         % 根据移动向量长度是否为零判断是否有动作
 %         if div==0 % 长度为零，没动作。
@@ -100,75 +100,56 @@ function cal_dir(cur_index)
 %         %% 思路4，默认为转动，特殊情况下认为是移动
 %         mov = cfg.rotation;
 
-       
-%     set(cfg.handles.edit5,'string', num2str(l_r_angle));
-%     set(cfg.handles.edit6,'string', num2str(l_d_angle));
-        
-%     end
-    
-    %% hmm分类思路
-    class_tim = tic;
+        %% hmm分类思路
         % 计算观测状态obs
-        ons = 1;
         if cur_index == 1
-            obs = 1;
+            tmp = 1;
         else
-            last_index = cur_index - 1; % 上一帧
-            pos1_mov = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向
+            pos_mov
+            mov = sub_data(j, :) - sub_data(j-1, :);
             
-            div_angle = 2*pi/cfg.angle_num;
+            angle1 = get_angle(mov(1), mov(2));
+            code1 = floor(angle1/div_angel)*angle_num;
             
-            angle1 = get_angle2(pos1_mov(1), pos1_mov(2));
-            code1 = floor(angle1/div_angle)*cfg.angle_num;
+            angle2 = get_angle(sqrt(mov(1)^2+mov(2)^2),mov(3));
+            code2 = floor(angle2/div_angel)+1;
             
-            angle2 = get_angle2(sqrt(pos1_mov(1)^2+pos1_mov(2)^2),pos1_mov(3));
-            code2 = floor(angle2/div_angle)+1;
-            
-            obs = code1+code2;
-        end
-        cfg.obs = [cfg.obs, obs];
-        
-        % hmm分类
+            tmp = [tmp; code1+code2];
         if cur_index < cfg.cut_len
-            mov_class = cfg.static;
+            mov = cfg.static;
         else
-            obs_data = cfg.obs(cur_index-cfg.cut_len+1+1:cur_index);
-            mov_class = hmm_class(obs_data);
-        end
-        
-        
-    t = toc(class_tim);
-    fprintf("hmm分类用时：%.4f\n", vpa(t));
             
+        
+    end
     
-    if mov_class == cfg.static % 静止
+    if mov == cfg.static % 静止
         str = "静止";
         pos3 = cfg.O;
-    elseif mov_class == cfg.surge % 前后移动
+    elseif mov == cfg.surge % 前后移动
         str = "前后移动";
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-    elseif mov_class == cfg.sway % 左右移动
+    elseif mov == cfg.sway % 左右移动
         str = "左右移动";
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-    elseif mov_class == cfg.heave % 上下移动
+    elseif mov == cfg.heave % 上下移动
         str = "上下移动";
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-    elseif mov_class == cfg.roll % 左右倾斜
+    elseif mov == cfg.roll % 左右倾斜
         str = "左右倾斜";
         pos3 = cfg.O;
-    elseif mov_class ==  cfg.pitch % 前后俯仰
+    elseif mov ==  cfg.pitch % 前后俯仰
         str = "前后俯仰";
         pos3 = cfg.O;
-    elseif mov_class == cfg.yaw % 左右旋转
+    elseif mov == cfg.yaw % 左右旋转
         str = "左右旋转";
         pos3 = cfg.O;
-    elseif mov_class == cfg.translation % 移动
+    elseif mov == cfg.translation % 移动
         str = "移动";
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-    elseif mov_class == cfg.rotation % 转动
+    elseif mov == cfg.rotation % 转动
         str = "转动";
         pos3 = cfg.O;
-    elseif mov_class == cfg.pitch_surge % 俯仰或前后移动
+    elseif mov == cfg.pitch_surge % 俯仰或前后移动
         str = "俯仰或前后移动";
         pos3 = cfg.O;
     else
@@ -176,9 +157,11 @@ function cal_dir(cur_index)
         pos3 = cfg.O;
     end
     cfg.O = pos3;
+    set(cfg.handles.edit5,'string', num2str(l_r_angle));
+    set(cfg.handles.edit6,'string', num2str(l_d_angle));
     set(cfg.handles.edit7,'string', str);%num2str(mov));
     cfg.pos3 = [cfg.pos3; pos3];
-    cfg.mov = [cfg.mov; mov_class];
+    cfg.mov = [cfg.mov; mov];
     
 %     po = (pos1+pos2)/2;
     dir = get_dir(pos1, pos2, pos3);
@@ -250,30 +233,6 @@ function [div, angle] = get_angle(a, b)
         div = 1;
         angle = acos(dot(a,b)/(na*nb))*180/pi;
     end
-end
-
-
-%% 求角度
-function res = get_angle2(x, y)
-    
-    if x == 0
-        if y == 0
-            res = 0;
-        elseif y>0
-            res = pi/2;
-        else
-            res = 3*pi/2;
-        end
-    else
-        res = atan(y/x);
-        if x < 0
-            res = pi + res;
-        elseif x > 0 && y < 0
-            res = 2*pi + res;
-        end
-    end
-    
-
 end
 
 %% 求两点间距离

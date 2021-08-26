@@ -120,6 +120,7 @@ function init_para()
     cfg.pos3 = [];
     cfg.dir = [];
     cfg.mov = [];
+    cfg.obs= [];
     cfg.SIGQUAL1 = [];
     cfg.SIGQUAL2 = [];
 %     cfg.init_dis = [0.069 0.069 0.060 100 100 100;
@@ -784,6 +785,14 @@ function pushbutton11_Callback(hObject, eventdata, handles)
     %save_var(fileName)
     
     init_para();
+    
+    
+        
+        %% 训练hmm
+%         make_dataset();
+%         hmm_train();
+        
+        
     
     %% 从文件中读取距离
     fprintf("\n-----【开始读取位置】-----\n");
