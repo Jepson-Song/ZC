@@ -3,7 +3,6 @@ function cal_dir(cur_index)
     global cfg
     
     dir_tim = tic;
-    cfg.timeTree = cfg.timeTree + 1;
     
     pos1 = cfg.pos1(cur_index, :);
     pos2 = cfg.pos2(cur_index, :);
@@ -207,10 +206,6 @@ function cal_dir(cur_index)
 
 
     t = toc(dir_tim);
-    cfg.timeTree = cfg.timeTree - 1;
-    for i=1:1:cfg.timeTree
-        fprintf(" # ");
-    end
     fprintf("计算方向用时：%.4f\n", vpa(t));
 
 end

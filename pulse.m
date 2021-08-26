@@ -129,7 +129,6 @@ function init_para()
         cfg.left_bd = ones(cfg.nout, cfg.nin)*cfg.init_left_bd;
         cfg.right_bd = ones(cfg.nout, cfg.nin)*cfg.init_right_bd;
     end
-    cfg.timeTree = 0;
 end
 
 function toobar()

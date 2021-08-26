@@ -3,7 +3,6 @@ function draw_pos(cur_index)
         global cfg
         
         draw_tim = tic;
-        cfg.timeTree = cfg.timeTree + 1;
 
         if cfg.drawPos == 1
             
@@ -76,10 +75,6 @@ function draw_pos(cur_index)
         end
         
         t = double(toc(draw_tim));
-        cfg.timeTree = cfg.timeTree - 1;
-        for i=1:1:cfg.timeTree
-            fprintf(" # ");
-        end
         fprintf("画pos图用时：%.4f\n", vpa(t));
     
 end

@@ -258,8 +258,6 @@ niconfig.lim = 0.5;
 niconfig.dataAddress = 'E:\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 % niconfig.dataAddress = 'C:\Users\Jepson\seadrive_root\宋金鹏 MF20\我的资料库\Data\';
 
-niconfig.timeTree = 0;
-
 
 niconfig.static = 0; % 静止
 niconfig.surge = 1; % 前后移动

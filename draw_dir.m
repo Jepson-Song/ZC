@@ -3,7 +3,6 @@ function draw_dir(cur_index)
         global cfg
         
         draw_tim = tic;
-        cfg.timeTree = cfg.timeTree + 1;
 
         if cfg.drawDir == 1 
             
@@ -76,10 +75,6 @@ function draw_dir(cur_index)
         end
         
         t = double(toc(draw_tim));
-        cfg.timeTree = cfg.timeTree - 1;
-        for i=1:1:cfg.timeTree
-            fprintf(" # ");
-        end
         fprintf("画dir图用时：%.4f\n", vpa(t));
     
 end
