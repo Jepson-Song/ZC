@@ -94,7 +94,7 @@ cfg.handles = handles;
     set(handles.edit4,'string',num2str(cfg.rate));
     
     %% 加载HMM代码
-    addpath(genpath('.\HMMall'))
+%     addpath(genpath('.\HMMall'))
    
 end
 
