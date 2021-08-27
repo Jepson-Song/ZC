@@ -92,6 +92,9 @@ cfg.handles = handles;
     
     set(handles.edit3,'string',num2str(cfg.temp));
     set(handles.edit4,'string',num2str(cfg.rate));
+    
+    %% 加载HMM代码
+    addpath(genpath('.\HMMall'))
    
 end
 
