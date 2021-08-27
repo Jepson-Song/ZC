@@ -506,11 +506,19 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     init_para();
     
     %% 从文件中读取距离
+    fprintf("\n-----【开始读取距离】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+%     fileName = [prefix, '_dis_cor.txt'];
     if cfg.choseCorrect == 0
-        dis = load_data('dis');
+        fileName = [prefix, '_dis.txt'];
+        dis = load_data(address);
     else
-        dis = load_data('dis_cor');
+        fileName = [prefix, '_dis_cor.txt'];
     end
+    fprintf("【从文件读取距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis = load(address);
 %     whos dis
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
@@ -547,13 +555,22 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     fprintf("-----【结束离线计算】-----\n");
     
     
-    %% 保存位置
-    pos = [cfg.pos1,cfg.pos2];
+    %% 保存结果
+    fprintf("\n-----【开始保存位置】-----\n");
+    prefix = get(handles.edit1, 'string');
+
+    % 保存修正后的位置
     if cfg.choseCorrect == 0
-        save_data(pos, 'pos')
+        fileName = [prefix, '_pos.txt'];
+        fprintf("【创建文件保存位置】 "+fileName+"\n");
     else
-        save_data(pos, 'pos_cor')
+        fileName = [prefix, '_pos_cor.txt'];
+        fprintf("【创建文件保存修正后位置】 "+fileName+"\n");
     end
+    address = [cfg.dataAddress,fileName];
+    pos_cor = [cfg.pos1,cfg.pos2];
+    save(address, 'pos_cor', '-ascii')
+    fprintf("-----【完成保存位置】-----\n");
     
 end
 
@@ -573,16 +590,41 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     
     init_para();
     
-    %% 从文件中读取位置
+    %% 从文件中读取修正后的结果
+    prefix = get(handles.edit1, 'string');
     if cfg.choseCorrect == 0
-        pos = load_data('pos');
+        fprintf("\n-----【开始读取原始结果】-----\n");
+        fileName = [prefix, '_pos.txt'];
+        fprintf("【从文件读取原始位置】 "+fileName+"\n");
     else
-        pos = load_data('pos_cor');
+        fprintf("\n-----【开始读取修正后的结果】-----\n");
+        fileName = [prefix, '_pos_cor.txt'];
+        fprintf("【从文件读取修正后的位置】 "+fileName+"\n");
     end
+    address = [cfg.dataAddress,fileName];
+    pos = load(address);
+    
     cfg.index = size(pos, 1);
     
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);  
+%     cfg.pos3 = pos(:, 7:9);  
+    % 读取法向量
+    if cfg.choseCorrect == 0
+        fileName = [prefix, '_dir.txt'];
+        fprintf("【从文件读取原始法向量】 "+fileName+"\n");
+    else
+        fileName = [prefix, '_dir_cor.txt'];
+        fprintf("【从文件读取修正后的法向量】 "+fileName+"\n");
+    end
+    address = [cfg.dataAddress,fileName];
+    cfg.dir = load(address);
+    
+    if cfg.choseCorrect == 0
+        fprintf("-----【完成读取原始结果】-----\n");
+    else
+        fprintf("-----【完成读取修正后的结果】-----\n");
+    end
     
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
@@ -638,10 +680,18 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     init_para();
     
     %% 从文件中读取距离
-    dis = load_data('dis');
+    fprintf("\n-----【开始读取距离】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+    fileName = [prefix, '_dis.txt'];
+    fprintf("【从文件读取距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis = load(address);
+    whos dis
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    fprintf("-----【完成读取距离】-----\n");
     
     
     %% 修正距离
@@ -696,8 +746,14 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     
     
     %% 保存结果
+    prefix = get(handles.edit1, 'string');
+    % 保存修正后的距离
+    fileName = [prefix, '_dis_cor.txt'];
+    fprintf("【创建文件保存修正后距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
     dis_cor = [cfg.dis1,cfg.dis2];
-    save_data(dis_cor, 'dis_cor')
+    save(address, 'dis_cor', '-ascii')
+    fprintf("-----【完成保存修正后距离】-----\n");
 
 
 end
@@ -713,10 +769,17 @@ function pushbutton9_Callback(hObject, eventdata, handles)
     
     global cfg
     %% 从文件中读取结果
-    dis = load_data('dis_cor');
+    fprintf("\n-----【开始读取结果】-----\n");
+    prefix = get(handles.edit1, 'string');
+    % 读取距离
+    fileName = [prefix, '_dis_cor.txt'];
+    fprintf("【从文件读取距离】 "+fileName+"\n");
+    address = [cfg.dataAddress,fileName];
+    dis = load(address);
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    fprintf("-----【完成读取结果】-----\n");
     
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
