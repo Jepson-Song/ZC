@@ -777,23 +777,16 @@ function pushbutton11_Callback(hObject, eventdata, handles)
         
     
     %% 从文件中读取距离
-    fprintf("\n-----【开始读取位置】-----\n");
-    prefix = get(handles.edit1, 'string');
-    % 读取距离
     if cfg.choseCorrect == 0
-        fileName = [prefix, '_pos.txt'];
+        pos = load_data('pos');
     else
-        fileName = [prefix, '_pos_cor.txt'];
+        pos = load_data('pos_cor');
     end
-    fprintf("【从文件读取位置】 "+fileName+"\n");
-    address = [cfg.dataAddress,fileName];
-    pos = load(address);
 %     whos dis
     cfg.index = size(pos, 1);
     cfg.pos1 = pos(:, 1:3);
     cfg.pos2 = pos(:, 4:6);
-%     cfg.pos3 = pos(:, 7:9);
-    fprintf("-----【完成读取距离】-----\n");
+    
     
     %% 离线计算位置
     fprintf("\n-----【开始离线计算】-----\n");
@@ -825,22 +818,13 @@ function pushbutton11_Callback(hObject, eventdata, handles)
     fprintf("-----【结束离线计算】-----\n");
     
     
-    %% 保存结果
-    fprintf("\n-----【开始保存位置3和方向】-----\n");
-    prefix = get(handles.edit1, 'string');
-
-    % 保存修正后的法向量
-%     fileName = [prefix, '_dir_cor.txt'];
-    if cfg.choseCorrect == 0
-        fileName = [prefix, '_dir.txt'];
-    else
-        fileName = [prefix, '_dir_cor.txt'];
-    end
-    fprintf("【创建文件保存位置3和方向】 "+fileName+"\n");
-    address = [cfg.dataAddress,fileName];
+    %% 保存方向
     dir = [cfg.pos3, cfg.dir];
-    save(address, 'dir', '-ascii')
-    fprintf("-----【完成保存位置3和方向】-----\n");
+    if cfg.choseCorrect == 0
+        save_data(dir, 'dir')
+    else
+        save_data(dir, 'dir_cor')
+    end
 
     
 end
@@ -859,16 +843,10 @@ function pushbutton12_Callback(hObject, eventdata, handles)
     prefix = get(handles.edit1, 'string');
     % 读取位置
     if cfg.choseCorrect == 0
-        fprintf("\n-----【开始读取原始位置】-----\n");
-        fileName = [prefix, '_pos.txt'];
-        fprintf("【从文件读取原始位置】 "+fileName+"\n");
+        pos = load_data('pos');
     else
-        fprintf("\n-----【开始读取修正后的位置】-----\n");
-        fileName = [prefix, '_pos_cor.txt'];
-        fprintf("【从文件读取修正后的位置】 "+fileName+"\n");
+        pos = load_data('pos_cor');
     end
-    address = [cfg.dataAddress,fileName];
-    pos = load(address);
     cfg.index = size(pos, 1);
     
     cfg.pos1 = pos(:, 1:3);
@@ -877,22 +855,12 @@ function pushbutton12_Callback(hObject, eventdata, handles)
     
     % 读取方向
     if cfg.choseCorrect == 0
-        fileName = [prefix, '_dir.txt'];
-        fprintf("【从文件读取原始方向】 "+fileName+"\n");
+        dir = load_data('dir');
     else
-        fileName = [prefix, '_dir_cor.txt'];
-        fprintf("【从文件读取修正后的方向性】 "+fileName+"\n");
+        dir = load_data('dir_cor');
     end
-    address = [cfg.dataAddress,fileName];
-    dir = load(address);
     cfg.pos3 = dir(:, 1:3);
     cfg.dir = dir(:, 4:6);  
-    
-    if cfg.choseCorrect == 0
-        fprintf("-----【完成读取原始结果】-----\n");
-    else
-        fprintf("-----【完成读取修正后的结果】-----\n");
-    end
     
     %% 读取结果后画图
     fprintf("\n-----【开始画图】-----\n");
