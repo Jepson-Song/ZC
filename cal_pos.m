@@ -33,6 +33,7 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     
     %% 计算坐标
     
+    % 列出方程组
     equations = tic;
     syms x1 y1 z1 x2 y2 z2
 
@@ -44,11 +45,10 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     eq5 = (x2-qos2(2, 1))^2+(y2-qos2(2, 2))^2+(z2-qos2(2, 3))^2==dis2(2)^2;
     eq6 = (x2-qos2(3, 1))^2+(y2-qos2(3, 2))^2+(z2-qos2(3, 3))^2==dis2(3)^2;
 %     eq7 = (x1-x2)^2+(y1-y2)^2+(z1-z2)^2==0.1^2;
-    
     t = toc(equations);
     fprintf("列方程用时：%.4f\n", vpa(t));
     
-    
+    % 解方程
     solve = tic;
     [x1, y1, z1] = vpasolve([eq1 eq2 eq3], [x1 y1 z1]);
     [x2, y2, z2] = vpasolve([eq4 eq5 eq6], [x2 y2 z2]);
