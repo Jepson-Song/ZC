@@ -10,7 +10,7 @@ function cal_pos(cur_index)
     
     
     %% 解方程
-    [pos1, pos2] = solve_equations(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
+    [pos1, pos2] = solve_equations2(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
 %     cfg.pos3 = [cfg.pos3; pos3];
@@ -19,6 +19,79 @@ function cal_pos(cur_index)
     fprintf("计算位置用时：%.4f\n", vpa(t));
 end
 
+%% 手写牛顿迭代解方程
+function [pos1, pos2] = solve_equations2(cur_index) 
+
+    global  cfg
+    
+    chose1 = find(cfg.dis1(cur_index, :)~=0);
+    qos1 = cfg.Q(chose1, :);
+    dis1 = cfg.dis1(cur_index, chose1);
+    
+    chose2 = find(cfg.dis2(cur_index, :)~=0);
+    qos2 = cfg.Q(chose2, :);
+    dis2 = cfg.dis2(cur_index, chose2);
+    
+    
+    if cur_index == 1
+        last_pos1 = cfg.init_pos1;
+        last_pos2 = cfg.init_pos2;
+    else
+        last_pos1 = cfg.pos1(cur_index-1, :);
+        last_pos2 = cfg.pos2(cur_index-1, :);
+    end
+    
+    solve = tic;
+    
+    pos1 = newton(last_pos1, qos1, dis1);
+    pos2 = newton(last_pos2, qos2, dis2);
+    
+    t = toc(solve);
+    fprintf("解方程用时：%.4f\n", vpa(t));
+    
+    
+    
+
+end
+
+%% 牛顿迭代
+function xyz = newton(pos, qos, dis)
+    x = pos(1);
+    y = pos(2);
+    z = pos(3);
+    
+    eps = 1e-6;
+    
+    %% 手写牛顿迭代
+    cnt = 0;
+    while(1)
+    cnt = cnt + 1;
+    
+    % 雅克比矩阵
+    J = 2*[x-qos(1, 1), y-qos(1, 2), z-qos(1, 3);
+           x-qos(2, 1), y-qos(2, 2), z-qos(2, 3);
+           x-qos(3, 1), y-qos(3, 2), z-qos(3, 3);];
+       
+    f = [ (x-qos(1, 1))^2+(y-qos(1, 2))^2+(z-qos(1, 3))^2-dis(1)^2;
+          (x-qos(2, 1))^2+(y-qos(2, 2))^2+(z-qos(2, 3))^2-dis(2)^2;
+          (x-qos(3, 1))^2+(y-qos(3, 2))^2+(z-qos(3, 3))^2-dis(3)^2; ];
+       
+    
+    xyz = [x y z] - (inv(J)*f)';
+    
+    if( abs(xyz(1)-x)<eps && abs(xyz(2)-y)<eps && abs(xyz(3)-z)<eps)
+        fprintf("牛顿迭代次数：%d\n", cnt);
+        break;    
+    end
+    
+    x = xyz(1);
+    y = xyz(2);
+    z = xyz(3);
+    
+    end
+end
+
+%% 用matlab的solve函数解方程
 function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
 
     global  cfg
@@ -67,6 +140,8 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
 %     [x2, y2, z2] = fun(qos2, dis2);
 %     t = toc(solve);
 %     fprintf("解方程用时：%.4f\n", vpa(t));
+
+
     
     if cur_index == 1
         last_pos1 = cfg.init_pos1;
@@ -106,6 +181,7 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
     end
         
     
+
     
     
 
@@ -127,6 +203,22 @@ function [pos1, pos2] = solve_equations(cur_index) %solve_equations(dis1, dis2)
 %     fprintf("解方程用时：%.4f\n", vpa(t));
     
 end
+
+%% 雅可比矩阵
+function J = get_jaccobi(qos)
+
+%     x1 = qos(1, 1);    y1 = qos(1, 2);    z1 = qos(1, 2);
+%     x2 = qos(2, 1);    y2 = qos(2, 2);    z2 = qos(2, 2);
+%     x3 = qos(3, 1);    y3 = qos(3, 2);    z3 = qos(3, 2);
+
+    J = 2*[x-qos(1, 1), y-qos(1, 2), z-qos(1, 3);
+           x-qos(2, 1), y-qos(2, 2), z-qos(2, 3);
+           x-qos(3, 1), y-qos(3, 2), z-qos(3, 3);];
+
+
+end
+
+
 
 function F = myfun(x, dis1, dis2)
 %     eq1 = (x1-cfg.P1(1))^2+(y1-cfg.P1(2))^2+(z1-cfg.P1(3))^2==dis1(1)^2;
@@ -162,7 +254,7 @@ function res = get_distance(a, b)
 
 end
 
-%% 化简方程求解
+%% 化简方程求解析解
 function [rx, ry, rz] = fun(qos, d)
 
 %     x1 = qos(1, 1);    y1 = qos(1, 2);    z1 = qos(1, 2);

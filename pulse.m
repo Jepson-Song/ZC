@@ -522,7 +522,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
         end
 
         % 计算坐标
-        tic
+        tic;
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
         
