@@ -83,6 +83,11 @@ function xyz = newton(pos, qos, dis)
         fprintf("牛顿迭代次数：%d\n", cnt);
         break;    
     end
+    if cnt > 1000
+        fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
+        break;    
+    end
+        
     
     x = xyz(1);
     y = xyz(2);

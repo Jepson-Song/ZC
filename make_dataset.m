@@ -4,13 +4,19 @@ function make_dataset()
     
    
     
-    % 遍历每个类别的数据
-    for k=1:1:6
+%     % 遍历每个类别的数据
+%     for k=1:1:6
+        cfg.data_name = '20210827_202339';
+%         k = 1;
         
          % 先清空数据集
         address = [cfg.dataAddress,cfg.data_name,'\train\'];
+        if ~exist(address,'dir')
+            mkdir(address);
+            fprintf("【新建文件夹】 "+address+"\n");
+        end
         fileFolder=fullfile(address);
-        dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
+        dirOutput=dir(fullfile(fileFolder,'*.txt'));
         fileNames={dirOutput.name};
         for index=1:length(fileNames)
             fileName = fileNames(index);
@@ -19,8 +25,12 @@ function make_dataset()
         end
         
         address = [cfg.dataAddress,cfg.data_name,'\test\'];
+        if ~exist(address,'dir')
+            mkdir(address);
+            fprintf("【新建文件夹】 "+address+"\n");
+        end
         fileFolder=fullfile(address);
-        dirOutput=dir(fullfile(fileFolder,[num2str(k),'*.txt']));
+        dirOutput=dir(fullfile(fileFolder,'*.txt'));
         fileNames={dirOutput.name};
         for index=1:length(fileNames)
             fileName = fileNames(index);
@@ -29,9 +39,9 @@ function make_dataset()
         end
         
         
-    fileName = [num2str(k), '_pos.txt'];
+    fileName = [cfg.data_name, '_pos.txt'];
     fprintf("【从文件读取位置数据】 "+fileName+"\n");
-    address = [cfg.dataAddress,fileName];
+    address = [cfg.dataAddress,cfg.data_name,'\',fileName];
     data = load(address);
     len = size(data, 1);
     
@@ -47,7 +57,7 @@ function make_dataset()
 %         sub_data = data(i:i+sub_len-1, :);
 %         save(address, 'sub_data', '-ascii')
         
-        fileName = [num2str(k),num2str(num,'%04d'), '.txt'];
+        fileName = [cfg.data_name,'-',num2str(num,'%04d'), '.txt'];
         fprintf("【创建文件保存子数据】 "+fileName+"\n");
         train_address = [cfg.dataAddress,cfg.data_name,'\train\',fileName];
         test_address = [cfg.dataAddress,cfg.data_name,'\test\',fileName];
@@ -82,7 +92,7 @@ function make_dataset()
         end
         
     end
-    end
+%     end
 
 end
 %% 求两点间距离

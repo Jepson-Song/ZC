@@ -7,7 +7,7 @@ function cal_dir(cur_index)
     pos1 = cfg.pos1(cur_index, :);
     pos2 = cfg.pos2(cur_index, :);
 %     pos3 = cfg.pos3(cur_index, :);
-    mov_class = 0;
+%     mov_class = 0;
 
 %     if (cur_index==1)
 %         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
@@ -107,37 +107,38 @@ function cal_dir(cur_index)
     
     %% hmm分类思路
     class_tim = tic;
-%         % 计算观测状态obs
-%         ons = 1;
-%         if cur_index == 1
-%             obs = 1;
-%         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-%         cfg.O = pos3;
-%         else
-%             last_index = cur_index - 1; % 上一帧
-%             pos1_mov = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向
-%             
-%             div_angle = 2*pi/cfg.angle_num;
-%             
-%             angle1 = get_angle2(pos1_mov(1), pos1_mov(2));
-%             code1 = floor(angle1/div_angle)*cfg.angle_num;
-%             
-%             angle2 = get_angle2(sqrt(pos1_mov(1)^2+pos1_mov(2)^2),pos1_mov(3));
-%             code2 = floor(angle2/div_angle)+1;
-%             
-%             obs = code1+code2;
-%         end
-%         cfg.obs = [cfg.obs, obs];
-%         
-%         % hmm分类
-%         if cur_index < cfg.cut_len
-%             mov_class = cfg.static;
-%         else
-%             obs_data = cfg.obs(cur_index-cfg.cut_len+1+1:cur_index);
-%             mov_class = hmm_class(obs_data);
-%         end
     
-    mov_class = cfg.static;
+        % 计算观测状态obs
+        obs = 1;
+        if cur_index == 1
+            obs = 1;
+        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
+        cfg.O = pos3;
+        else
+            last_index = cur_index - 1; % 上一帧
+            pos1_mov = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向
+            
+            div_angle = 2*pi/cfg.angle_num;
+            
+            angle1 = get_angle2(pos1_mov(1), pos1_mov(2));
+            code1 = floor(angle1/div_angle)*cfg.angle_num;
+            
+            angle2 = get_angle2(sqrt(pos1_mov(1)^2+pos1_mov(2)^2),pos1_mov(3));
+            code2 = floor(angle2/div_angle)+1;
+            
+            obs = code1+code2;
+        end
+        cfg.obs = [cfg.obs, obs];
+        
+        % hmm分类
+        if cur_index < cfg.cut_len
+            mov_class = cfg.static;
+        else
+            obs_data = cfg.obs(cur_index-cfg.cut_len+1+1:cur_index);
+            mov_class = hmm_class(obs_data);
+        end
+    
+%     mov_class = cfg.static;
     if (cur_index==1)
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
         cfg.O = pos3;
@@ -182,6 +183,8 @@ function cal_dir(cur_index)
         pos3 = cfg.O;
     end
     cfg.O = pos3;
+    
+    fprintf("--------------------------------------------------- hmm分类为：【 %d 】【 %s 】\n", mov_class, str);
     set(cfg.handles.edit7,'string', str);%num2str(mov));
     cfg.pos3 = [cfg.pos3; pos3];
     cfg.mov = [cfg.mov; mov_class];
