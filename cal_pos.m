@@ -25,10 +25,12 @@ function [pos1, pos2] = solve_equations2(cur_index)
     global  cfg
     
     chose1 = find(cfg.dis1(cur_index, :)~=0);
+    chose1 = [1 2 3];
     qos1 = cfg.Q(chose1, :);
     dis1 = cfg.dis1(cur_index, chose1);
     
     chose2 = find(cfg.dis2(cur_index, :)~=0);
+    chose2 = [4 5 6];
     qos2 = cfg.Q(chose2, :);
     dis2 = cfg.dis2(cur_index, chose2);
     
@@ -40,6 +42,7 @@ function [pos1, pos2] = solve_equations2(cur_index)
         last_pos1 = cfg.pos1(cur_index-1, :);
         last_pos2 = cfg.pos2(cur_index-1, :);
     end
+   
     
     solve = tic;
     
@@ -65,33 +68,38 @@ function xyz = newton(pos, qos, dis)
     %% 手写牛顿迭代
     cnt = 0;
     while(1)
-    cnt = cnt + 1;
-    
-    % 雅克比矩阵
-    J = 2*[x-qos(1, 1), y-qos(1, 2), z-qos(1, 3);
-           x-qos(2, 1), y-qos(2, 2), z-qos(2, 3);
-           x-qos(3, 1), y-qos(3, 2), z-qos(3, 3);];
-       
-    f = [ (x-qos(1, 1))^2+(y-qos(1, 2))^2+(z-qos(1, 3))^2-dis(1)^2;
-          (x-qos(2, 1))^2+(y-qos(2, 2))^2+(z-qos(2, 3))^2-dis(2)^2;
-          (x-qos(3, 1))^2+(y-qos(3, 2))^2+(z-qos(3, 3))^2-dis(3)^2; ];
-       
-    
-    xyz = [x y z] - (inv(J)*f)';
-    
-    if( abs(xyz(1)-x)<eps && abs(xyz(2)-y)<eps && abs(xyz(3)-z)<eps)
-        fprintf("牛顿迭代次数：%d\n", cnt);
-        break;    
-    end
-    if cnt > 1000
-        fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
-        break;    
-    end
+        cnt = cnt + 1;
+
+        % 雅克比矩阵
+        J = 2*[x-qos(1, 1), y-qos(1, 2), z-qos(1, 3);
+               x-qos(2, 1), y-qos(2, 2), z-qos(2, 3);
+               x-qos(3, 1), y-qos(3, 2), z-qos(3, 3);];
+
+        f = [ (x-qos(1, 1))^2+(y-qos(1, 2))^2+(z-qos(1, 3))^2-dis(1)^2;
+              (x-qos(2, 1))^2+(y-qos(2, 2))^2+(z-qos(2, 3))^2-dis(2)^2;
+              (x-qos(3, 1))^2+(y-qos(3, 2))^2+(z-qos(3, 3))^2-dis(3)^2; ];
+
+
+        xyz = [x y z] - (inv(J)*f)';
+
+        if( abs(xyz(1)-x)<eps && abs(xyz(2)-y)<eps && abs(xyz(3)-z)<eps)
+            fprintf("牛顿迭代次数：%d\n", cnt);
+            break;    
+        end
         
-    
-    x = xyz(1);
-    y = xyz(2);
-    z = xyz(3);
+        x = xyz(1);
+        y = xyz(2);
+        z = xyz(3);
+        
+        if cnt > 1000
+            fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
+            break;    
+        end
+
+
+%         x = xyz(1);
+%         y = xyz(2);
+%         z = xyz(3);
     
     end
 end

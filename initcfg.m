@@ -280,6 +280,7 @@ niconfig.iter_numm = 10; % hmm训练时迭代最大次数
 niconfig.cut_len = 20; % 数据集切分的长度
 niconfig.cut_step = 1; % 数据集切分的长度
 niconfig.data_name = '20210827_182636'; % 数据集的名字
+niconfig.data_name = 'data1'; % 数据集的名字
 
 % 模型1
 niconfig.prior1 = [];
