@@ -112,8 +112,8 @@ function cal_dir(cur_index)
         obs = 1;
         if cur_index == 1
             obs = 1;
-        pos3 = (pos1+pos2)/2 - cfg.ear2neck;
-        cfg.O = pos3;
+            pos3 = (pos1+pos2)/2 - cfg.ear2neck;
+            cfg.O = pos3;
         else
             last_index = cur_index - 1; % 上一帧
             pos1_mov = pos1 - cfg.pos1(last_index, :); % 左耳机移动方向

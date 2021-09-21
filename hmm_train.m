@@ -20,6 +20,7 @@ function hmm_train()
     % training data
     fprintf("开始训练第1个HMM模型");
     data = load_dataset(1, 'train');
+    whos data
     % improve guess of parameters using EM
     [LL1, cfg.prior1, cfg.transmat1, cfg.obsmat1] = dhmm_em(data, prior0, transmat0, obsmat0, 'max_iter', cfg.iter_numm);
 
