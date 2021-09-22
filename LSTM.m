@@ -93,18 +93,19 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
         classificationLayer]
     
     % options
-    maxEpochs = 100;
+    maxEpochs = 200;
     miniBatchSize = 100;
 
-    options = trainingOptions('adam', ...
+    options = trainingOptions('rmsprop', ...
         'ExecutionEnvironment','cpu', ...
         'GradientThreshold',1, ...
         'MaxEpochs',maxEpochs, ...
         'MiniBatchSize',miniBatchSize, ...
         'SequenceLength','longest', ...
-        'Shuffle','never', ...
+        'Shuffle','every-epoch', ...
         'Verbose',0, ...
-        'Plots','training-progress');
+        'Plots','training-progress',...
+        'InitialLearnRate', 0.001);
     
     
     %% 训练LSTM网络
@@ -119,9 +120,10 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
         'SequenceLength','longest','MiniBatchSize',miniBatchSize);
     %计算分类准确度
     acc = sum(YPred == YTest)./numel(YTest)
-    
+    whos YPred
+    whos YTest
     % 混淆矩阵
-    confusion_matrix1(YTest, YPred)
+    confusion_matrix1(double(YTest), double(YPred))
     
     
 
