@@ -1,4 +1,4 @@
-function LSTM()%(dataStandardlized, dataStandardlizedLable)
+function LSTM_train()%(dataStandardlized, dataStandardlizedLable)
 
     %% 数据格式转换
     % dataStandardlized是原始数据标准化后的数据，dataStandardlizedLable是每条数据对应的类别标签，num型。
@@ -59,7 +59,7 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
         end
     end
     whos XTrain
-    whos XTrainLabel
+%     whos XTrainLabel
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     %YTrain
@@ -68,7 +68,7 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
         TraincellLable{i,1} = TrainstrLable(i,1);
     end
     YTrain = categorical(TraincellLable);%cell to categorical
-    whos YTrain
+%     whos YTrain
     
     %YTest
     TeststrLable = num2str(XTestLabel);% num to str
@@ -94,9 +94,9 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
     
     % options
     maxEpochs = 200;
-    miniBatchSize = 100;
+    miniBatchSize = 50;
 
-    options = trainingOptions('rmsprop', ...
+    options = trainingOptions('adam', ...
         'ExecutionEnvironment','cpu', ...
         'GradientThreshold',1, ...
         'MaxEpochs',maxEpochs, ...
@@ -111,19 +111,25 @@ function LSTM()%(dataStandardlized, dataStandardlizedLable)
     %% 训练LSTM网络
     
     net = trainNetwork(XTrain,YTrain,layers,options);
+    whos net
     
+    %% 保存网络到net.mat
+    save('lstm_net','net')
+
     
-    %% 利用LSTM网络进行分类
-    
+    %% 利用LSTM网络进行分类 
     miniBatchSize = 100;
     YPred = classify(net,XTest, ...
         'SequenceLength','longest','MiniBatchSize',miniBatchSize);
     %计算分类准确度
     acc = sum(YPred == YTest)./numel(YTest)
-    whos YPred
-    whos YTest
+%     whos YPred
+%     whos YTest
+
+
     % 混淆矩阵
     confusion_matrix1(double(YTest), double(YPred))
+    
     
     
 
