@@ -95,6 +95,10 @@ cfg.handles = handles;
     
     %% 加载HMM代码
 %     addpath(genpath('.\HMMall'))
+
+    %% 读取LSTM网络
+    cfg.net = coder.loadDeepLearningNetwork('lstm_net.mat');
+    cfg.net.Layers
    
 end
 
@@ -264,9 +268,9 @@ function processData(src,event)
     
     t = double(toc(tim));
     cfg.data_len = size(cfg.datain,1);
-    if(mod(cfg.data_len,cfg.fs)==0)
+%     if(mod(cfg.data_len,cfg.fs)==0)
         fprintf('Dataseg index: %d, New seg length: %d, Total data length: %d 一共用时：%.4f\n',cfg.index,datalen,cfg.data_len,vpa(t))
-    end
+%     end
         
 end
 

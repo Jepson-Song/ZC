@@ -76,7 +76,7 @@ niconfig.zc_l=307;%253;  %253   %ZC length must be odd
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
 
-niconfig.rate = 1;
+niconfig.rate = 10;
 niconfig.zclen=960*2;   %FFT size 
 % niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.maxrate = niconfig.fs/niconfig.zclen;
@@ -306,6 +306,10 @@ niconfig.obsmat5 = [];
 niconfig.prior6 = [];
 niconfig.transmat6 = [];
 niconfig.obsmat6 = [];
+
+
+% LSTM模型网络
+niconfig.net = [];
 
 
 end

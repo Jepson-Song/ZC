@@ -103,17 +103,17 @@ function make_dataset()
         %% 相对位置%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         sub_data = data(index:index+cfg.cut_len-1, 1:6);
         sub_data = sub_data - sub_data(1, :);
-        tmp = sub_data(2:end,:);
+        sub_data = sub_data(2:end,:);
         
         
         % 以4:1的比例生成训练集和测试集
         r = rand;
         if r <= 0.8
-            save(train_address, 'tmp', '-ascii')
+            save(train_address, 'sub_data', '-ascii')
         else
-            save(test_address, 'tmp', '-ascii')
+            save(test_address, 'sub_data', '-ascii')
         end
-        save(all_address, 'tmp', '-ascii')
+        save(all_address, 'sub_data', '-ascii')
         
     end
     end

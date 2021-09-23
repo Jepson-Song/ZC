@@ -91,8 +91,8 @@ function xyz = newton(pos, qos, dis)
         y = xyz(2);
         z = xyz(3);
         
-        if cnt > 1000
-            fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
+        if cnt > 10
+%             fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
             break;    
         end
 
