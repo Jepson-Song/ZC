@@ -48,14 +48,19 @@ function cal_dis_2O6I(cur_index)
         d1 = peak1*cfg.soundspeed/cfg.fs;
         d2 = peak2*cfg.soundspeed/cfg.fs;
 
-%         % 用相位计算细粒度距离
-%         % 整数倍波长
-%         dis = fix(dis/cfg.wavelength)*cfg.wavelength;
-%         phase = atan(imag(m)/real(m));
-%         dis = dis + phase/(2*pi)*cfg.wavelength;
 
         dis1(i) = d1;
         dis2(i) = d2;
+        
+        
+%         % 用相位计算细粒度距离
+%         % 整数倍波长
+%         d1 = fix(d1/cfg.wavelength)*cfg.wavelength;
+%         phase1 = atan(imag(tm1)/real(tm1));
+%         d1 = d1 + phase1/(2*pi)*cfg.wavelength;
+%         
+%         dis2(i) = d1;
+        
         
 %         chose1(i) = i;
 %         chose2(i) = i;
@@ -82,8 +87,8 @@ function cal_dis_2O6I(cur_index)
     
     %% 真实距离
     % 零点校准
-    dis1 = dis1-cfg.init_dis(1, :);
-    dis2 = dis2-cfg.init_dis(2, :);
+%     dis1 = dis1-cfg.init_dis(1, :);
+%     dis2 = dis2-cfg.init_dis(2, :);
     
     %     dis1
     [val, index1] = sort(SIGQUAL1);
@@ -99,6 +104,9 @@ function cal_dis_2O6I(cur_index)
     chose2 = [4 5 6];
     notchose1 = [4 5 6];
     notchose2 = [1 2 3];
+    
+%     chose2 = chose1;
+%     notchose2 = notchose1;
     
     dis1(notchose1) = ones(1, 3)*0;
     dis2(notchose2) = ones(1, 3)*0;
