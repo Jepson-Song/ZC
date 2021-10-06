@@ -23,7 +23,7 @@ function varargout = pulse(varargin)
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 07-Aug-2021 17:13:02
+% Last Modified by GUIDE v2.5 27-Sep-2021 20:25:49
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -251,9 +251,11 @@ function processData(src,event)
 %         set(cfg.handles.edit2, 'string', str);
 % %         set(cfg.handles.edit2, 'string', "20210518_193646");
 
+%         PhaseRange(cur_index);
+
         % 计算坐标 
         cal_pos(cur_index);
-        if cfg.drawStyle == 2
+        if cfg.drawStyle == 2 ||cfg.drawStyle == 1
         draw_pos(cur_index);
         end
         
@@ -426,6 +428,8 @@ function pushbutton3_Callback(hObject, eventdata, handles)
         % 计算距离
         tic
 %         cal_dis(cur_index);
+
+%         PhaseRange(cur_index);
         
         cal_dis_2O6I(cur_index);
         

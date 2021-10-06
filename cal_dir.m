@@ -223,11 +223,11 @@ function cal_dir(cur_index)
     cfg.dir = [cfg.dir; dir];
     
     %% 发送数据
-%     send_time = tic;
-%     send_data = [num2str(dir(1)),' ',num2str(dir(2)),' ',num2str(dir(3))];
-%     udp_client(send_data);
-%     t = toc(send_time);
-%     fprintf("发送数据用时：%.4f\n", vpa(t));
+    send_time = tic;
+    send_data = [num2str(dir(2)),' ',num2str(dir(3)),' ',num2str(dir(1))];
+    udp_client(send_data);
+    t = toc(send_time);
+    fprintf("发送数据用时：%.4f\n", vpa(t));
 
 
     t = toc(dir_tim);

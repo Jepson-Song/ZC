@@ -41,7 +41,7 @@ function draw_dir(cur_index)
             xlabel(cfg.figure5, 'X')
             ylabel(cfg.figure5, 'Y')
             zlabel(cfg.figure5, 'Z')
-            title(cfg.figure5,'3D')
+            title(cfg.figure5,'三维视图')
             rotate3d(cfg.figure5, 'on')
             set(cfg.figure5,'ydir','reverse','xaxislocation','top');
             
@@ -51,7 +51,7 @@ function draw_dir(cur_index)
             set(cfg.figure6,  'YGrid', 'on')
             xlabel(cfg.figure6, 'X')
             ylabel(cfg.figure6, 'Z')
-            title(cfg.figure6,'XZ平面 - 俯视图')
+            title(cfg.figure6,'俯视图（XZ平面 ）')
 
             xlim(cfg.figure7, myxlim)
             ylim(cfg.figure7, myylim)
@@ -59,7 +59,7 @@ function draw_dir(cur_index)
             set(cfg.figure7,  'YGrid', 'on')
             xlabel(cfg.figure7, 'X')
             ylabel(cfg.figure7, 'Y')
-            title(cfg.figure7,'XY平面 - 正视图')
+            title(cfg.figure6,'俯视图（XZ平面 ）')
             set(cfg.figure7,'ydir','reverse','xaxislocation','top');
 
             xlim(cfg.figure8, myylim)
@@ -68,7 +68,7 @@ function draw_dir(cur_index)
             set(cfg.figure8,  'YGrid', 'on')
             xlabel(cfg.figure8, 'Y')
             ylabel(cfg.figure8, 'Z')
-            title(cfg.figure8,'YZ平面 - 侧视图')
+            title(cfg.figure8,'侧视图（YZ平面）')
   
             drawnow();
 

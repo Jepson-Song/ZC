@@ -7,10 +7,13 @@ function draw_pos(cur_index)
         if cfg.drawPos == 1
             
             if cfg.drawStyle == 1
-                plot3(cfg.figure5, cfg.pos1(1:cur_index, 1),  cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
-                plot(cfg.figure6, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 3), 'r');
-                plot(cfg.figure7, cfg.pos1(1:cur_index, 1), cfg.pos1(1:cur_index, 2), 'b');%, cfg.pos2(1:cur_index, 1), cfg.pos2(1:cur_index, 2), 'r');
-                plot(cfg.figure8, cfg.pos1(1:cur_index, 2), cfg.pos1(1:cur_index, 3), 'b');%, cfg.pos2(1:cur_index, 2), cfg.pos2(1:cur_index, 3), 'r');
+                start_index = 10;
+                if cur_index>=start_index
+                plot3(cfg.figure5, cfg.pos1(start_index:cur_index, 1),  cfg.pos1(start_index:cur_index, 2), cfg.pos1(start_index:cur_index, 3), 'b', cfg.pos2(start_index:cur_index, 1), cfg.pos2(start_index:cur_index, 2), cfg.pos2(start_index:cur_index, 3), 'r');
+                plot(cfg.figure6, cfg.pos1(start_index:cur_index, 1), cfg.pos1(start_index:cur_index, 3), 'b', cfg.pos2(start_index:cur_index, 1), cfg.pos2(start_index:cur_index, 3), 'r');
+                plot(cfg.figure7, cfg.pos1(start_index:cur_index, 1), cfg.pos1(start_index:cur_index, 2), 'b', cfg.pos2(start_index:cur_index, 1), cfg.pos2(start_index:cur_index, 2), 'r');
+                plot(cfg.figure8, cfg.pos1(start_index:cur_index, 2), cfg.pos1(start_index:cur_index, 3), 'b', cfg.pos2(start_index:cur_index, 2), cfg.pos2(start_index:cur_index, 3), 'r');
+                end
             else
             
                 p1 = cfg.pos1(cur_index, :);
@@ -41,7 +44,7 @@ function draw_pos(cur_index)
             xlabel(cfg.figure5, 'X')
             ylabel(cfg.figure5, 'Y')
             zlabel(cfg.figure5, 'Z')
-            title(cfg.figure5,'3D')
+            title(cfg.figure5,'三维轨迹')
             rotate3d(cfg.figure5, 'on')
             set(cfg.figure5,'ydir','reverse','xaxislocation','top');
             
@@ -51,7 +54,7 @@ function draw_pos(cur_index)
             set(cfg.figure6,  'YGrid', 'on')
             xlabel(cfg.figure6, 'X')
             ylabel(cfg.figure6, 'Z')
-            title(cfg.figure6,'XZ平面 - 俯视图')
+            title(cfg.figure6,'俯视图（XZ平面 ）')
 
             xlim(cfg.figure7, myxlim)
             ylim(cfg.figure7, myylim)
@@ -59,8 +62,8 @@ function draw_pos(cur_index)
             set(cfg.figure7,  'YGrid', 'on')
             xlabel(cfg.figure7, 'X')
             ylabel(cfg.figure7, 'Y')
-            title(cfg.figure7,'XY平面 - 正视图')
-            set(cfg.figure7,'ydir','reverse','xaxislocation','top');
+            title(cfg.figure7,' 正视图（XY平面）')
+            set(cfg.figure7,'ydir','reverse');%,'xaxislocation','top');
 
             xlim(cfg.figure8, myylim)
             ylim(cfg.figure8, myzlim)
@@ -68,7 +71,7 @@ function draw_pos(cur_index)
             set(cfg.figure8,  'YGrid', 'on')
             xlabel(cfg.figure8, 'Y')
             ylabel(cfg.figure8, 'Z')
-            title(cfg.figure8,'YZ平面 - 侧视图')
+            title(cfg.figure8,'侧视图（YZ平面）')
             
             
             drawnow();

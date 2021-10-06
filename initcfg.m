@@ -4,7 +4,7 @@ function niconfig = initcfg()
 %   Detailed explanation goes here
 
 niconfig.fs = 96000;  %sampling frequency
-niconfig.volume =2;  %output Vpp/2  %1
+niconfig.volume =3;  %output Vpp/2  %1
 
 niconfig.dev = 'Dev1';
 niconfig.nout=2;
@@ -76,7 +76,7 @@ niconfig.zc_l=307;%253;  %253   %ZC length must be odd
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
 
-niconfig.rate = 10;
+niconfig.rate = 1;
 niconfig.zclen=960*2;   %FFT size 
 % niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.maxrate = niconfig.fs/niconfig.zclen;
@@ -117,15 +117,35 @@ niconfig.zcseq1=ifft(ofdm1);
 % a = niconfig.zcseq1
 niconfig.zcseq2=ifft(ofdm2);   
 % b = niconfig.zcseq2
+% a = niconfig.zcseq1;
+% whos a 
+sin_f = 24000;
+sin_t = [1:1:niconfig.zclen]/niconfig.fs;
+niconfig.sin_seq = 0.15*sin(2*pi*sin_f*sin_t)';
+niconfig.cos_seq = 0.15*cos(2*pi*sin_f*sin_t)';
+% whos sin_seq
+% plot(sin_seq)
+% figure
+% plot(niconfig.zcseq1)
 
 if niconfig.nout==1
 % niconfig.dataout =repmat( real(niconfig.zcseq1),100,1);%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
 % niconfig.dataout =repmat( real(niconfig.zcseq2),100,1);%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
 elseif niconfig.nout==2
 niconfig.dataout =[repmat(niconfig.zcseq1,100,1), repmat(niconfig.zcseq2,100,1)];%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
+
+% niconfig.dataout =[repmat(niconfig.zcseq1+niconfig.cos_seq,100,1), repmat(niconfig.zcseq2,100,1)];%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
+% niconfig.dataout =[repmat(niconfig.cos_seq,100,1), repmat(niconfig.zcseq2,100,1)];%, repmat( real(niconfig.zcseq2),100,1)];           % repeat 100 symbols longer than one second
+
 end
 
-niconfig.dataout=niconfig.dataout./max(abs(niconfig.dataout))*niconfig.volume;  % adjust Vpp
+niconfig.dataout=niconfig.dataout./max(abs(niconfig.dataout))*niconfig.volume;%*3;  % adjust Vpp
+% whos niconfig.dataout
+% a = niconfig.dataout(:,1);
+% spectrogram(a,256,250,256,niconfig.fs)
+% plot(a)
+% figure
+% plot(niconfig.dataout)
 
 niconfig.index = 0;                             %record for frames
 niconfig.samples = 1;                           %record for samples

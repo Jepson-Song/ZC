@@ -9,6 +9,7 @@ function cal_dis_2O6I(cur_index)
     dataseg = cfg.datain((cur_index-1)*cfg.seglen+1:cur_index*cfg.seglen, :);
 %     whos dataseg
 
+
     cir1=zeros(cfg.zclen, cfg.nin);  %we have 3 frames 960*3 points for 3 mics
     dis1 = zeros(1, cfg.nin);
     SIGQUAL1 = zeros(1, cfg.nin);
@@ -21,7 +22,7 @@ function cal_dis_2O6I(cur_index)
     chose2 = zeros(1, 3);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 开始奇偶插值
     
-%% 左右发射端
+    %% 左右发射端
     for i=1:1:cfg.nin                 %for each mic
         
         data = dataseg(1:cfg.zclen, i);
