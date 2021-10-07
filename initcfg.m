@@ -76,7 +76,7 @@ niconfig.zc_l=307;%253;  %253   %ZC length must be odd
 niconfig.zc_u1=5;       %ZC u
 niconfig.zc_u2=7;       %ZC u
 
-niconfig.rate = 1;
+niconfig.rate = 10;
 niconfig.zclen=960*2;   %FFT size 
 % niconfig.zcrep = 50 ; %4*1920/niconfig.zclen; % 16
 niconfig.maxrate = niconfig.fs/niconfig.zclen;
@@ -224,6 +224,7 @@ niconfig.pos3 = [];
 niconfig.dir = []; % direction
 niconfig.mov = []; % movement
 niconfig.obs = []; % obs观测状态序列
+niconfig.cir1 = []; % cir
 
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
 niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);

@@ -38,6 +38,10 @@ function cal_dis_2O6I(cur_index)
         cir1(:, i) = conj(ifft(fftshift(temp_fft1,1))); %ifft and get the CIR
         cir2(:, i) = conj(ifft(fftshift(temp_fft2,1))); %ifft and get the CIR
         
+        if i==1
+            cfgcir1 = real(cir1(1:960, i)');
+        end
+        
         [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i), i)));
         peak1 = cfg.left_bd(1, i) + p1 - 1;
 %         m = cir(peak);
@@ -114,6 +118,7 @@ function cal_dis_2O6I(cur_index)
     
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
+    cfg.cir1 = [cfg.cir1; cfgcir1];
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
     cfg.chose1 = [cfg.chose1; chose1];

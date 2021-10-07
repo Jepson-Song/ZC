@@ -4,10 +4,43 @@ function draw_dis(cur_index)
         
         draw_tim = tic;
         
+            % 画cir
+            tcir1 = [repmat(cfg.cir1(1, :),cfg.dislen,1); cfg.cir1]';
+            tcir1 = tcir1(:, end-cfg.dislen+1:end);
+            dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
+            
+            imagesc(cfg.figure7,tcir1);
+%             colormap jet
+%             colorbar
+            set(cfg.figure7, 'XTick', 0:50:300)
+            set(cfg.figure7, 'XTickLabel', 0:5:30)
+            set(cfg.figure7, 'YDir', 'normal')
+            set(cfg.figure7, 'YTick', [0:100:960])
+            set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
+            xlabel(cfg.figure7, 'Time(s)')
+            ylabel(cfg.figure7, 'Distance(cm)')
+%             set(cfg.figure7,'YGrid','on')
+            
+            imagesc(cfg.figure8,dcir1);
+            set(cfg.figure8, 'XTick', 0:50:300)
+            set(cfg.figure8, 'XTickLabel', 0:5:30)
+            set(cfg.figure8, 'YDir', 'normal')
+            set(cfg.figure8, 'YTick', [0:100:960])
+            set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
+            xlabel(cfg.figure8, 'Time(s)')
+            ylabel(cfg.figure8, 'Distance(cm)')
+            colormap jet
+            colorbar
+            
+            drawnow();
+            
+        
         if cfg.drawDis == 1
             
             dis1 = [repmat(cfg.dis1(1, :),cfg.dislen,1); cfg.dis1];
             dis2 = [repmat(cfg.dis2(1, :),cfg.dislen,1); cfg.dis2];
+            
+            
             
             for i=1:1:cfg.nin
                 if cfg.dis1(cur_index, i)~=0

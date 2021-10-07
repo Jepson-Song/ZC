@@ -121,6 +121,7 @@ function init_para()
     cfg.index = 0;
 %     cfg.datain = [];
     cfg.dis1 = [];%zeros(cfg.nin, cfg.dislen);
+    cfg.cir1 = [];
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.pos1 = [];
     cfg.pos2 = [];
@@ -445,6 +446,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     %% 保存距离
     dis = [cfg.dis1,cfg.dis2];
     save_data(dis, 'dis')
+    
+    %% 保存cir
+    cir = cfg.cir1;
+    save_data(cir, 'cir')
   
 end
 
@@ -466,6 +471,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.index = size(dis, 1);
     cfg.dis1 = dis(:, 1:cfg.nin);
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    
+    %% 从文件中读取cir
+    cir1 = load_data('cir');
+    cfg.cir1 = cir1;
 
     
     %% 读取结果后画图
