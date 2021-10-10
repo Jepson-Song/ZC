@@ -4,35 +4,6 @@ function draw_dis(cur_index)
         
         draw_tim = tic;
         
-            % 画cir
-            tcir1 = [repmat(cfg.cir1(1, :),cfg.dislen,1); cfg.cir1]';
-            tcir1 = tcir1(:, end-cfg.dislen+1:end);
-            dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
-            
-            imagesc(cfg.figure7,tcir1);
-%             colormap jet
-%             colorbar
-            set(cfg.figure7, 'XTick', 0:50:300)
-            set(cfg.figure7, 'XTickLabel', 0:5:30)
-            set(cfg.figure7, 'YDir', 'normal')
-            set(cfg.figure7, 'YTick', [0:100:960])
-            set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
-            xlabel(cfg.figure7, 'Time(s)')
-            ylabel(cfg.figure7, 'Distance(cm)')
-%             set(cfg.figure7,'YGrid','on')
-            
-            imagesc(cfg.figure8,dcir1);
-            set(cfg.figure8, 'XTick', 0:50:300)
-            set(cfg.figure8, 'XTickLabel', 0:5:30)
-            set(cfg.figure8, 'YDir', 'normal')
-            set(cfg.figure8, 'YTick', [0:100:960])
-            set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
-            xlabel(cfg.figure8, 'Time(s)')
-            ylabel(cfg.figure8, 'Distance(cm)')
-            colormap jet
-            colorbar
-            
-            drawnow();
             
         
         if cfg.drawDis == 1
@@ -67,6 +38,35 @@ function draw_dis(cur_index)
             ylim(cfg.figure4, [0, 1.5]);
             set(cfg.figure4,  'XGrid', 'on')
             set(cfg.figure4,  'YGrid', 'on')
+            
+            
+            % 画cir
+            tcir1 = [repmat(0*ones(1,length(cfg.cir1(1, :))),cfg.dislen,1); cfg.cir1]';
+%             tcir1 = tcir1(:, end-cfg.dislen+1:end);
+            dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
+            
+            imagesc(cfg.figure7,tcir1(:, 1+cur_index:cfg.dislen+cur_index));
+%             colormap jet
+%             colorbar
+            set(cfg.figure7, 'XTick', 0:50:300)
+            set(cfg.figure7, 'XTickLabel', 0:5:30)
+%             set(cfg.figure7, 'YDir', 'normal')
+            set(cfg.figure7, 'YTick', [0:100:960])
+%             set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
+            xlabel(cfg.figure7, 'Time(s)')
+            ylabel(cfg.figure7, 'Distance(cm)')
+%             set(cfg.figure7,'YGrid','on')
+            
+            imagesc(cfg.figure8,dcir1(:, 1+cur_index:cfg.dislen+cur_index-1));
+            set(cfg.figure8, 'XTick', 0:50:300)
+            set(cfg.figure8, 'XTickLabel', 0:5:30)
+%             set(cfg.figure8, 'YDir', 'normal')
+            set(cfg.figure8, 'YTick', [0:100:960])
+%             set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
+            xlabel(cfg.figure8, 'Time(s)')
+            ylabel(cfg.figure8, 'Distance(cm)')
+            colormap jet
+            colorbar
 
             drawnow();
 

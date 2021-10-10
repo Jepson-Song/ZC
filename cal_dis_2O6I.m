@@ -38,7 +38,7 @@ function cal_dis_2O6I(cur_index)
         cir1(:, i) = conj(ifft(fftshift(temp_fft1,1))); %ifft and get the CIR
         cir2(:, i) = conj(ifft(fftshift(temp_fft2,1))); %ifft and get the CIR
         
-        if i==1
+        if i==3
             cfgcir1 = real(cir1(1:960, i)');
         end
         

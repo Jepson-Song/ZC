@@ -543,7 +543,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %% pca
     cir1 = cfg.cir1;
-    tcir1 = cir1(:,200:300);
+    tcir1 = cir1(:,250:42);
     
 %     dcir1 = diff(tcir1, 1, 2);
 %     whos dcir1
