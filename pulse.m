@@ -532,8 +532,8 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %             set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
             xlabel(cfg.figure8, 'Time(s)')
             ylabel(cfg.figure8, 'Distance(cm)')
-            colormap jet
-            colorbar
+%             colormap jet
+%             colorbar
     
             toobar();
     
@@ -544,28 +544,56 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %% pca
     cir1 = cfg.cir1;
     tcir1 = cir1(:,200:300);
+    whos tcir1
     
 %     dcir1 = diff(tcir1, 1, 2);
 %     whos dcir1
+    [m, n] = size(tcir1);
+    for i=1:1:n
+        tcir1(:, i) = smooth(tcir1(:, i), 9);
+    end
     whos tcir1
+    
+%             cir1(:,200:300) = tcir1;
+%             imagesc(cfg.figure5,cir1');
+%             set(cfg.figure5, 'XTick', 0:50:300)
+%             set(cfg.figure5, 'XTickLabel', 0:5:30)
+%             set(cfg.figure5, 'YTick', [0:100:960])
+%             xlabel(cfg.figure5, 'Time(s)')
+%             ylabel(cfg.figure5, 'Distance(cm)')
+%             
+%             dcir1 = diff(cir1', 1, 2);  % para3: 1是列差分 2是行差分
+%             imagesc(cfg.figure6,dcir1);
+%             set(cfg.figure6, 'XTick', 0:50:300)
+%             set(cfg.figure6, 'XTickLabel', 0:5:30)
+%             set(cfg.figure6, 'YTick', [0:100:960])
+%             xlabel(cfg.figure6, 'Time(s)')
+%             ylabel(cfg.figure6, 'Distance(cm)')
+%     
+%     dcir1 = diff(tcir1, 1, 1);
+%     whos dcir1
+%     for i=1:1:n
+%         dcir1(:, i) = smooth(dcir1(:, i), 9);
+%     end
     [coeff,score,latent] = pca(tcir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
-    whos coeff
-    figure(1)
-    plot(coeff(:,1))
+%     whos coeff
+%     figure(1)
+%     plot(coeff(:,1))
     
     figure(2)
     plot(score(:,1))
+    title('降维后')
     whos score
     
-    figure(3)
-    plot(latent)
-    title('特征值')
-    
-    tmp = cumsum(latent)./sum(latent);
-    whos latent
-    
-    pc = coeff; % 140*100
-    tranMatrix = pc(:,1:2);
+%     figure(3)
+%     plot(latent)
+%     title('特征值')
+%     
+%     tmp = cumsum(latent)./sum(latent);
+%     whos latent
+%     
+%     pc = coeff; % 140*100
+%     tranMatrix = pc(:,1:2);
 
 end
 
