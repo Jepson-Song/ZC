@@ -581,9 +581,9 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     plot(tmp)
     tmp = LEVD(tmp);
     tcir1(:,1) = tmp;
-%     hold on 
-%     plot(tmp)
-%     hold off
+    hold on 
+    plot(tmp)
+    hold off
 
 
     [coeff,score,latent] = pca(tcir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
@@ -611,7 +611,7 @@ end
 
 function res = LEVD(x)
 
-    thr = std(x)
+    thr = 3*std(x);
     
     len = length(x);
     res = zeros(1, len);
@@ -621,23 +621,16 @@ function res = LEVD(x)
     res(1) = x(1);
     
     ax = [1];
-    ay = [x(1)];
-    figure(4)
-    plot(x)
-    for i=2:1:len-1
-        
-%         if i~=1&&i~=n&&()
-        if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
+    
+    for i=2:1:n
+        if i~=1&&i~=n&&(x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1))
             
 %             e(n) = x(i);
 %         else if x(i)>=x(i-1) && 
-%             i
 
             if abs(x(i)-e(n)) > thr
-                n = n + 1
+                n = n + 1;
                 e = [e, x(i)];
-                ax = [ax, i];
-                ay = [ay, x(i)];
             end
                 
             
@@ -645,20 +638,9 @@ function res = LEVD(x)
         if n>=2
             res(i) = 0.9*res(i-1)+0.1*(e(n)+e(n-1))/2;
         else
-            res(i) = 0.9*res(i-1)+0.1*e(n);
+            res(i) = 0.9*res(i-1)+0.1*e(n)/2;
         end
     end
-    
-    ax
-    ay
-    figure(5)
-    
-    plot(x)
-    hold on 
-
-    plot(ax,ay,'*')
-%     plot(tmp)
-    hold off
 
 end
 
