@@ -48,8 +48,9 @@ function draw_dis(cur_index)
             imagesc(cfg.figure7,tcir1(:, 1+cur_index:cfg.dislen+cur_index));
 %             colormap jet
 %             colorbar
-            set(cfg.figure7, 'XTick', 0:50:300)
-            set(cfg.figure7, 'XTickLabel', 0:5:30)
+            len = length(tcir1(1,:));
+            set(cfg.figure7, 'XTick', 0:50:len)
+            set(cfg.figure7, 'XTickLabel', 0:5:len/10)
 %             set(cfg.figure7, 'YDir', 'normal')
             set(cfg.figure7, 'YTick', [0:100:960])
 %             set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)

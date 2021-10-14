@@ -302,8 +302,9 @@ function save_data(data, type)
     
     address = [dir_address,'\',fileName];
 %     cfg.address = address;
-    
+%     data = mat2str(data);
     save(address, 'data', '-ascii')
+%     dlmwrite(address, data)
 %     whos datain
     fprintf("-----【完成保存数据】-----\n");
 
@@ -449,7 +450,8 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     %% 保存cir
     cir = cfg.cir1;
-    save_data(cir, 'cir')
+    save_data(real(cir), 'cir_real')
+    save_data(imag(cir), 'cir_imag')
     
 %     %% pca
 %     coeff = pca(cir(310:420, :));
@@ -478,7 +480,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     
     %% 从文件中读取cir
-    cir1 = load_data('cir');
+    cir1_real = load_data('cir_real');
+    cir1_imag = load_data('cir_imag');
+    cir1 = cir1_real+cir1_imag*1j;
+%     cir1 = cir1_real;
     cfg.cir1 = cir1;
 
     
@@ -506,34 +511,16 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %     draw_dis(cur_index);
 
 
+    tmp = cir1(1, :)
 
             % 画cir
             tcir1 = cfg.cir1';
 %             tcir1 = tcir1(:, end-cfg.dislen+1:end);
+    draw_pic(cfg.figure7,tcir1)
             dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
+    draw_pic(cfg.figure8,dcir1)
             
-            imagesc(cfg.figure7,tcir1);
-%             colormap jet
-%             colorbar
-            set(cfg.figure7, 'XTick', 0:50:300)
-            set(cfg.figure7, 'XTickLabel', 0:5:30)
-%             set(cfg.figure7, 'YDir', 'normal')
-            set(cfg.figure7, 'YTick', [0:100:960])
-%             set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
-            xlabel(cfg.figure7, 'Time(s)')
-            ylabel(cfg.figure7, 'Distance(cm)')
-%             set(cfg.figure7,'YGrid','on')
             
-            imagesc(cfg.figure8,dcir1);
-            set(cfg.figure8, 'XTick', 0:50:300)
-            set(cfg.figure8, 'XTickLabel', 0:5:30)
-%             set(cfg.figure8, 'YDir', 'normal')
-            set(cfg.figure8, 'YTick', [0:100:960])
-%             set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
-            xlabel(cfg.figure8, 'Time(s)')
-            ylabel(cfg.figure8, 'Distance(cm)')
-%             colormap jet
-%             colorbar
     
             toobar();
     
@@ -543,70 +530,84 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %% pca
     cir1 = cfg.cir1;
-    tcir1 = cir1(:,320:420);
-    whos tcir1
+    whos cir1
+%     cir1 = dcir1';
+    [T, Frame] = size(cir1);
     
-%     dcir1 = diff(tcir1, 1, 2);
-%     whos dcir1
-    [m, n] = size(tcir1);
-    for i=1:1:n
-        tcir1(:, i) = smooth(tcir1(:, i), 9);
-    end
-    whos tcir1
-    
-%             cir1(:,200:300) = tcir1;
-%             imagesc(cfg.figure5,cir1');
-%             set(cfg.figure5, 'XTick', 0:50:300)
-%             set(cfg.figure5, 'XTickLabel', 0:5:30)
-%             set(cfg.figure5, 'YTick', [0:100:960])
-%             xlabel(cfg.figure5, 'Time(s)')
-%             ylabel(cfg.figure5, 'Distance(cm)')
-%             
-%             dcir1 = diff(cir1', 1, 2);  % para3: 1是列差分 2是行差分
-%             imagesc(cfg.figure6,dcir1);
-%             set(cfg.figure6, 'XTick', 0:50:300)
-%             set(cfg.figure6, 'XTickLabel', 0:5:30)
-%             set(cfg.figure6, 'YTick', [0:100:960])
-%             xlabel(cfg.figure6, 'Time(s)')
-%             ylabel(cfg.figure6, 'Distance(cm)')
-%     
-%     dcir1 = diff(tcir1, 1, 1);
-%     whos dcir1
-%     for i=1:1:n
-%         dcir1(:, i) = smooth(dcir1(:, i), 9);
-%     end
-    
-    tmp = tcir1(:,1);
+    % path selection
+    fft_cir1 = abs(real(fft(cir1,100)));
+    whos fft_cir1
+    draw_pic(cfg.figure5, fft_cir1(1:51,:)');
     figure(1)
-    plot(tmp)
-    tmp = LEVD(tmp);
-    tcir1(:,1) = tmp;
-%     hold on 
-%     plot(tmp)
-%     hold off
+    plot(fft_cir1(:,320))
+    title('FFT')
+    
+    for index=1:1:Frame
+        % 路径选择
+        Emax = max(fft_cir1([1:1:5]+1,index));
+        part1 = sum(fft_cir1([1:1:5]+1,index))-Emax;
+        part2 = sum(fft_cir1([5:1:50]+1,index));
+        w1 = 0.5;
+        w2 = 0.5;
+        SNR(index) = w1*Emax/part1+w2*Emax/part2;
+        
+        % 先减去复数均值
+        cir1(:, index) = cir1(:, index) - mean(cir1(:, index));
+        
+        % 再做LEVD
+        
+        % 再做滑动平均
+        cir1(:, index) = smooth(cir1(:, index), 9);
+    end
+    
+    draw_pic(cfg.figure6, cir1');
+    figure(2)
+    plot(SNR)
+    hold on
+    title('SNR')
+    [, sel]= find(SNR(1:500)>=0.7);
+    sel = [300:400];
+    plot(sel, SNR(sel),'*');
+    hold off
+    
+    sel_cir1 = cir1( :, sel );
+    sel_cir1 = real(sel_cir1);
+    
+    tmp =zeros(T, Frame);
+    tmp(:, sel) = sel_cir1;
+    draw_pic(cfg.figure5, tmp');
 
-
-    [coeff,score,latent] = pca(tcir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
-%     whos coeff
-%     figure(1)
-%     plot(coeff(:,1))
-
+    % pca
+    whos sel_cir1
+    [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
     
     figure(3)
-    plot(score(:,1))
+    tmp = score(:,1);%+score(:,2)+score(:,3);
+    plot(tmp)
     title('降维后')
     whos score
     
-%     figure(3)
-%     plot(latent)
-%     title('特征值')
-%     
-%     tmp = cumsum(latent)./sum(latent);
-%     whos latent
-%     
-%     pc = coeff; % 140*100
-%     tranMatrix = pc(:,1:2);
+    % 低通滤波
+    tmp = lowpass(0.5,0.6,tmp,10);
+    figure(4)
+    plot(tmp)
+    title('滤波后')
+    
 
+end
+
+function draw_pic(fig,data)
+    if ~isreal(data)
+        data = real(data);
+    end
+    len = length(data(1,:));
+            imagesc(fig,data);
+            set(fig, 'XTick', 0:50:len)
+            set(fig, 'XTickLabel', 0:5:len/10)
+            set(fig, 'YTick', [0:100:960])
+            xlabel(fig, 'Time(s)')
+            ylabel(fig, 'Distance')
+            
 end
 
 function res = LEVD(x)
@@ -614,27 +615,23 @@ function res = LEVD(x)
     thr = std(x)
     
     len = length(x);
-    res = zeros(1, len);
+    s = zeros(1, len);
     n = 1;
     e = [];
     e = [e, x(1)];
-    res(1) = x(1);
+    s(1) = x(1);
     
     ax = [1];
     ay = [x(1)];
-    figure(4)
-    plot(x)
+%     figure(4)
+%     plot(x)
     for i=2:1:len-1
         
 %         if i~=1&&i~=n&&()
         if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
-            
-%             e(n) = x(i);
-%         else if x(i)>=x(i-1) && 
-%             i
 
             if abs(x(i)-e(n)) > thr
-                n = n + 1
+                n = n + 1;
                 e = [e, x(i)];
                 ax = [ax, i];
                 ay = [ay, x(i)];
@@ -643,14 +640,14 @@ function res = LEVD(x)
             
         end
         if n>=2
-            res(i) = 0.9*res(i-1)+0.1*(e(n)+e(n-1))/2;
+            s(i) = 0.9*s(i-1)+0.1*(e(n)+e(n-1))/2;
         else
-            res(i) = 0.9*res(i-1)+0.1*e(n);
+            s(i) = 0.9*s(i-1)+0.1*e(n);
         end
     end
     
-    ax
-    ay
+%     ax
+%     ay
     figure(5)
     
     plot(x)
@@ -659,7 +656,7 @@ function res = LEVD(x)
     plot(ax,ay,'*')
 %     plot(tmp)
     hold off
-
+    res = x-s';
 end
 
 

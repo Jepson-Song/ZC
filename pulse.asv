@@ -515,25 +515,28 @@ function pushbutton4_Callback(hObject, eventdata, handles)
             imagesc(cfg.figure7,tcir1);
 %             colormap jet
 %             colorbar
-            set(cfg.figure7, 'XTick', 0:50:300)
-            set(cfg.figure7, 'XTickLabel', 0:5:30)
+            len = length(tcir1(:,1));
+            set(cfg.figure7, 'XTick', 0:50:len)
+            set(cfg.figure7, 'XTickLabel', 0:5:len/10)
 %             set(cfg.figure7, 'YDir', 'normal')
             set(cfg.figure7, 'YTick', [0:100:960])
 %             set(cfg.figure7, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
             xlabel(cfg.figure7, 'Time(s)')
-            ylabel(cfg.figure7, 'Distance(cm)')
+            ylabel(cfg.figure7, 'Distance')
 %             set(cfg.figure7,'YGrid','on')
             
             imagesc(cfg.figure8,dcir1);
-            set(cfg.figure8, 'XTick', 0:50:300)
-            set(cfg.figure8, 'XTickLabel', 0:5:30)
+            set(cfg.figure8, 'XTick', 0:50:len)
+            set(cfg.figure8, 'XTickLabel', 0:5:len/10)
 %             set(cfg.figure8, 'YDir', 'normal')
             set(cfg.figure8, 'YTick', [0:100:960])
 %             set(cfg.figure8, 'YTickLabel', [0:100:960]*0.35);%*cfg.soundspeed/cfg.fs*100)
             xlabel(cfg.figure8, 'Time(s)')
-            ylabel(cfg.figure8, 'Distance(cm)')
+            ylabel(cfg.figure8, 'Distance')
 %             colormap jet
 %             colorbar
+
+            
     
             toobar();
     
@@ -543,105 +546,92 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %% pca
     cir1 = cfg.cir1;
-    tcir1 = cir1(:,320:420);
-    whos tcir1
+%     cir1 = dcir1';
+    [T, Frame] = size(cir1);
     
-%     dcir1 = diff(tcir1, 1, 2);
-%     whos dcir1
-    [m, n] = size(tcir1);
-    for i=1:1:n
-        tcir1(:, i) = smooth(tcir1(:, i), 9);
+    % path selection
+    fft_cir1 = fft(cir1);
+    
+    for index=1:1:Frame
+        % 先减去复数均值
+        cir1(:, index) = cir1(:, index) - mean(cir1(:, index));
+        
+        % 再做LEVD
+        
+        % 再做滑动平均
+        cir1(:, index) = smooth(cir1(:, index), 9);
     end
-    whos tcir1
     
-%             cir1(:,200:300) = tcir1;
-%             imagesc(cfg.figure5,cir1');
-%             set(cfg.figure5, 'XTick', 0:50:300)
-%             set(cfg.figure5, 'XTickLabel', 0:5:30)
-%             set(cfg.figure5, 'YTick', [0:100:960])
-%             xlabel(cfg.figure5, 'Time(s)')
-%             ylabel(cfg.figure5, 'Distance(cm)')
-%             
-%             dcir1 = diff(cir1', 1, 2);  % para3: 1是列差分 2是行差分
-%             imagesc(cfg.figure6,dcir1);
-%             set(cfg.figure6, 'XTick', 0:50:300)
-%             set(cfg.figure6, 'XTickLabel', 0:5:30)
-%             set(cfg.figure6, 'YTick', [0:100:960])
-%             xlabel(cfg.figure6, 'Time(s)')
-%             ylabel(cfg.figure6, 'Distance(cm)')
-%     
-%     dcir1 = diff(tcir1, 1, 1);
-%     whos dcir1
-%     for i=1:1:n
-%         dcir1(:, i) = smooth(dcir1(:, i), 9);
-%     end
     
-    tmp = tcir1(:,1);
+
+            
+    
     figure(1)
+    tmp = score(:,1)+score(:,2)+score(:,3);
     plot(tmp)
-    tmp = LEVD(tmp);
-    tcir1(:,1) = tmp;
-    hold on 
-    plot(tmp)
-    hold off
-
-
-    [coeff,score,latent] = pca(tcir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
-%     whos coeff
-%     figure(1)
-%     plot(coeff(:,1))
-
-    
-    figure(3)
-    plot(score(:,1))
     title('降维后')
     whos score
     
-%     figure(3)
-%     plot(latent)
-%     title('特征值')
-%     
-%     tmp = cumsum(latent)./sum(latent);
-%     whos latent
-%     
-%     pc = coeff; % 140*100
-%     tranMatrix = pc(:,1:2);
 
 end
 
+function draw_pic()
+imagesc(cfg.figure6,scir1');
+            set(cfg.figure6, 'XTick', 0:50:len)
+            set(cfg.figure6, 'XTickLabel', 0:5:len/10)
+            set(cfg.figure6, 'YTick', [0:100:960])
+            xlabel(cfg.figure6, 'Time(s)')
+            ylabel(cfg.figure6, 'Distance')
+            
+            en
+
 function res = LEVD(x)
 
-    thr = 3*std(x);
+    thr = std(x)
     
     len = length(x);
-    res = zeros(1, len);
+    s = zeros(1, len);
     n = 1;
     e = [];
     e = [e, x(1)];
-    res(1) = x(1);
+    s(1) = x(1);
     
     ax = [1];
-    
-    for i=2:1:n
-        if i~=1&&i~=n&&(x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1))
-            
-%             e(n) = x(i);
-%         else if x(i)>=x(i-1) && 
+    ay = [x(1)];
+%     figure(4)
+%     plot(x)
+    for i=2:1:len-1
+        
+%         if i~=1&&i~=n&&()
+        if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
 
             if abs(x(i)-e(n)) > thr
                 n = n + 1;
                 e = [e, x(i)];
+                ax = [ax, i];
+                ay = [ay, x(i)];
             end
                 
             
         end
         if n>=2
-            res(i) = 0.9*res(i-1)+0.1*(e(n)+e(n-1))/2;
+            s(i) = 0.9*s(i-1)+0.1*(e(n)+e(n-1))/2;
         else
-            res(i) = 0.9*res(i-1)+0.1*e(n)/2;
+            s(i) = 0.9*s(i-1)+0.1*e(n);
         end
     end
+    
+%     ax
+%     ay
+    figure(5)
+    
+    plot(x)
+    hold on 
 
+    plot(ax,ay,'*')
+%     plot(tmp)
+    hold off
+    res = x-s';
 end
 
 

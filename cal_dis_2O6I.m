@@ -39,7 +39,9 @@ function cal_dis_2O6I(cur_index)
         cir2(:, i) = conj(ifft(fftshift(temp_fft2,1))); %ifft and get the CIR
         
         if i==3
-            cfgcir1 = real(cir1(1:960, i)');
+%             cfgcir1 = real(cir1(1:960, i)');
+            cfgcir1 = cir1(1:960, i)';
+%             whos cfgcir1
         end
         
         [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i), i)));
@@ -119,6 +121,8 @@ function cal_dis_2O6I(cur_index)
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
     cfg.cir1 = [cfg.cir1; cfgcir1];
+    tmp = cfg.cir1;
+%     whos tmp
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];
     cfg.chose1 = [cfg.chose1; chose1];
