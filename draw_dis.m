@@ -41,7 +41,7 @@ function draw_dis(cur_index)
             
             
             % 画cir
-            tcir1 = [repmat(0*ones(1,length(cfg.cir1(1, :))),cfg.dislen,1); cfg.cir1]';
+            tcir1 = [repmat(0*ones(1,length(cfg.cir1(1, :))),cfg.dislen,1); real(cfg.cir1)]';
 %             tcir1 = tcir1(:, end-cfg.dislen+1:end);
             dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
             

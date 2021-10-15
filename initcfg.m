@@ -33,7 +33,7 @@ niconfig.outlength = niconfig.fs; %output sample buffer, one second
 
 niconfig.signal = 'zc';%'zc'
 
-niconfig.rate = 10;
+niconfig.rate = 1;
 niconfig.notifysample = niconfig.fs/niconfig.rate;
 niconfig.seglen = niconfig.notifysample;
 niconfig.notifytime = niconfig.notifysample/niconfig.fs;    

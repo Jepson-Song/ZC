@@ -22,6 +22,7 @@ function cal_dis_2O6I(cur_index)
     chose2 = zeros(1, 3);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 开始奇偶插值
     
+    allcir = zeros(1, 960*12);
     %% 左右发射端
     for i=1:1:cfg.nin                 %for each mic
         
@@ -38,11 +39,11 @@ function cal_dis_2O6I(cur_index)
         cir1(:, i) = conj(ifft(fftshift(temp_fft1,1))); %ifft and get the CIR
         cir2(:, i) = conj(ifft(fftshift(temp_fft2,1))); %ifft and get the CIR
         
-        if i==3
-%             cfgcir1 = real(cir1(1:960, i)');
-            cfgcir1 = cir1(1:960, i)';
-%             whos cfgcir1
-        end
+%         if i==3
+% %             cfgcir1 = real(cir1(1:960, i)');
+%             cfgcir1 = cir1(1:960, i)';
+% %             whos cfgcir1
+%         end
         
         [tm1, p1] = max(abs(cir1(cfg.left_bd(1, i):cfg.right_bd(1, i), i)));
         peak1 = cfg.left_bd(1, i) + p1 - 1;
@@ -80,7 +81,12 @@ function cal_dis_2O6I(cur_index)
             cfg.init_dis(2, i) = dis2(i);
         end
         
+        % 把所有cir放到一行
+        allcir((i-1)*960+1:i*960) = cir1(1:960, i)';
+        allcir((i-1+6)*960+1:(i+6)*960) = cir2(1:960, i)';
     end
+    whos allcir
+%     cfgcir1 = ;
 
     
     t = toc(dis_tim);
@@ -120,8 +126,8 @@ function cal_dis_2O6I(cur_index)
     
     cfg.dis1 = [cfg.dis1; dis1];
     cfg.dis2 = [cfg.dis2; dis2];
-    cfg.cir1 = [cfg.cir1; cfgcir1];
-    tmp = cfg.cir1;
+    cfg.cir1 = [cfg.cir1; allcir];
+%     tmp = cfg.cir1;
 %     whos tmp
     cfg.SIGQUAL1 = [cfg.SIGQUAL1; SIGQUAL1];
     cfg.SIGQUAL2 = [cfg.SIGQUAL2; SIGQUAL2];

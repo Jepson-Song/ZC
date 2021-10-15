@@ -450,6 +450,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     %% 保存cir
     cir = cfg.cir1;
+    whos cir
     save_data(real(cir), 'cir_real')
     save_data(imag(cir), 'cir_imag')
     
@@ -480,118 +481,145 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     
     %% 从文件中读取cir
-    cir1_real = load_data('cir_real');
-    cir1_imag = load_data('cir_imag');
-    cir1 = cir1_real+cir1_imag*1j;
+    allcir_real = load_data('cir_real');
+    allcir_imag = load_data('cir_imag');
+    allcir = allcir_real+allcir_imag*1j;
 %     cir1 = cir1_real;
-    cfg.cir1 = cir1;
+    cfg.cir1 = allcir;
 
     
-    %% 读取结果后画图
-    fprintf("\n-----【开始画图】-----\n");
-    for cur_index=1:1:cfg.index
-        if cfg.pause
-            toobar();
-            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-            while cfg.pause
-                pause(0.1)
-            end
-        end
-        tic
-%         draw(cur_index);
-        draw_dis(cur_index);
-        t = toc;
-        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-    end
-    toobar();
-    fprintf("-----【结束画图】-----\n");
-    
+%     %% 读取结果后画图
+%     fprintf("\n-----【开始画图】-----\n");
+%     for cur_index=1:1:cfg.index
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
+%         tic
+% %         draw(cur_index);
+%         draw_dis(cur_index);
+%         t = toc;
+%         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%     end
+%     toobar();
+%     fprintf("-----【结束画图】-----\n");
+%     
     
 %     cfg.drawDis = 1;
 %     draw_dis(cur_index);
 
+% 
+%     tmp = cir1(1, :)
 
-    tmp = cir1(1, :)
-
-            % 画cir
-            tcir1 = cfg.cir1';
-%             tcir1 = tcir1(:, end-cfg.dislen+1:end);
-    draw_pic(cfg.figure7,tcir1)
-            dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
-    draw_pic(cfg.figure8,dcir1)
-            
             
     
-            toobar();
-    
-%             imagesc(cfg.figure6,coeff);
-
+    toobar();
 
 
     %% pca
-    cir1 = cfg.cir1;
-    whos cir1
-%     cir1 = dcir1';
-    [T, Frame] = size(cir1);
-    
-    % path selection
-    fft_cir1 = abs(real(fft(cir1,100)));
-    whos fft_cir1
-    draw_pic(cfg.figure5, fft_cir1(1:51,:)');
-    figure(1)
-    plot(fft_cir1(:,320))
-    title('FFT')
-    
-    for index=1:1:Frame
-        % 路径选择
-        Emax = max(fft_cir1([1:1:5]+1,index));
-        part1 = sum(fft_cir1([1:1:5]+1,index))-Emax;
-        part2 = sum(fft_cir1([5:1:50]+1,index));
-        w1 = 0.5;
-        w2 = 0.5;
-        SNR(index) = w1*Emax/part1+w2*Emax/part2;
+        sel_cir1 = [];
+    for i=1:1:12
+%         if i~=3
+%             continue
+%         end
+        cir1 = cfg.cir1(:, (i-1)*960+1:i*960);
         
-        % 先减去复数均值
-        cir1(:, index) = cir1(:, index) - mean(cir1(:, index));
         
-        % 再做LEVD
+        % 画cir
+        tcir1 = cir1';
+    %             tcir1 = tcir1(:, end-cfg.dislen+1:end);
+        draw_pic(cfg.figure7,tcir1)
+        % 画差分cir1
+        dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
+        draw_pic(cfg.figure8,dcir1)
+
+%         whos cir1
+    %     cir1 = dcir1';
+        [T, Frame] = size(cir1);
+
+        % path selection
+        fft_cir1 = abs(real(fft(cir1,100)));
+%         whos fft_cir1
+        % 画fft
+        draw_pic(cfg.figure5, fft_cir1(1:51,:)');
+
+    %     figure(1)
+    %     plot(fft_cir1(:,320))
+    %     title('FFT')
+
+        for index=1:1:Frame
+            
+            % 路径选择
+            Emax = max(fft_cir1([1:1:5]+1,index));
+            part1 = sum(fft_cir1([1:1:5]+1,index))-Emax;
+            part2 = sum(fft_cir1([5:1:50]+1,index));
+            w1 = 0.5;
+            w2 = 0.5;
+            SNR(index) = w1*Emax/part1+w2*Emax/part2;
+
+            % 先减去复数均值
+            cir1(:, index) = cir1(:, index) - mean(cir1(:, index));
+
+            % 再做LEVD
+    %         cir1(:, index) = LEVD(cir1(:, index));
+
+            % 再做滑动平均
+            cir1(:, index) = smooth(cir1(:, index), 9);
+        end
         
-        % 再做滑动平均
-        cir1(:, index) = smooth(cir1(:, index), 9);
+        % 处理后
+        draw_pic(cfg.figure6, cir1');
+
+
+        figure(2)
+        plot(SNR,'b')
+        hold on
+        title('SNR')
+        l_bd = 1;
+        r_bd = 960;
+        SNR_thr = 0.7;
+        [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
+        sel = sel + l_bd - 1;
+    %     sel = [300:400];
+        plot(sel, SNR(sel),'r*');
+        hold off
+        
+        one_cir1 = cir1( :, sel );
+%         whos one_cir1
+%         whos sel_cir1
+%         tmp = zeros(size(sel_cir1)+size(one_cir1));
+        sel_cir1 = [sel_cir1, one_cir1];
+%         whos sel_cir1
+
     end
     
-    draw_pic(cfg.figure6, cir1');
-    figure(2)
-    plot(SNR)
-    hold on
-    title('SNR')
-    [, sel]= find(SNR(1:500)>=0.7);
-    sel = [300:400];
-    plot(sel, SNR(sel),'*');
-    hold off
-    
-    sel_cir1 = cir1( :, sel );
     sel_cir1 = real(sel_cir1);
+%     whos sel_cir1
     
+    % 路径选择后的cir
     tmp =zeros(T, Frame);
-    tmp(:, sel) = sel_cir1;
+%     tmp(:, sel) = sel_cir1;
+    tmp = sel_cir1;
     draw_pic(cfg.figure5, tmp');
 
     % pca
-    whos sel_cir1
     [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
     
-    figure(3)
-    tmp = score(:,1);%+score(:,2)+score(:,3);
-    plot(tmp)
-    title('降维后')
-    whos score
+    resp = score(:,1:5);%+score(:,2)+score(:,3);
+%     figure(3)
+%     plot(tmp)
+%     title('降维后')
+%     whos score
     
     % 低通滤波
-    tmp = lowpass(0.5,0.6,tmp,10);
+    resp = lowpass(0.5,0.6,resp,10);
     figure(4)
-    plot(tmp)
-    title('滤波后')
+    plot(resp)
+    title('呼吸波形')
+    legend('1','2','3','4','5')
     
 
 end
@@ -612,7 +640,7 @@ end
 
 function res = LEVD(x)
 
-    thr = std(x)
+    thr = std(x)*3;
     
     len = length(x);
     s = zeros(1, len);
@@ -648,14 +676,14 @@ function res = LEVD(x)
     
 %     ax
 %     ay
-    figure(5)
-    
-    plot(x)
-    hold on 
-
-    plot(ax,ay,'*')
-%     plot(tmp)
-    hold off
+%     figure(5)
+%     
+%     plot(x)
+%     hold on 
+% 
+%     plot(ax,ay,'*')
+% %     plot(tmp)
+%     hold off
     res = x-s';
 end
 
