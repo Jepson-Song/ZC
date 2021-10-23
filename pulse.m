@@ -580,7 +580,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         title('SNR')
         l_bd = 1;
         r_bd = 960;
-        SNR_thr = 0.7;
+        SNR_thr = 0.9;
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
     %     sel = [300:400];
