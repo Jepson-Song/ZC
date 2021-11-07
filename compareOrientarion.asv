@@ -28,7 +28,7 @@ function compareOrientarion()
     dir
     
     
-    len = size(dir_m,1);
+    len = size(pos1,1);
     mn_err = 360;
     point_start = start_ub;
     shift = [0,0,0];
@@ -36,12 +36,12 @@ function compareOrientarion()
     while(1)
         dir_m = point_end - point_start;
         include_angle = cal_angle(dir, dir_m);
-        avg_err = sum(include_angle)/len
+        avg_err = sum(include_angle)/len;
         if avg_err < mn_err
             mn_err = avg_err;
             shift_rem = shift;
         end
-        shift = shift - [0,0,0.001]
+        shift = shift - [0,0,0.001];
         point_start = start_ub + shift;
         if shift(3) < -0.2
             break
@@ -52,19 +52,35 @@ function compareOrientarion()
     point_start = start_ub + shift_rem;
     dir_m = point_end - point_start;
     
-    include_angle  = cal_err(dir, dir_m);
+    include_angle  = cal_angle(dir, dir_m);
     avg_err = sum(include_angle)/len
     
         
     
     figure(1)
     plot(include_angle);
-    xlabel('s')
+    xlabel('Samle')
+    ylabel('Error (degree)')
 
 
 end
 
-function include_angle = cal_err(dir, dir_m)
+function auto(dir, point_start, init_point_end)
+
+
+    len = size(point_start,1);
+    point_end = []
+    for i=1:1:len
+        mm_angle = 2*pi;
+        for j=1:1:size(init_point_end,1)
+            dir_m = init_point_end(j,:) - point_start(i, :);
+            angle = acos(sum(dir_m(i,:).*dir(i,:))/(sqrt(sum(dir_m(i,:).*dir_m(i,:)))*sqrt(sum(dir(i,:).*dir(i,:)))));
+            
+        
+
+end
+
+function include_angle = cal_angle(dir, dir_m)
 
     include_angle  =[];
     len = size(dir_m,1);
@@ -74,7 +90,7 @@ function include_angle = cal_err(dir, dir_m)
     end
 %     figure(1)
 %     plot(include_angle);
-    avg_err = sum(include_angle)/len
+    avg_err = sum(include_angle)/len;
 
 end
 
