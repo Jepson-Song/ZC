@@ -23,7 +23,7 @@ function varargout = pulse(varargin)
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 07-Nov-2021 09:15:13
+% Last Modified by GUIDE v2.5 07-Nov-2021 09:09:10
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1089,33 +1089,62 @@ function pushbutton13_Callback(hObject, eventdata, handles)
 %     init_para();
   
         
-    %% 记录数据
-    pos2 = cfg.pos2(cfg.index, 4:6);
-    dir = cfg.dir(cfg.index,:);
-    rec = [pos2, dir];
-    cfg.rec = [cfg.rec; rec];
     
+    %% 从文件中读取距离
+    if cfg.choseCorrect == 0
+        pos = load_data('pos');
+    else
+        pos = load_data('pos_cor');
+    end
+%     whos dis
+    cfg.index = size(pos, 1);
+    cfg.pos1 = pos(:, 1:3);
+    pos2 = pos(:, 4:6);
+    dir = cfg.dir()
+    
+    
+    %% 离线计算位置
+    fprintf("\n-----【开始离线计算】-----\n");
+
+%     cfg.pos1 = [];
+%     cfg.pos2 = [];
+    % 把data划分成dataseg
+    for cur_index = 1:1:cfg.index
+        %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
+        if cfg.pause
+            toobar();
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
+
+        % 计算坐标
+        tic
+        cal_dir(cur_index);
+        cfg.cur_index = cur_index;
+        
+        draw_dir(cur_index);
+        
+        t = toc;
+        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    toobar();
+    fprintf("-----【结束离线计算】-----\n");
+    
+    
+    %% 保存方向
+    dir = [cfg.pos3, cfg.dir];
+    if cfg.choseCorrect == 0
+        save_data(dir, 'dir')
+    else
+        save_data(dir, 'dir_cor')
+    end
 
 
 end
 
 
-% save
-% --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA) 
-
-
-    global  cfg
-    
-    
-    %保存记录的数据
-    rec = cfg.rec;
-    save_data(rec, 'rec')
-
-end
 
 
 % --- Executes when figure1 is resized.
@@ -1394,3 +1423,4 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 end
+

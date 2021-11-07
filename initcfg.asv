@@ -225,7 +225,7 @@ niconfig.dir = []; % direction
 niconfig.mov = []; % movement
 niconfig.obs = []; % obs观测状态序列
 niconfig.cir1 = []; % cir
-niconfig.rec = []; % rec记录数据
+niconfig.cir1 = []; % cir
 
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
 niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
