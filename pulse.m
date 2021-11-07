@@ -23,7 +23,7 @@ function varargout = pulse(varargin)
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 07-Nov-2021 09:15:13
+% Last Modified by GUIDE v2.5 07-Nov-2021 10:38:04
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -210,6 +210,12 @@ fprintf("\n-----【开始读入数据】-----\n");
     init_para();
     cfg.datain = [];
     
+    
+
+    time = datetime();
+    prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
+    set(handles.edit1, 'string', prefix);
+    
 end
 
 
@@ -347,16 +353,18 @@ daq.reset;
 delete (cfg.inputlistener);
 delete(cfg.outputlistener);
 
-    time = datetime();
-    prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
-    set(handles.edit1, 'string', prefix);
+%     time = datetime();
+%     prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
+%     set(handles.edit1, 'string', prefix);
     
     
     %% 保存数据
-    save_data(cfg.datain, '');
-    
-    set(handles.radiobutton3,'value',1);
-    cfg.lastDataNum = prefix;
+    if get(handles.radiobutton10,'value') == 1
+        save_data(cfg.datain, '');
+
+        set(handles.radiobutton3,'value',1);
+    end
+    %cfg.lastDataNum = prefix;
     
 
 end
@@ -1090,9 +1098,10 @@ function pushbutton13_Callback(hObject, eventdata, handles)
   
         
     %% 记录数据
-    pos2 = cfg.pos2(cfg.index, 4:6);
+    pos1 = cfg.pos1(cfg.index, :);
+    pos2 = cfg.pos2(cfg.index, :);
     dir = cfg.dir(cfg.index,:);
-    rec = [pos2, dir];
+    rec = [pos1, pos2, dir];
     cfg.rec = [cfg.rec; rec];
     
 
@@ -1114,7 +1123,7 @@ function pushbutton14_Callback(hObject, eventdata, handles)
     %保存记录的数据
     rec = cfg.rec;
     save_data(rec, 'rec')
-
+    cfg.rec = [];
 end
 
 
@@ -1393,4 +1402,14 @@ function edit7_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+end
+
+
+% --- Executes on button press in radiobutton10.
+function radiobutton10_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton10
 end

@@ -93,15 +93,15 @@ function cal_dis_2O6I(cur_index)
     fprintf("计算距离用时：%.4f\n", vpa(t));
     
     %dis = [dis1, dis2];
-    %% 计算shift_dis
-        if cur_index==1
-            cfg.shift_dis = [dis1; dis2];
-        end
+%     %% 计算shift_dis
+%         if cur_index==1
+%             cfg.shift_dis = [dis1; dis2];
+%         end
     
     %% 真实距离
     % 零点校准
-%     dis1 = dis1-cfg.init_dis(1, :);
-%     dis2 = dis2-cfg.init_dis(2, :);
+    dis1 = dis1-cfg.init_dis(1, :);
+    dis2 = dis2-cfg.init_dis(2, :);
     
     %     dis1
     [val, index1] = sort(SIGQUAL1);
