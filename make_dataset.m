@@ -52,7 +52,7 @@ function make_dataset()
         end
         
 %     % 遍历每个类别的数据
-    for k=1:1:6
+    for k=1:1:7
         
     fileName = [num2str(k), '_pos.txt'];
     fprintf("【从文件读取位置数据】 "+fileName+"\n");
