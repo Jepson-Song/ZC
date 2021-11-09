@@ -361,10 +361,10 @@ delete(cfg.outputlistener);
     %% 保存数据
     if get(handles.radiobutton10,'value') == 1
         save_data(cfg.datain, '');
-
+        prefix = get(cfg.handles.edit1, 'string');
+        cfg.lastDataNum = prefix;
         set(handles.radiobutton3,'value',1);
     end
-    %cfg.lastDataNum = prefix;
     
 
 end

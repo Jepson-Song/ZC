@@ -135,6 +135,20 @@ function cal_dis_2O6I(cur_index)
     cfg.chose2 = [cfg.chose2; chose2];
     
  
+%     figure(2)
+%     legend_line = [];
+%         for i=1:1:3
+%             h = plot([1:1:cfg.zclen],abs(cir1(1:end,i)),cfg.color(i));
+% %                 [peak1(i), peak1(i)],[0, abs(m1(i))], strcat('--*',cfg.color(i)));
+%             hold on
+% %             legend_str = [legend_str, ['距离',num2str(i)]];
+%             legend_line = [legend_line, h(1)];
+%             legend_str{i} = ['Reciever',num2str(i)];
+%         end
+%         hold off
+% %         title(cfg.figure(1, 1),'左耳机CIR')
+%         legend(legend_line, legend_str)
+        
     
     %% 实时画图，画cir
     if cfg.drawCir

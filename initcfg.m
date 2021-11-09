@@ -256,6 +256,8 @@ niconfig.chose2 = [];
 % niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
 niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0;
                         0 0 0 0.0759 0.0723 0.0723];
+niconfig.init_dis = [0.0723 0.0687 0.0651 0 0 0;
+                        0 0 0 0.0687 0.0687 0.0687];
 niconfig.handles = [];
 niconfig.SIG_LOS = 4;
 
@@ -300,8 +302,8 @@ niconfig.rotation = 8; % 转动
 niconfig.pitch_surge = -3; % 
 
 niconfig.init_dir = [-1 -1 0]; % 初始时大概视线方向
-niconfig.init_pos1 = [0.3 1 0]; % 初始时左耳机的大概位置
-niconfig.init_pos2 = [1 0.3 0]; % 初始时右耳机的大概位置
+niconfig.init_pos1 = [0.3 0.8 0]; % 初始时左耳机的大概位置
+niconfig.init_pos2 = [0.8 0.3 0]; % 初始时右耳机的大概位置
 
 niconfig.class_num = 6; % 分类的数目
 niconfig.angle_num = 18; % 观测值编码时角度划分的数量

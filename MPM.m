@@ -1,4 +1,4 @@
-function compareOrientarion()
+function MPM()
 %     global cfg
     
     rec = load_data('rec');
