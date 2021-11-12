@@ -313,6 +313,10 @@ niconfig.cut_step = 1; % 数据集切分的长度
 niconfig.data_name = '20210827_182636'; % 数据集的名字
 niconfig.data_name = 'data1'; % 数据集的名字
 
+
+niconfig.resp = 0; % 测呼吸
+
+
 % 模型1
 niconfig.prior1 = [];
 niconfig.transmat1 = [];

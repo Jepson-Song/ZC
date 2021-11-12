@@ -223,6 +223,23 @@ function cal_dir(cur_index)
         
     end
     
+    % 处理异常值
+    if cur_index~=1 && 0
+        last_dir = cfg.dir(cur_index-1, :);
+        
+        threshold_pos = 5/cfg.rate;
+        change_pos1 = get_distance(pos1, last_pos1)
+        change_pos2 = get_distance(pos2, last_pos2)
+        if change_pos1 > threshold_pos
+            pos1 = last_pos1;
+        end
+            
+        if change_pos2 > threshold_pos 
+            pos2 = last_pos2;
+        end
+    end
+    
+    
     cfg.dir = [cfg.dir; dir];
     
     %% 发送数据

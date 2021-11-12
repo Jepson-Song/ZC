@@ -456,11 +456,14 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     dis = [cfg.dis1,cfg.dis2];
     save_data(dis, 'dis')
     
+    
     %% 保存cir
+    if cfg.resp == 1
     cir = cfg.cir1;
     whos cir
     save_data(real(cir), 'cir_real')
     save_data(imag(cir), 'cir_imag')
+    end
     
 %     %% pca
 %     coeff = pca(cir(310:420, :));
@@ -489,44 +492,14 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     
     %% 从文件中读取cir
+    if cfg.resp == 1
     allcir_real = load_data('cir_real');
     allcir_imag = load_data('cir_imag');
     allcir = allcir_real+allcir_imag*1j;
 %     cir1 = cir1_real;
     cfg.cir1 = allcir;
-
     
-%     %% 读取结果后画图
-%     fprintf("\n-----【开始画图】-----\n");
-%     for cur_index=1:1:cfg.index
-%         if cfg.pause
-%             toobar();
-%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-%             while cfg.pause
-%                 pause(0.1)
-%             end
-%         end
-%         tic
-% %         draw(cur_index);
-%         draw_dis(cur_index);
-%         t = toc;
-%         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-%     end
-%     toobar();
-%     fprintf("-----【结束画图】-----\n");
-%     
     
-%     cfg.drawDis = 1;
-%     draw_dis(cur_index);
-
-% 
-%     tmp = cir1(1, :)
-
-            
-    
-    toobar();
-
-
     %% pca
         sel_cir1 = [];
     for i=1:1:12
@@ -628,6 +601,42 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     plot(resp)
     title('呼吸波形')
     legend('1','2','3','4','5')
+    
+    end
+
+    
+%     %% 读取结果后画图
+%     fprintf("\n-----【开始画图】-----\n");
+%     for cur_index=1:1:cfg.index
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
+%         tic
+% %         draw(cur_index);
+%         draw_dis(cur_index);
+%         t = toc;
+%         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%     end
+%     toobar();
+%     fprintf("-----【结束画图】-----\n");
+%     
+    
+%     cfg.drawDis = 1;
+%     draw_dis(cur_index);
+
+% 
+%     tmp = cir1(1, :)
+
+            
+    
+    toobar();
+
+
+    
     
 
 end
