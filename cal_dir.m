@@ -162,7 +162,8 @@ function cal_dir(cur_index)
     t = toc(class_tim);
     fprintf("hmm分类用时：%.4f\n", vpa(t));
             
-    mov_class = cfg.static;
+%     mov_class = cfg.static;
+%     mov_class = cfg.surge;
     
     
     if mov_class == cfg.static % 静止

@@ -9,28 +9,39 @@ function REM()
     
     
     len = size(dir,1);
-    whos dir
-    
-    dir_zero = [];
-    for i=1:1:len
-        dir_zero = [dir_zero; [-1 0 0]];
-    end
-    whos dir_zero
-    
-    
-    dir_angle = cal_angle(dir, dir_zero);
+%     whos dir
+%     
+%     dir_zero = [];
+%     for i=1:1:len
+%         dir_zero = [dir_zero; [-1 0 0]];
+%     end
+%     whos dir_zero
+%     
+%     
+%     dir_angle = cal_angle(dir, dir_zero);
     
     dir_gt = [0:90/(len-1):90];
     
-    include_angle = abs(dir_angle-dir_gt);
+%     include_angle = abs(dir_angle-dir_gt);
     
-    figure(1)
-    plot(dir_angle, 'b.-');
-    hold on
-    plot(dir_gt, 'b--');
-    hold off
-    xlabel('Samle')
-    ylabel('Angle(degree)')
+    tmp = zeros(len,3);
+    tmp(:, 1) = -cos(dir_gt/180*pi)/pi*180;
+    tmp(:, 2) = -sin(dir_gt/180*pi)/pi*180;
+    dir_gt = tmp;
+    
+    whos dir_angle
+    whos dir_gt
+    
+    include_angle = cal_angle(dir, dir_gt);
+    
+    
+%     figure(1)
+%     plot(dir_angle, 'b.-');
+%     hold on
+%     plot(dir_gt, 'b--');
+%     hold off
+%     xlabel('Samle')
+%     ylabel('Angle(degree)')
     
     figure(2)
     plot(include_angle, 'r.-')
