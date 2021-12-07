@@ -211,7 +211,7 @@ niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 niconfig.Q = [0 1.20 0;
               0 0.90 -0.15;
               0 0.60 0;
-              1.40 0.2 0-0;
+              1.4 0.2 0-0;
               0.90 0 -0.15;
               1.20 0 0];
 niconfig.P = [niconfig.P1; niconfig.P2];

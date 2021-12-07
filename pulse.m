@@ -23,7 +23,7 @@ function varargout = pulse(varargin)
 % Edit the above text to modify the response to help pulse
 
 
-% Last Modified by GUIDE v2.5 07-Nov-2021 10:38:04
+% Last Modified by GUIDE v2.5 15-Nov-2021 10:52:31
     
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -749,7 +749,8 @@ function pushbutton5_Callback(hObject, eventdata, handles)
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
         
-        draw_pos(cur_index);
+        % 画图
+%         draw_pos(cur_index);
         
         t = toc;
         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
@@ -1020,7 +1021,8 @@ function pushbutton11_Callback(hObject, eventdata, handles)
         cal_dir(cur_index);
         cfg.cur_index = cur_index;
         
-        draw_dir(cur_index);
+        % 画图
+%         draw_dir(cur_index);
         
         t = toc;
         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
@@ -1421,4 +1423,77 @@ function radiobutton10_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton10
+end
+
+
+% --- Executes on button press in pushbutton15.
+function pushbutton15_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton15 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+        allREM = [];
+    
+        global cfg
+        
+        address = cfg.dataAddress;
+        fileFolder=fullfile(address);
+        dirOutput=dir(fullfile(fileFolder,'20211115*'));
+        fileNames={dirOutput.name};
+        
+        class = 6
+        for i=0:1:class-1
+        cnt = 0;
+        for index=1:length(fileNames)
+            cnt = cnt + 1;
+            fileName = fileNames(index);
+            fileName = fileName{1}
+            
+            set(handles.edit1, 'string', fileName);
+            set(handles.edit1, 'string', fileName);
+            set(handles.edit1, 'string', fileName);
+            
+            fileaddress = [address,'/',fileName,'/',fileName,'_REM.txt'];
+            if ~exist(fileaddress,'file')
+            
+            fprintf("REM不存在，开始计算......");
+            
+%                error(display('no startup.m file'));
+
+
+                pushbutton3_Callback(hObject, eventdata, handles)
+                
+                pushbutton5_Callback(hObject, eventdata, handles)
+                
+                pushbutton11_Callback(hObject, eventdata, handles)
+                
+                REM()
+
+
+            else 
+                
+                fprintf("REM存在，跳过");
+                
+                if cnt<=30 && mod(cnt,class) == i
+                    data = load_data('REM');
+    %                 allREM = [allREM; data];
+                    f = fopen([address,'\allREM_5.txt'], 'a+');
+                    fprintf(f, '%f ', data);
+                    fclose(f);
+                end
+                
+            end
+            
+            end
+            
+                    f = fopen([address,'\allREM_5.txt'], 'a+');
+                    fprintf(f, '\n');
+                    fclose(f);
+        
+        end
+        
+        whos allREM
+    
+
 end

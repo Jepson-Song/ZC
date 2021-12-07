@@ -105,7 +105,7 @@ function cal_dir(cur_index)
         
 %     end
     
-%     %% hmm分类思路
+%     %% hmm分类
 %     class_tim = tic;
 %     
 %         % 计算观测状态obs
@@ -139,7 +139,7 @@ function cal_dir(cur_index)
 %             mov_class = hmm_class(obs_data);
 %         end
         
-    %% LSTM分类思路
+    %% LSTM分类
     class_tim = tic;
     if cur_index < cfg.cut_len
         mov_class = cfg.static;
@@ -152,19 +152,15 @@ function cal_dir(cur_index)
         mov_class = double(LSTM_class(cfg.net, sub_data'));
     end
     
-    
-%     mov_class = cfg.static;
     if (cur_index==1)
         pos3 = (pos1+pos2)/2 - cfg.ear2neck;
         cfg.O = pos3;
     end
         
     t = toc(class_tim);
-    fprintf("hmm分类用时：%.4f\n", vpa(t));
+    fprintf("分类用时：%.4f\n", vpa(t));
             
-%     mov_class = cfg.static;
-%     mov_class = cfg.surge;
-    
+    mov_class = cfg.static;
     
     if mov_class == cfg.static % 静止
         str = "静止";
@@ -227,16 +223,13 @@ function cal_dir(cur_index)
     if cur_index~=1 && 0
         last_dir = cfg.dir(cur_index-1, :);
         
-        threshold_pos = 5/cfg.rate;
-        change_pos1 = get_distance(pos1, last_pos1)
-        change_pos2 = get_distance(pos2, last_pos2)
-        if change_pos1 > threshold_pos
-            pos1 = last_pos1;
+        threshold_dir = 5;%/cfg.rate;
+        [div, change_dir] = get_angle(dir, last_dir);
+        fprintf("---------------------------------------change_dir：%.4f\n", vpa(change_dir));
+        if change_dir > threshold_dir
+            dir = last_dir;
         end
             
-        if change_pos2 > threshold_pos 
-            pos2 = last_pos2;
-        end
     end
     
     
@@ -293,7 +286,7 @@ function [div, angle] = get_angle(a, b)
 end
 
 
-%% 求角度
+%% 正切求角度
 function res = get_angle2(x, y)
     
     if x == 0
