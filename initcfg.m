@@ -314,7 +314,8 @@ niconfig.data_name = '20210827_182636'; % 数据集的名字
 niconfig.data_name = 'data1'; % 数据集的名字
 
 
-niconfig.resp = 0; % 测呼吸
+niconfig.resp = 1; % 测呼吸
+niconfig.lastCIR = ""; % 测呼吸
 
 
 % 模型1

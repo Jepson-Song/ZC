@@ -35,7 +35,7 @@ function PPAC()
     ub = mid_first - [0 0 0.05];
     lb = mid_first - [0 0 0.25];
     pos3 = ub;
-    while(ub(3)-lb(3)>0.001)
+    while(ub(3)-lb(3)>0.00001)
         pos3 = (ub+lb)/2;
         
         vec_first = mid_first-pos3

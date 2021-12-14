@@ -459,10 +459,11 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     %% 保存cir
     if cfg.resp == 1
-    cir = cfg.cir1;
-    whos cir
-    save_data(real(cir), 'cir_real')
-    save_data(imag(cir), 'cir_imag')
+        cfg.lastCIR = prefix;
+        cir = cfg.cir1;
+        whos cir
+        save_data(real(cir), 'cir_real')
+        save_data(imag(cir), 'cir_imag')
     end
     
 %     %% pca
@@ -482,129 +483,12 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %save_var(fileName)
     
-    init_para();
-    
-    global cfg
-    %% 从文件中读取结果
-    dis = load_data('dis');
-    cfg.index = size(dis, 1);
-    cfg.dis1 = dis(:, 1:cfg.nin);
-    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
-    
-    %% 从文件中读取cir
-    if cfg.resp == 1
-    allcir_real = load_data('cir_real');
-    allcir_imag = load_data('cir_imag');
-    allcir = allcir_real+allcir_imag*1j;
-%     cir1 = cir1_real;
-    cfg.cir1 = allcir;
-    
-    
-    %% pca
-        sel_cir1 = [];
-    for i=1:1:12
-%         if i~=3
-%             continue
-%         end
-        cir1 = cfg.cir1(:, (i-1)*960+1:i*960);
-        
-        
-        % 画cir
-        tcir1 = cir1';
-    %             tcir1 = tcir1(:, end-cfg.dislen+1:end);
-        draw_pic(cfg.figure7,tcir1)
-        % 画差分cir1
-        dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
-        draw_pic(cfg.figure8,dcir1)
-
-%         whos cir1
-    %     cir1 = dcir1';
-        [T, Frame] = size(cir1);
-
-        % path selection
-        fft_cir1 = abs(real(fft(cir1,100)));
-%         whos fft_cir1
-        % 画fft
-        draw_pic(cfg.figure5, fft_cir1(1:51,:)');
-
-    %     figure(1)
-    %     plot(fft_cir1(:,320))
-    %     title('FFT')
-
-        for index=1:1:Frame
-            
-            % 路径选择
-            Emax = max(fft_cir1([1:1:5]+1,index));
-            part1 = sum(fft_cir1([1:1:5]+1,index))-Emax;
-            part2 = sum(fft_cir1([5:1:50]+1,index));
-            w1 = 0.5;
-            w2 = 0.5;
-            SNR(index) = w1*Emax/part1+w2*Emax/part2;
-
-            % 先减去复数均值
-            cir1(:, index) = cir1(:, index) - mean(cir1(:, index));
-
-            % 再做LEVD
-    %         cir1(:, index) = LEVD(cir1(:, index));
-
-            % 再做滑动平均
-            cir1(:, index) = smooth(cir1(:, index), 9);
-        end
-        
-        % 处理后
-        draw_pic(cfg.figure6, cir1');
-
-
-        figure(2)
-        plot(SNR,'b')
-        hold on
-        title('SNR')
-        l_bd = 1;
-        r_bd = 960;
-        SNR_thr = 0.9;
-        [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
-        sel = sel + l_bd - 1;
-    %     sel = [300:400];
-        plot(sel, SNR(sel),'r*');
-        hold off
-        
-        one_cir1 = cir1( :, sel );
-%         whos one_cir1
-%         whos sel_cir1
-%         tmp = zeros(size(sel_cir1)+size(one_cir1));
-        sel_cir1 = [sel_cir1, one_cir1];
-%         whos sel_cir1
-
-    end
-    
-    sel_cir1 = real(sel_cir1);
-%     whos sel_cir1
-    
-    % 路径选择后的cir
-    tmp =zeros(T, Frame);
-%     tmp(:, sel) = sel_cir1;
-    tmp = sel_cir1;
-    draw_pic(cfg.figure5, tmp');
-
-    % pca
-    [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
-    
-    resp = score(:,1:5);%+score(:,2)+score(:,3);
-%     figure(3)
-%     plot(tmp)
-%     title('降维后')
-%     whos score
-    
-    % 低通滤波
-    resp = lowpass(0.5,0.6,resp,10);
-    figure(4)
-    plot(resp)
-    title('呼吸波形')
-    legend('1','2','3','4','5')
-    
-    end
+    cal_resp();
 
     
+%     init_para();    
+%     global cfg
+%     
 %     %% 读取结果后画图
 %     fprintf("\n-----【开始画图】-----\n");
 %     for cur_index=1:1:cfg.index
@@ -641,19 +525,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
 end
 
-function draw_pic(fig,data)
-    if ~isreal(data)
-        data = real(data);
-    end
-    len = length(data(1,:));
-            imagesc(fig,data);
-            set(fig, 'XTick', 0:50:len)
-            set(fig, 'XTickLabel', 0:5:len/10)
-            set(fig, 'YTick', [0:100:960])
-            xlabel(fig, 'Time(s)')
-            ylabel(fig, 'Distance')
-            
-end
 
 function res = LEVD(x)
 
