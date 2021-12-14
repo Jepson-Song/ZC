@@ -314,8 +314,11 @@ niconfig.data_name = '20210827_182636'; % 数据集的名字
 niconfig.data_name = 'data1'; % 数据集的名字
 
 
-niconfig.resp = 1; % 测呼吸
-niconfig.lastCIR = ""; % 测呼吸
+niconfig.ifResp = 1; % 是否测呼吸
+niconfig.lastCIR = ""; % 上一个cir编号
+niconfig.resp = []; % 呼吸结果
+niconfig.sel_cir1 = []; % 路径选择
+niconfig.SNR = []; % SNR
 
 
 % 模型1

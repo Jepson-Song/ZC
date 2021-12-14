@@ -1,11 +1,11 @@
 function cal_resp()
 
     global cfg
-%     %% 从文件中读取结果
-%     dis = load_data('dis');
-%     cfg.index = size(dis, 1);
-%     cfg.dis1 = dis(:, 1:cfg.nin);
-%     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    %% 从文件中读取结果
+    dis = load_data('dis');
+    cfg.index = size(dis, 1);
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     
     %% 从文件中读取cir
     if cfg.ifResp == 1
@@ -15,8 +15,8 @@ function cal_resp()
         if strcmp(cfg.lastCIR, prefix)==0
             allcir_real = load_data('cir_real');
             whos allcir_real
-%             allcir_imag = load_data('cir_imag');
-%             whos allcir_imag
+            allcir_imag = load_data('cir_imag');
+            whos allcir_imag
             allcir = allcir_real;%+allcir_imag*1j;
             cfg.cir1 = allcir;
 
@@ -88,7 +88,7 @@ function cal_resp()
     %         cir1(:, index) = LEVD(cir1(:, index));
 
             % 再做滑动平均
-            cir1(:, index) = smooth(cir1(:, index), 21); % 有作用
+            cir1(:, index) = smooth(cir1(:, index), 9); % 有作用
         end
         
         all_SNR = [all_SNR; SNR];
@@ -121,8 +121,6 @@ function cal_resp()
 
     end
     
-    cfg.SNR = all_SNR;
-    
     % 路径选择后的cir
     sel_cir1 = real(sel_cir1);
 %     whos sel_cir1
@@ -135,16 +133,8 @@ function cal_resp()
     % pca
     [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
     
-    
-    
-    for i=1:1:3
-%         resp = score(:,i);%+score(:,2)+score(:,3);  
-        
-        % 对呼吸结果做滑动平均 
-        resp = smooth(score(:, i), 11); % 有作用
-        
-%         resp = LEVD(resp);
-        
+    for i=1:1:6
+        resp = score(:,i);%+score(:,2)+score(:,3);    
         % 低通滤波
         resp = lowpass(0.5,0.6,resp,10);
         figure(i)
@@ -164,54 +154,4 @@ function cal_resp()
     
     end
 
-end
-
-
-function res = LEVD(x)
-
-    thr = std(x)*3;
-    
-    len = length(x);
-    s = zeros(1, len);
-    n = 1;
-    e = [];
-    e = [e, x(1)];
-    s(1) = x(1);
-    
-    ax = [1];
-    ay = [x(1)];
-%     figure(4)
-%     plot(x)
-    for i=2:1:len-1
-        
-%         if i~=1&&i~=n&&()
-        if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
-
-            if abs(x(i)-e(n)) > thr
-                n = n + 1;
-                e = [e, x(i)];
-                ax = [ax, i];
-                ay = [ay, x(i)];
-            end
-                
-            
-        end
-        if n>=2
-            s(i) = 0.9*s(i-1)+0.1*(e(n)+e(n-1))/2;
-        else
-            s(i) = 0.9*s(i-1)+0.1*e(n);
-        end
-    end
-    
-%     ax
-%     ay
-%     figure(5)
-%     
-%     plot(x)
-%     hold on 
-% 
-%     plot(ax,ay,'*')
-% %     plot(tmp)
-%     hold off
-    res = x-s';
 end

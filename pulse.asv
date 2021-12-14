@@ -460,7 +460,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     
     %% 保存cir
-    if cfg.ifResp == 1
+    if cfg.resp == 1
         cfg.lastCIR = prefix;
         cir = cfg.cir1;
         whos cir
@@ -486,57 +486,51 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %save_var(fileName)
     
     %% cal_resp
-%     cal_resp();
+    cal_resp();
     
     
     %% cal_resp_rt
     global cfg
-        cfg.resp = [];
-        prefix = get(cfg.handles.edit1, 'string');
-        if strcmp(cfg.lastCIR, prefix)==0
-            
-            allcir_real = load_data('cir_real');
-            allcir = allcir_real;%+allcir_imag*1j;
-            cfg.cir1 = allcir;
-
-            
-
-            cfg.lastCIR = prefix;
-        end
-%         allcir = cfg.cir1;
-%         whos allcir
-        cfg.index = size(cfg.cir1, 1);
-        
+    
+    allcir_real = load_data('cir_real');
+    allcir = allcir_real;%+allcir_imag*1j;
+    cfg.cir1 = allcir;
+    
+    cfg.index = size(allcir, 1);
     
     %% 计算距离
-    fprintf("\n-----【开始计算呼吸】-----\n");
+    fprintf("\n-----【开始计算距离】-----\n");
     fprintf('Total Data length: %d\n',cfg.data_len)
+    cfg.index = floor(cfg.data_len/cfg.seglen);
     
-    start = 1170;
-    step = 1;
-    for cur_index = 0:step:cfg.index
-        
-        if cur_index<start
-            continue;
-        end
-        
-        % 计算呼吸
+    
         tic
+    for cur_index = 1:1:cfg.index
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
+%         
+        % 计算距离
+        tic
+%         cal_dis(cur_index);
+
+%         PhaseRange(cur_index);
         
-        cal_resp_rt(cur_index, start, step);
+        cal_dis_2O6I(cur_index);
+        
+%         draw_dis(cur_index);
         
         t = toc;
         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-        
-    figure(10)
-    plot(cfg.resp)
-    title('全部呼吸波形')
 
     end
     
-    fprintf("-----【结束计算呼吸】-----\n");
-    
-        
+    toobar();
+    fprintf("-----【结束计算距离】-----\n");
 
     
     %% draw dis
@@ -568,7 +562,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
 % 
 %     tmp = cir1(1, :)
-%     toobar();
+
+            
+    
+    toobar();
 
 
     
@@ -577,6 +574,54 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 end
 
 
+function res = LEVD(x)
+
+    thr = std(x)*3;
+    
+    len = length(x);
+    s = zeros(1, len);
+    n = 1;
+    e = [];
+    e = [e, x(1)];
+    s(1) = x(1);
+    
+    ax = [1];
+    ay = [x(1)];
+%     figure(4)
+%     plot(x)
+    for i=2:1:len-1
+        
+%         if i~=1&&i~=n&&()
+        if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
+
+            if abs(x(i)-e(n)) > thr
+                n = n + 1;
+                e = [e, x(i)];
+                ax = [ax, i];
+                ay = [ay, x(i)];
+            end
+                
+            
+        end
+        if n>=2
+            s(i) = 0.9*s(i-1)+0.1*(e(n)+e(n-1))/2;
+        else
+            s(i) = 0.9*s(i-1)+0.1*e(n);
+        end
+    end
+    
+%     ax
+%     ay
+%     figure(5)
+%     
+%     plot(x)
+%     hold on 
+% 
+%     plot(ax,ay,'*')
+% %     plot(tmp)
+%     hold off
+    res = x-s';
+end
 
 
 %% Calculate position
