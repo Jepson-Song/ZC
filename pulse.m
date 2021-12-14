@@ -407,12 +407,6 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     %% 从文件中读取数据
     if get(handles.radiobutton3,'value') == 0
-%     fprintf("\n-----【开始读取数据】-----\n");
-%     fileName = [prefix, '.txt'];
-%     fprintf("【从文件读取数据】 "+fileName+"\n");
-%     address = [cfg.dataAddress,fileName];
-%     cfg.datain = load(address);
-%     fprintf("-----【完成读取数据】-----\n");
 
     cfg.datain = load_data('');
     
@@ -426,31 +420,39 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     fprintf('Total Data length: %d\n',cfg.data_len)
     cfg.index = floor(cfg.data_len/cfg.seglen);
     
-    for cur_index = 1:1:cfg.index
-        if cfg.pause
-            toobar();
-            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-            while cfg.pause
-                pause(0.1)
-            end
-        end
-        
-        % 计算距离
+    
         tic
+    for cur_index = 1:1:cfg.index
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
+%         
+        % 计算距离
+%         tic
 %         cal_dis(cur_index);
 
 %         PhaseRange(cur_index);
         
         cal_dis_2O6I(cur_index);
         
-        draw_dis(cur_index);
+%         draw_dis(cur_index);
         
-        t = toc;
-        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%         t = toc;
+%         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
 
     end
+    
+        t = toc;
+        fprintf("【处理完数据】 数据长度：%d一共用时：%.4f\n",cfg.index,vpa(t));
     toobar();
     fprintf("-----【结束计算距离】-----\n");
+    
+%     pushbutton5_Callback(hObject, eventdata, handles);
+%     pushbutton11_Callback(hObject, eventdata, handles);
 
     %% 保存距离
     dis = [cfg.dis1,cfg.dis2];
@@ -724,27 +726,31 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
     cfg.pos1 = [];
     cfg.pos2 = [];
+    tic;
     % 把data划分成dataseg
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
-        if cfg.pause
-            toobar();
-            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-            while cfg.pause
-                pause(0.1)
-            end
-        end
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
 
         % 计算坐标
-        tic;
+%         tic;
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
         
-        draw_pos(cur_index);
+%         draw_pos(cur_index);
         
-        t = toc;
-        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%         t = toc;
+%         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    
+        t = toc;
+        fprintf("【处理完数据】 一共用时：%.4f\n",vpa(t));
     toobar();
     fprintf("-----【结束离线计算】-----\n");
     
@@ -756,6 +762,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     else
         save_data(pos, 'pos_cor')
     end
+
     
 end
 
@@ -766,43 +773,59 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     
-    global cfg
-    
-    %save_var(fileName)
-    
-    %clear
-    %load(address)
-    
-    init_para();
-    
-    %% 从文件中读取位置
-    if cfg.choseCorrect == 0
-        pos = load_data('pos');
-    else
-        pos = load_data('pos_cor');
-    end
-    cfg.index = size(pos, 1);
-    
-    cfg.pos1 = pos(:, 1:3);
-    cfg.pos2 = pos(:, 4:6);  
-    
-    %% 读取结果后画图
-    fprintf("\n-----【开始画图】-----\n");
-    for cur_index=1:1:cfg.index
-        if cfg.pause
-            toobar();
-            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-            while cfg.pause
-                pause(0.1)
-            end
-        end
-        tic
-        draw_pos(cur_index);
-        t = toc;
-        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-    end
-    toobar();
-    fprintf("-----【结束画图】-----\n");
+%     global cfg
+%     
+%     %save_var(fileName)
+%     
+%     %clear
+%     %load(address)
+%     
+%     init_para();
+%     
+%     %% 从文件中读取位置
+%     if cfg.choseCorrect == 0
+%         pos = load_data('pos');
+%     else
+%         pos = load_data('pos_cor');
+%     end
+%     cfg.index = size(pos, 1);
+%     
+%     cfg.pos1 = pos(:, 1:3);
+%     cfg.pos2 = pos(:, 4:6);  
+%     
+%     %% 读取结果后画图
+%     fprintf("\n-----【开始画图】-----\n");
+%     for cur_index=1:1:cfg.index
+%         if cfg.pause
+%             toobar();
+%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+%             while cfg.pause
+%                 pause(0.1)
+%             end
+%         end
+%         tic
+%         draw_pos(cur_index);
+%         t = toc;
+%         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%     end
+%     toobar();
+%     fprintf("-----【结束画图】-----\n");
+
+
+
+    tic;
+    pushbutton3_Callback(hObject, eventdata, handles);
+    t1 = toc;
+    fprintf("计算距离一共用时：%.4f\n", vpa(t));
+    tic;
+    pushbutton5_Callback(hObject, eventdata, handles);
+    t2 = toc;
+    fprintf("计算位置一共用时：%.4f\n", vpa(t));
+    tic;
+    pushbutton11_Callback(hObject, eventdata, handles);
+    t3 = toc;
+    fprintf("计算方向一共用时：%.4f\n", vpa(t));
+
 
 end
 
@@ -996,6 +1019,7 @@ function pushbutton11_Callback(hObject, eventdata, handles)
 %     cfg.pos1 = [];
 %     cfg.pos2 = [];
     % 把data划分成dataseg
+    tic
     for cur_index = 1:1:cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
         if cfg.pause
@@ -1007,15 +1031,18 @@ function pushbutton11_Callback(hObject, eventdata, handles)
         end
 
         % 计算坐标
-        tic
+%         tic
         cal_dir(cur_index);
         cfg.cur_index = cur_index;
         
         draw_dir(cur_index);
-        
-        t = toc;
-        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%         
+%         t = toc;
+%         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
     end
+    
+        t = toc;
+        fprintf("【处理完数据】 一共用时：%.4f\n",vpa(t));
     toobar();
     fprintf("-----【结束离线计算】-----\n");
     

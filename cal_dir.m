@@ -160,7 +160,7 @@ function cal_dir(cur_index)
     end
         
     t = toc(class_tim);
-    fprintf("hmm分类用时：%.4f\n", vpa(t));
+    fprintf("h分类用时：%.4f\n", vpa(t));
             
     mov_class = cfg.static;
     
