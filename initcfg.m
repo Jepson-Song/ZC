@@ -211,7 +211,7 @@ niconfig.Q = [niconfig.A; niconfig.B; niconfig.C];
 niconfig.Q = [0 1.20 0;
               0 0.90 -0.15;
               0 0.60 0;
-              1.40 0.2 0-0;
+              1.4 0.2 0-0;
               0.90 0 -0.15;
               1.20 0 0];
 niconfig.P = [niconfig.P1; niconfig.P2];
@@ -256,6 +256,8 @@ niconfig.chose2 = [];
 % niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
 niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0;
                         0 0 0 0.0759 0.0723 0.0723];
+niconfig.init_dis = [0.0723 0.0687 0.0651 0 0 0;
+                        0 0 0 0.0687 0.0687 0.0687];
 niconfig.handles = [];
 niconfig.SIG_LOS = 4;
 
@@ -300,8 +302,8 @@ niconfig.rotation = 8; % 转动
 niconfig.pitch_surge = -3; % 
 
 niconfig.init_dir = [-1 -1 0]; % 初始时大概视线方向
-niconfig.init_pos1 = [0.3 1 0]; % 初始时左耳机的大概位置
-niconfig.init_pos2 = [1 0.3 0]; % 初始时右耳机的大概位置
+niconfig.init_pos1 = [0.3 0.8 0]; % 初始时左耳机的大概位置
+niconfig.init_pos2 = [0.8 0.3 0]; % 初始时右耳机的大概位置
 
 niconfig.class_num = 6; % 分类的数目
 niconfig.angle_num = 18; % 观测值编码时角度划分的数量
@@ -310,6 +312,11 @@ niconfig.cut_len = 20; % 数据集切分的长度
 niconfig.cut_step = 1; % 数据集切分的长度
 niconfig.data_name = '20210827_182636'; % 数据集的名字
 niconfig.data_name = 'data1'; % 数据集的名字
+
+
+niconfig.resp = 1; % 测呼吸
+niconfig.lastCIR = ""; % 测呼吸
+
 
 % 模型1
 niconfig.prior1 = [];

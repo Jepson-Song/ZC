@@ -85,7 +85,7 @@ function cal_dis_2O6I(cur_index)
         allcir((i-1)*960+1:i*960) = cir1(1:960, i)';
         allcir((i-1+6)*960+1:(i+6)*960) = cir2(1:960, i)';
     end
-    whos allcir
+%     whos allcir
 %     cfgcir1 = ;
 
     
@@ -109,10 +109,10 @@ function cal_dis_2O6I(cur_index)
     [val, index2] = sort(SIGQUAL2);
     chose2 = index2(cfg.nin-2:cfg.nin);
     
-    % 不校准直接用计算出来的坐绝对距离
     notchose1 = index1(1:cfg.nin-3);
     notchose2 = index2(1:cfg.nin-3);
 
+    % 固定每个发射端对应的接收端
     chose1 = [1 2 3];
     chose2 = [4 5 6];
     notchose1 = [4 5 6];
@@ -135,6 +135,20 @@ function cal_dis_2O6I(cur_index)
     cfg.chose2 = [cfg.chose2; chose2];
     
  
+%     figure(2)
+%     legend_line = [];
+%         for i=1:1:3
+%             h = plot([1:1:cfg.zclen],abs(cir1(1:end,i)),cfg.color(i));
+% %                 [peak1(i), peak1(i)],[0, abs(m1(i))], strcat('--*',cfg.color(i)));
+%             hold on
+% %             legend_str = [legend_str, ['距离',num2str(i)]];
+%             legend_line = [legend_line, h(1)];
+%             legend_str{i} = ['Reciever',num2str(i)];
+%         end
+%         hold off
+% %         title(cfg.figure(1, 1),'左耳机CIR')
+%         legend(legend_line, legend_str)
+        
     
     %% 实时画图，画cir
     if cfg.drawCir

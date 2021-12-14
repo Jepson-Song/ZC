@@ -11,6 +11,25 @@ function cal_pos(cur_index)
     
     %% 解方程
     [pos1, pos2] = solve_equations2(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
+    
+    
+    % 处理异常值
+    if cur_index~=1 && 0
+        last_pos1 = cfg.pos1(cur_index-1, :);
+        last_pos2 = cfg.pos2(cur_index-1, :);
+        
+        threshold_pos = 0.05/cfg.rate;
+        change_pos1 = get_distance(pos1, last_pos1)
+        change_pos2 = get_distance(pos2, last_pos2)
+        if change_pos1 > threshold_pos
+            pos1 = last_pos1;
+        end
+            
+        if change_pos2 > threshold_pos 
+            pos2 = last_pos2;
+        end
+    end
+    
     cfg.pos1 = [cfg.pos1; pos1];
     cfg.pos2 = [cfg.pos2; pos2];
 %     cfg.pos3 = [cfg.pos3; pos3];
@@ -18,6 +37,17 @@ function cal_pos(cur_index)
     t = toc(pos_tim);
     fprintf("计算位置用时：%.4f\n", vpa(t));
 end
+
+
+
+%% 求两点间距离
+function res = get_distance(a, b)
+
+    c = a-b;
+    res = sqrt(sum(c.*c));
+
+end
+
 
 %% 手写牛顿迭代解方程
 function [pos1, pos2] = solve_equations2(cur_index) 
@@ -56,6 +86,8 @@ function [pos1, pos2] = solve_equations2(cur_index)
     
 
 end
+
+
 
 %% 牛顿迭代
 function xyz = newton(pos, qos, dis)
@@ -256,15 +288,6 @@ function F = myfun(x, dis1, dis2)
       (x(1)-x(2))^2+(x(4)-x(5))^2+(x(7)-x(8))^2 - (cfg.AB)^2;
       (x(2)-x(3))^2+(x(5)-x(6))^2+(x(8)-x(9))^2 - (cfg.BC)^2;
       (x(1)-x(3))^2+(x(4)-x(6))^2+(x(7)-x(9))^2 - (cfg.AC)^2];
-end
-
-
-%% 求两点间距离
-function res = get_distance(a, b)
-
-    c = a-b;
-    res = sqrt(sum(c.*c));
-
 end
 
 %% 化简方程求解析解
