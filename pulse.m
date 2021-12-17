@@ -485,56 +485,92 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %save_var(fileName)
     
-    %% cal_resp
-%     cal_resp();
-    
-    
-    %% cal_resp_rt
     global cfg
-        cfg.resp = [];
-        prefix = get(cfg.handles.edit1, 'string');
+    
+    %% cal_resp
+    if cfg.ifResp == 1
+        
+        prefix = get(cfg.handles.edit1, 'string')
+        % 如果这个CIR数据已经在内存中就不重复读取
         if strcmp(cfg.lastCIR, prefix)==0
-            
             allcir_real = load_data('cir_real');
-            allcir = allcir_real;%+allcir_imag*1j;
-            cfg.cir1 = allcir;
+            whos allcir_real
 
+            % 丢掉前两秒的数据
+            allcir = allcir_real(1:end,: );%+allcir_imag*1j;
             
+            cfg.cir1 = allcir;
 
             cfg.lastCIR = prefix;
         end
-%         allcir = cfg.cir1;
-%         whos allcir
-        cfg.index = size(cfg.cir1, 1);
+        data_len = size(cfg.cir1, 1);
         
-    
-    %% 计算距离
-    fprintf("\n-----【开始计算呼吸】-----\n");
-    fprintf('Total Data length: %d\n',cfg.data_len)
-    
-    start = 1170;
-    step = 1;
-    for cur_index = 0:step:cfg.index
-        
-        if cur_index<start
-            continue;
+        seg_len = 200;
+        step = 100;
+        over = seg_len-step;
+        all_resp = zeros(1, data_len);
+        for cur_index=seg_len:step:data_len
+            resp = cal_resp(cur_index,seg_len);
+            
+            l = cur_index-seg_len+1+over/2
+            r = cur_index-over/2
+            all_resp(l:r) = resp(over/2+1:seg_len-over/2)+all_resp(r);
         end
         
-        % 计算呼吸
-        tic
+        % 画图
+        figure(1001)
+        plot(all_resp)
+        title('呼吸波形_分断')
+        legend(num2str(1001))
         
-        cal_resp_rt(cur_index, start, step);
+        resp = cal_resp(data_len, data_len);
+        % 画图
+        figure(1002)
+        plot(resp)
+        title('呼吸波形_整体')
+        legend(num2str(1002))
         
-        t = toc;
-        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-        
-    figure(10)
-    plot(cfg.resp)
-    title('全部呼吸波形')
-
     end
     
-    fprintf("-----【结束计算呼吸】-----\n");
+    
+    %% cal_resp_rt
+%     global cfg
+%         cfg.resp = [];
+%         prefix = get(cfg.handles.edit1, 'string');
+%         if strcmp(cfg.lastCIR, prefix)==0
+%             
+%             allcir_real = load_data('cir_real');
+%             allcir = allcir_real;%+allcir_imag*1j;
+%             cfg.cir1 = allcir;
+%             
+%             cfg.lastCIR = prefix;
+%         end
+%         cfg.index = size(cfg.cir1, 1);
+        
+    
+    %% 计算呼吸
+%     fprintf("\n-----【开始计算呼吸】-----\n");
+%     start = 1170;
+%     step = 1;
+%     for cur_index = 0:step:cfg.index
+%         
+%         if cur_index<start
+%             continue;
+%         end
+%         
+%         % 计算呼吸
+%         tic
+%         
+%         cal_resp_rt(cur_index, start, step);
+%         
+%         t = toc;
+%         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%         
+%     figure(10)
+%     plot(cfg.resp)
+%     title('全部呼吸波形')
+%     end
+%     fprintf("-----【结束计算呼吸】-----\n");
     
         
 

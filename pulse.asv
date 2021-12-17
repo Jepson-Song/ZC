@@ -460,7 +460,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     
     %% 保存cir
-    if cfg.resp == 1
+    if cfg.ifResp == 1
         cfg.lastCIR = prefix;
         cir = cfg.cir1;
         whos cir
@@ -485,52 +485,97 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
     %save_var(fileName)
     
+    global cfg
+    
     %% cal_resp
-    cal_resp();
+    if cfg.ifResp == 1
+        
+        prefix = get(cfg.handles.edit1, 'string')
+        % 如果这个CIR数据已经在内存中就不重复读取
+        if strcmp(cfg.lastCIR, prefix)==0
+            allcir_real = load_data('cir_real');
+            whos allcir_real
+
+            % 丢掉前两秒的数据
+            allcir = allcir_real(1:end,: );%+allcir_imag*1j;
+            
+            cfg.cir1 = allcir;
+
+            cfg.lastCIR = prefix;
+        end
+        index = size(cfg.cir1, 1);
+        
+        len = 200;
+        step = 100;
+        over = len-step;
+        all_resp = zeros(1, index);
+        for cur_index=len:step:index
+            resp = cal_resp(cur_index,len);
+%             if cur_index~=len
+%                 resp = resp(over+1:end)+all_resp(end);
+%             end
+%             l = cur_index+over/2
+%             r = cur_index+len-1-over/2
+            l = cur_i
+            all_resp(l:r) = resp(over/2+1:len-over/2)+all_resp(r);
+        end
+        
+        % 画图
+        figure(1001)
+        plot(all_resp)
+        title('呼吸波形')
+        legend(num2str(1001))
+        
+        resp = cal_resp(index, index);
+        % 画图
+        figure(1002)
+        plot(resp)
+        title('呼吸波形')
+        legend(num2str(1002))
+        
+    end
     
     
     %% cal_resp_rt
-    global cfg
+%     global cfg
+%         cfg.resp = [];
+%         prefix = get(cfg.handles.edit1, 'string');
+%         if strcmp(cfg.lastCIR, prefix)==0
+%             
+%             allcir_real = load_data('cir_real');
+%             allcir = allcir_real;%+allcir_imag*1j;
+%             cfg.cir1 = allcir;
+%             
+%             cfg.lastCIR = prefix;
+%         end
+%         cfg.index = size(cfg.cir1, 1);
+        
     
-    allcir_real = load_data('cir_real');
-    allcir = allcir_real;%+allcir_imag*1j;
-    cfg.cir1 = allcir;
-    
-    cfg.index = size(allcir, 1);
-    
-    %% 计算距离
-    fprintf("\n-----【开始计算距离】-----\n");
-    fprintf('Total Data length: %d\n',cfg.data_len)
-    cfg.index = floor(cfg.data_len/cfg.seglen);
-    
-    
-        tic
-    for cur_index = 1:1:cfg.index
-%         if cfg.pause
-%             toobar();
-%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-%             while cfg.pause
-%                 pause(0.1)
-%             end
+    %% 计算呼吸
+%     fprintf("\n-----【开始计算呼吸】-----\n");
+%     start = 1170;
+%     step = 1;
+%     for cur_index = 0:step:cfg.index
+%         
+%         if cur_index<start
+%             continue;
 %         end
 %         
-        % 计算距离
-        tic
-%         cal_dis(cur_index);
-
-%         PhaseRange(cur_index);
-        
-        cal_dis_2O6I(cur_index);
-        
-%         draw_dis(cur_index);
-        
-        t = toc;
-        fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-
-    end
+%         % 计算呼吸
+%         tic
+%         
+%         cal_resp_rt(cur_index, start, step);
+%         
+%         t = toc;
+%         fprintf("【处理完数据帧】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+%         
+%     figure(10)
+%     plot(cfg.resp)
+%     title('全部呼吸波形')
+%     end
+%     fprintf("-----【结束计算呼吸】-----\n");
     
-    toobar();
-    fprintf("-----【结束计算距离】-----\n");
+        
 
     
     %% draw dis
@@ -562,10 +607,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 
 % 
 %     tmp = cir1(1, :)
-
-            
-    
-    toobar();
+%     toobar();
 
 
     
@@ -574,54 +616,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 end
 
 
-function res = LEVD(x)
-
-    thr = std(x)*3;
-    
-    len = length(x);
-    s = zeros(1, len);
-    n = 1;
-    e = [];
-    e = [e, x(1)];
-    s(1) = x(1);
-    
-    ax = [1];
-    ay = [x(1)];
-%     figure(4)
-%     plot(x)
-    for i=2:1:len-1
-        
-%         if i~=1&&i~=n&&()
-        if x(i)>=x(i-1)&&x(i)>=x(i+1)||x(i)<=x(i-1)&&x(i)<=x(i+1)
-
-            if abs(x(i)-e(n)) > thr
-                n = n + 1;
-                e = [e, x(i)];
-                ax = [ax, i];
-                ay = [ay, x(i)];
-            end
-                
-            
-        end
-        if n>=2
-            s(i) = 0.9*s(i-1)+0.1*(e(n)+e(n-1))/2;
-        else
-            s(i) = 0.9*s(i-1)+0.1*e(n);
-        end
-    end
-    
-%     ax
-%     ay
-%     figure(5)
-%     
-%     plot(x)
-%     hold on 
-% 
-%     plot(ax,ay,'*')
-% %     plot(tmp)
-%     hold off
-    res = x-s';
-end
 
 
 %% Calculate position

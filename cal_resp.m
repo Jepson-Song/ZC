@@ -1,65 +1,37 @@
-function cal_resp()
+function res = cal_resp(cur_index, seg_len)
 
     global cfg
-%     %% 从文件中读取结果
-%     dis = load_data('dis');
-%     cfg.index = size(dis, 1);
-%     cfg.dis1 = dis(:, 1:cfg.nin);
-%     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     
-    %% 从文件中读取cir
-    if cfg.ifResp == 1
-        
-        prefix = get(cfg.handles.edit1, 'string');
-        % 如果这个CIR数据已经在内存中就不重复读取
-        if strcmp(cfg.lastCIR, prefix)==0
-            allcir_real = load_data('cir_real');
-            whos allcir_real
-%             allcir_imag = load_data('cir_imag');
-%             whos allcir_imag
-            allcir = allcir_real;%+allcir_imag*1j;
-            cfg.cir1 = allcir;
-
-            cfg.lastCIR = prefix;
-        end
-        % 20211015_123426
+    allcir = cfg.cir1(cur_index-seg_len+1:cur_index, :);
     
     %% pca
         sel_cir1 = [];
         all_SNR = [];
+        
+    % 两发六收一共十二个cir，存储格式是12个并排放到同一行
     for i=1:1:12
 %         if i~=3
 %             continue
 %         end
 
-        % 某个接收端的cir
-        cir1 = cfg.cir1(:, (i-1)*960+1:i*960);
-        
-        % tcir转置一下，cir是T*F，tcir转置成F*T
-        tcir1 = cir1';
-    %             tcir1 = tcir1(:, end-cfg.dislen+1:end);
+        % 某个接收端的cir，T*F
+        tcir1 = allcir(:, (i-1)*960+1:i*960);
+    
         % 画cir
-%         draw_pic(cfg.figure7,tcir1)
+%         draw_pic(cfg.figure7,tcir1')
 
         % 按时间进行差分
-        dcir1 = diff(tcir1, 1, 2);  % para3: 1是列差分 2是行差分
+        dcir1 = diff(tcir1, 1, 1);  % para3: 1是列差分 2是行差分
+        
         % 画差分cir1
-%         draw_pic(cfg.figure8,dcir1)
+        draw_pic(cfg.figure8,dcir1')
 
-%         whos cir1
-    %     cir1 = dcir1';
-    
+        cir1 = dcir1;
         % 从文件中读出来的数据行号都是时间T
         [T, Frame] = size(cir1);
         
-        
-%         cir1 = lowpass(0.5,0.6,cir1,10);
-
-        cir1 = dcir1';
-        
 %         cir1 = lowpass(0.5,0.6,cir1,10);
         
-
         % path selection
         fft_cir1 = abs(real(fft(cir1,100)));
 %         whos fft_cir1
@@ -99,10 +71,10 @@ function cal_resp()
         % 选择path
         l_bd = 1;
         r_bd = 960;
-        SNR_thr = 0.9;
+        SNR_thr = 0; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
-    %     sel = [300:400];
+%         sel = [400:500];
 
 %         % 画出选择的path
 %         figure(10)
@@ -135,23 +107,38 @@ function cal_resp()
     % pca
     [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
     
+    latent;
     
     
-    for i=1:1:3
-%         resp = score(:,i);%+score(:,2)+score(:,3);  
+    for i=1:1:1
+
+        % 低通滤波
+        score(:, i) = lowpass(0.5,0.6,score(:, i),10);
         
         % 对呼吸结果做滑动平均 
-        resp = smooth(score(:, i), 11); % 有作用
+        score(:, i) = smooth(score(:, i), 15); % 有作用
+           
         
 %         resp = LEVD(resp);
         
-        % 低通滤波
-        resp = lowpass(0.5,0.6,resp,10);
-        figure(i)
-        plot(resp)
-        title('呼吸波形')
-        legend(num2str(i))
+        
+        % 画图
+%         resp = score(:, i);
+%         figure(cur_index+i)
+%         plot(resp)
+%         title('呼吸波形')
+%         legend(num2str(cur_index+i))
     end
+    
+    res = score(:, 1)';
+    
+%     resp = score(:, 1)+score(:, 2)+score(:, 3);
+%     
+%         resp = lowpass(0.5,0.6,resp,10);
+%         figure(cur_index+5)
+%         plot(resp)
+%         title('呼吸波形')
+%         legend(num2str(cur_index+5))
         
     
 %     resp = score(:,1:5);%+score(:,2)+score(:,3);    
@@ -161,8 +148,6 @@ function cal_resp()
 %     plot(resp)
 %     title('呼吸波形')
 %     legend('1','2','3')
-    
-    end
 
 end
 
