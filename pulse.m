@@ -490,45 +490,74 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     %% cal_resp
     if cfg.ifResp == 1
         
+        
+%         allcir_real = load_data('cir_real');
+%         whos allcir_real
+%         allcir_imag = load_data('cir_imag');
+%         whos allcir_imag
+        
         prefix = get(cfg.handles.edit1, 'string')
         % 如果这个CIR数据已经在内存中就不重复读取
         if strcmp(cfg.lastCIR, prefix)==0
+            
             allcir_real = load_data('cir_real');
             whos allcir_real
+            cfg.real_cir = allcir_real;
+            
+            allcir_imag = load_data('cir_imag');
+            whos allcir_imag
+            cfg.imag_cir = allcir_imag;
+            
+            allcir = allcir_real+allcir_imag*j;%atan(allcir_imag./allcir_real);
+            whos allcir
+            cfg.cir1 = allcir;
 
             % 丢掉前两秒的数据
-            allcir = allcir_real(1:end,: );%+allcir_imag*1j;
+%             allcir = allcir_real(21:end,: );%+allcir_imag*1j;
             
-            cfg.cir1 = allcir;
+%             cfg.cir1 = allcir(1+50:end-30,:);
 
             cfg.lastCIR = prefix;
         end
+%         cfg.cir1 = cfg.cir1(1+10:end-10,:);
         data_len = size(cfg.cir1, 1);
         
-        seg_len = 200;
-        step = 100;
-        over = seg_len-step;
-        all_resp = zeros(1, data_len);
-        for cur_index=seg_len:step:data_len
-            resp = cal_resp(cur_index,seg_len);
-            
-            l = cur_index-seg_len+1+over/2
-            r = cur_index-over/2
-            all_resp(l:r) = resp(over/2+1:seg_len-over/2)+all_resp(r);
-        end
+%         seg_len = 200;
+%         step = 100;
+%         over = seg_len-step;
+%         all_resp = zeros(1, data_len);
+%         for cur_index=seg_len:step:data_len
+%             resp = cal_resp(cur_index,seg_len);
+%             
+%             l = cur_index-seg_len+1+over/2
+%             r = cur_index-over/2
+%             all_resp(l:r) = resp(over/2+1:seg_len-over/2)+all_resp(r);
+%         end
+%         % 画图
+%         figure(1001)
+%         plot(all_resp)
+%         title('呼吸波形(分段)')
+%         legend(num2str(1001))
         
-        % 画图
-        figure(1001)
-        plot(all_resp)
-        title('呼吸波形_分断')
-        legend(num2str(1001))
+%         resp = cal_resp(data_len, data_len);
+
+        resp_real = cal_resp(cfg.real_cir);
         
-        resp = cal_resp(data_len, data_len);
+        resp_imag = cal_resp(cfg.imag_cir);
+        
+        resp = resp_real-resp_imag;
+        
+%         resp = cal_resp(cfg.real_cir+cfg.imag_cir*j);
+        
         % 画图
         figure(1002)
         plot(resp)
-        title('呼吸波形_整体')
-        legend(num2str(1002))
+        xlabel('时间(s)', 'FontSize', 16)
+%         set(gca, 'YLim', [-0.04,0.04]);
+        set(gca, 'XTick', 0:50:data_len)
+        set(gca, 'XTickLabel', 0:5:data_len/10)
+        title('波形', 'FontSize', 16)
+%         legend(num2str(1002))
         
     end
     

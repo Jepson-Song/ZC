@@ -12,7 +12,7 @@ function y=bandpass(pass_low,pass_high,x,fs)
 % Fs=2000;%采样率
 %
 wp = [pass_low pass_high]/(fs/2);
-ws = [pass_low-50 pass_high+50]/(fs/2);
+ws = [pass_low-0.1 pass_high+0.1]/(fs/2);
 rp = 5;
 rs = 8;
 % 设计切比雪夫滤波器；

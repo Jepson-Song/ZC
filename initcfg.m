@@ -232,6 +232,8 @@ niconfig.dir = []; % direction
 niconfig.mov = []; % movement
 niconfig.obs = []; % obs观测状态序列
 niconfig.cir1 = []; % cir
+niconfig.real_cir = []; % cir
+niconfig.imag_cir = []; % cir
 niconfig.rec = []; % rec记录数据
 
 niconfig.SIGQUAL1 = [];%zeros(niconfig.nout, niconfig.nin);
@@ -310,7 +312,7 @@ niconfig.angle_num = 18; % 观测值编码时角度划分的数量
 niconfig.iter_numm = 10; % hmm训练时迭代最大次数
 niconfig.cut_len = 20; % 数据集切分的长度
 niconfig.cut_step = 1; % 数据集切分的长度
-niconfig.data_name = '20210827_182636'; % 数据集的名字
+niconfig.data_name = '20211213_214603'; % 数据集的名字
 niconfig.data_name = 'data1'; % 数据集的名字
 
 

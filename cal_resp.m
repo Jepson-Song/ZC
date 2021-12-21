@@ -1,19 +1,18 @@
-function res = cal_resp(cur_index, seg_len)
+function res = cal_resp(data)%, cur_index, seg_len)
 
     global cfg
     
-    allcir = cfg.cir1(cur_index-seg_len+1:cur_index, :);
+    type = 2; % 1.呼吸 2.心跳
     
+    %allcir = cfg.cir1(cur_index-seg_len+1:cur_index, :);
+    allcir = data;
     %% pca
         sel_cir1 = [];
         all_SNR = [];
         
     % 两发六收一共十二个cir，存储格式是12个并排放到同一行
     for i=1:1:12
-%         if i~=3
-%             continue
-%         end
-
+        
         % 某个接收端的cir，T*F
         tcir1 = allcir(:, (i-1)*960+1:i*960);
     
@@ -31,18 +30,13 @@ function res = cal_resp(cur_index, seg_len)
         [T, Frame] = size(cir1);
         
 %         cir1 = lowpass(0.5,0.6,cir1,10);
-        
-        % path selection
-        fft_cir1 = abs(real(fft(cir1,100)));
-%         whos fft_cir1
 
         % 画fft
 %         draw_pic(cfg.figure5, fft_cir1(1:51,:)');
 
-    %     figure(1)
-    %     plot(fft_cir1(:,320))
-    %     title('FFT')
-
+        % path selection
+        fft_cir1 = abs(fft(cir1,100));
+        
         for index=1:1:Frame
             
             % 路径选择
@@ -53,28 +47,32 @@ function res = cal_resp(cur_index, seg_len)
             w2 = 0.5;
             SNR(index) = w1*Emax/part1+w2*Emax/part2;
 
-            % 先减去复数均值
+%             % 先减去复数均值
 %             cir1(:, index) = cir1(:, index) - mean(cir1(:, index)); %作用不大
 
-            % 再做LEVD
-    %         cir1(:, index) = LEVD(cir1(:, index));
+%             % 再做LEVD
+%             cir1(:, index) = LEVD(cir1(:, index));
 
             % 再做滑动平均
+            if type==1
             cir1(:, index) = smooth(cir1(:, index), 21); % 有作用
+            elseif type==2
+            cir1(:, index) = smooth(cir1(:, index), 7); 
+            end
+
         end
-        
-        all_SNR = [all_SNR; SNR];
         
         % 处理后
         %draw_pic(cfg.figure6, cir1');
         
         % 选择path
+        all_SNR = [all_SNR; SNR];
         l_bd = 1;
         r_bd = 960;
         SNR_thr = 0; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
-%         sel = [400:500];
+%         sel = [1:1:960];
 
 %         % 画出选择的path
 %         figure(10)
@@ -85,38 +83,35 @@ function res = cal_resp(cur_index, seg_len)
 %         hold off
         
         one_cir1 = cir1( :, sel );
-%         whos one_cir1
-%         whos sel_cir1
-%         tmp = zeros(size(sel_cir1)+size(one_cir1));
+        
         sel_cir1 = [sel_cir1, one_cir1];
-%         whos sel_cir1
 
     end
     
     cfg.SNR = all_SNR;
     
     % 路径选择后的cir
-    sel_cir1 = real(sel_cir1);
-%     whos sel_cir1
-    
-%     tmp =zeros(T, Frame);
-% %     tmp(:, sel) = sel_cir1;
-%     tmp = sel_cir1;
-%     draw_pic(cfg.figure5, tmp');
+%     sel_cir1 = real(sel_cir1);
 
     % pca
     [coeff,score,latent] = pca(sel_cir1); % coeff 转换矩阵   score 降维后结果  latent 特征值
     
-    latent;
-    
+    latent(1:10)';
     
     for i=1:1:1
 
-        % 低通滤波
+        if type==1
+        % 低通滤波（呼吸）
         score(:, i) = lowpass(0.5,0.6,score(:, i),10);
-        
         % 对呼吸结果做滑动平均 
         score(:, i) = smooth(score(:, i), 15); % 有作用
+        elseif type==2
+        % 带通滤波（心跳）
+        score(:, i) = bandpass(1,2,score(:, i),10);
+        % 对心跳结果做滑动平均 
+        score(:, i) = smooth(score(:, i), 5);
+        end
+        
            
         
 %         resp = LEVD(resp);
