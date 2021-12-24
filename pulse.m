@@ -547,11 +547,20 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         
         resp = resp_real-resp_imag;
         
-%         resp = cal_resp(cfg.real_cir+cfg.imag_cir*j);
+        % 极值点检测
+        local_extreme = get_extreme(resp);
         
         % 画图
         figure(1002)
-        plot(resp)
+        plot(resp,'b')
+        hold on
+%         plot([1:1:length(resp)], ones(1, length(resp))*s, 'r.');
+%         plot([1:1:length(resp)], ones(1, length(resp))*-s, 'r.');
+%         hold off
+%         plot(local_max, resp(local_max), 'r*');
+%         plot(local_min, resp(local_min), 'g*');
+        plot(local_extreme, resp(local_extreme), 'r*');
+        hold off
         xlabel('时间(s)', 'FontSize', 16)
 %         set(gca, 'YLim', [-0.04,0.04]);
         set(gca, 'XTick', 0:50:data_len)

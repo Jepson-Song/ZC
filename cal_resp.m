@@ -103,6 +103,7 @@ function res = cal_resp(data)%, cur_index, seg_len)
         if type==1
         % 低通滤波（呼吸）
         score(:, i) = lowpass(0.5,0.6,score(:, i),10);
+%         score(:, i) = bandpass(0.1,0.5,score(:, i),10);
         % 对呼吸结果做滑动平均 
         score(:, i) = smooth(score(:, i), 15); % 有作用
         elseif type==2
@@ -111,12 +112,7 @@ function res = cal_resp(data)%, cur_index, seg_len)
         % 对心跳结果做滑动平均 
         score(:, i) = smooth(score(:, i), 5);
         end
-        
-           
-        
-%         resp = LEVD(resp);
-        
-        
+
         % 画图
 %         resp = score(:, i);
 %         figure(cur_index+i)
@@ -126,16 +122,7 @@ function res = cal_resp(data)%, cur_index, seg_len)
     end
     
     res = score(:, 1)';
-    
-%     resp = score(:, 1)+score(:, 2)+score(:, 3);
-%     
-%         resp = lowpass(0.5,0.6,resp,10);
-%         figure(cur_index+5)
-%         plot(resp)
-%         title('呼吸波形')
-%         legend(num2str(cur_index+5))
-        
-    
+
 %     resp = score(:,1:5);%+score(:,2)+score(:,3);    
 %     % 低通滤波
 %     resp = lowpass(0.3,0.4,resp,10);
