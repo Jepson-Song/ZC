@@ -79,7 +79,7 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 cfg.handles = handles;
 
 
-    set(handles.edit1, 'string', "20210801_185446");
+    set(handles.edit1, 'string', "20211213_214603");
 
 %     cfg.choseCorrect = 0;
     set(handles.radiobutton1,'value',~cfg.choseCorrect);
@@ -522,33 +522,58 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %         cfg.cir1 = cfg.cir1(1+10:end-10,:);
         data_len = size(cfg.cir1, 1);
         
-%         seg_len = 200;
-%         step = 100;
-%         over = seg_len-step;
-%         all_resp = zeros(1, data_len);
-%         for cur_index=seg_len:step:data_len
-%             resp = cal_resp(cur_index,seg_len);
-%             
-%             l = cur_index-seg_len+1+over/2
-%             r = cur_index-over/2
-%             all_resp(l:r) = resp(over/2+1:seg_len-over/2)+all_resp(r);
-%         end
-%         % 画图
-%         figure(1001)
-%         plot(all_resp)
-%         title('呼吸波形(分段)')
-%         legend(num2str(1001))
+        % 检测类型
+        type = 1; % 1.呼吸 2.心跳
         
-%         resp = cal_resp(data_len, data_len);
-
-        resp_real = cal_resp(cfg.real_cir);
+        % 用cir实部
+        resp_real = cal_resp(cfg.real_cir, type);
         
-        resp_imag = cal_resp(cfg.imag_cir);
+        % 用cir虚部
+        resp_imag = cal_resp(cfg.imag_cir, type);
         
+        % 实部虚部计算的波形相减
         resp = resp_real-resp_imag;
         
+        
         % 极值点检测
-        local_extreme = get_extreme(resp);
+        local_extreme = get_extreme(resp, type);
+        
+        
+        % 波形修正
+%         a = 0;
+%         for k=1:1:length(local_extreme)
+%             i = local_extreme(k);
+%             lb = 1;
+%             rb = length(resp);
+%             
+%                 if k==1
+%                     a = resp(i);
+%                 else
+%                     lb = local_extreme(k-1)+1;
+%                 end
+%                 
+%                 if k == length(local_extreme)
+%                     
+%                 else
+%                     rb = local_extreme(k+1)-1;
+%                 end
+%                 
+%                 fac = abs(a/resp(i));
+%                 resp(i) = resp(i)*fac;
+%                 j = i+1;
+%                 while j>=lb&&j<=rb&& resp(j)*resp(i)>0
+%                     resp(j) = resp(j)*fac;
+%                     j = j+1;
+%                 end
+%                 j = i-1;
+%                 while j>=lb&&j<=rb&& resp(j)*resp(i)>0
+%                     resp(j) = resp(j)*fac;
+%                     j = j-1;
+%                 end
+%                 
+%         end
+        
+        
         
         % 画图
         figure(1002)
@@ -560,6 +585,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %         plot(local_max, resp(local_max), 'r*');
 %         plot(local_min, resp(local_min), 'g*');
         plot(local_extreme, resp(local_extreme), 'r*');
+%         plot(avg, 'r--');
         hold off
         xlabel('时间(s)', 'FontSize', 16)
 %         set(gca, 'YLim', [-0.04,0.04]);

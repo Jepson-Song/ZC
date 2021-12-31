@@ -79,7 +79,7 @@ cfg.figure = [handles.axes1,handles.axes2;handles.axes3,handles.axes4];
 cfg.handles = handles;
 
 
-    set(handles.edit1, 'string', "20210801_185446");
+    set(handles.edit1, 'string', "20211213_214603");
 
 %     cfg.choseCorrect = 0;
     set(handles.radiobutton1,'value',~cfg.choseCorrect);
@@ -522,109 +522,67 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %         cfg.cir1 = cfg.cir1(1+10:end-10,:);
         data_len = size(cfg.cir1, 1);
         
-%         seg_len = 200;
-%         step = 100;
-%         over = seg_len-step;
-%         all_resp = zeros(1, data_len);
-%         for cur_index=seg_len:step:data_len
-%             resp = cal_resp(cur_index,seg_len);
-%             
-%             l = cur_index-seg_len+1+over/2
-%             r = cur_index-over/2
-%             all_resp(l:r) = resp(over/2+1:seg_len-over/2)+all_resp(r);
-%         end
-%         % 画图
-%         figure(1001)
-%         plot(all_resp)
-%         title('呼吸波形(分段)')
-%         legend(num2str(1001))
+        % 检测类型
+        type = 1; % 1.呼吸 2.心跳
         
-%         resp = cal_resp(data_len, data_len);
-
-        resp_real = cal_resp(cfg.real_cir);
+        % 用cir实部
+        resp_real = cal_resp(cfg.real_cir, type);
         
-        resp_imag = cal_resp(cfg.imag_cir);
+        % 用cir虚部
+        resp_imag = cal_resp(cfg.imag_cir, type);
         
+        % 实部虚部计算的波形相减
         resp = resp_real-resp_imag;
         
-%         resp = cal_resp(cfg.real_cir+cfg.imag_cir*j);
-        s = std(resp)
         
-%         local_max = [];
-%         local_min = [];
-        % 列出所有候选极值
-        extreme_candidate = [];
-        for k=2:1:length(resp)-1
-            if resp(k) == resp(k-1)
-                continue;
-            end
-            
-            if resp(k)>=resp(k-1)&&resp(k)>=resp(k+1)
-%                 local_max = [local_max, k];
-                extreme_candidate = [extreme_candidate, k];
-            elseif resp(k)<=resp(k-1)&&resp(k)<=resp(k+1)
-%                 local_min = [local_min, k];
-                extreme_candidate = [extreme_candidate, k];
-            end
-        end
+        % 极值点检测
+        local_extreme = get_extreme(resp, type);
         
-        last_index = -1;
-        local_extreme = [];
-
-        for k = 1:1:length(extreme_candidate)
-            index = extreme_candidate(k);
+        
+        % 波形修正
+        
+        a = 0;
+        for k=1:1:length(local_extreme)
+            i = local_extreme(k);
+            lb = 1;
+            rb = length
             
-            % 以二分之一标准差为阈值
-            if resp(index)<s/2 && resp(index)>-s/2
-                continue;
-            end
-
-            if last_index==-1
-                last_index = index;
-                local_extreme = [local_extreme, index];
-            else
-                % 异号，一个极大值一个极小值
-                if resp(index)*resp(last_index)<0 
-                    last_index = index;
-                    local_extreme = [local_extreme, index];
-                else % 同号，如果绝对值更大则更新上一个极值
-                    if abs(resp(index))>abs(resp(last_index))
-                        local_extreme(end) = index;
-                        last_index = index;
-                    end
+                if k==1
+                    a = resp(i);
                 end
-            end
+                
+                fac = abs(a/resp(i));
+                resp(i) = resp(i)*fac;
+                j = i+1;
+                while resp(j)*resp(i)>0
+                    resp(j) = resp(j)*fac;
+                    j = j+1;
+                end
+                j = i-1;
+                while resp(j)*resp(i)>0
+                    resp(j) = resp(j)*fac;
+                    j = j-1;
+                end
+                
         end
         
-%         % 用正弦函数拟合
-%         r = pi/2;
-%         p = 1;
-%         d = local_extreme(p);
-%         p = p+1;
-%         last = 0;
-%         for k=1:1:length(resp)
-%             if k==local_extreme(p)
-%                 if p<length(local_extreme)
-%                     p = p+1;
-%                     d = local_extreme(p)-k;
-%                 else
-%                     d = length(resp)-k;
-%                 end
-%                 last = k;
-%                 r = pi;
-%             end
-%             resp(k) = resp(k)*abs(sin((k-last)/d*r-pi/2));
+        
+%         sum = resp(1);
+%         for i=2:1:length(resp)
+%            avg = sum/(i-1);
+%            diff = resp(i)-resp(i-1);
+%            resp(i) = avg + diff;
+%            sum = sum+resp(i);
 %         end
 
-        factor = 1;
-        p = 1;
-        for k=1:1:length(resp)
-            resp(k) = resp(k)*factor;
-            if k==local_extreme(p)
-                
-            end
-            resp(k) = resp(k)*abs(sin((k-last)/d*r-pi/2));
-        end
+%         avg = [];
+%         sum = 0;
+%         for i=1:1:length(resp)
+%             sum = sum+resp(i);
+%             avg = [avg, sum/i];
+%         end
+        
+%         ampl = abs(cfg.real_cir+cfg.imag_cir*1i);%sqrt(cfg.real_cir.*cfg.real_cir+cfg.imag_cir.*cfg.imag_cir);
         
         
         % 画图
@@ -637,6 +595,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %         plot(local_max, resp(local_max), 'r*');
 %         plot(local_min, resp(local_min), 'g*');
         plot(local_extreme, resp(local_extreme), 'r*');
+%         plot(avg, 'r--');
         hold off
         xlabel('时间(s)', 'FontSize', 16)
 %         set(gca, 'YLim', [-0.04,0.04]);

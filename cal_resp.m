@@ -1,8 +1,8 @@
-function res = cal_resp(data)%, cur_index, seg_len)
+function res = cal_resp(data, type)%, cur_index, seg_len)
 
     global cfg
     
-    type = 2; % 1.呼吸 2.心跳
+%     type = 1; % 1.呼吸 2.心跳
     
     %allcir = cfg.cir1(cur_index-seg_len+1:cur_index, :);
     allcir = data;

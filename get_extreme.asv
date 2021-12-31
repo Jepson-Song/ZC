@@ -34,8 +34,6 @@ function res = get_extreme(data, type)
 %             if resp(index)<thr && resp(index)>-thr
 %                 continue;
 %             end
-            
-            % 跟上一个极值点的差值与阈值比较
             if k~=1
                 last_index = extreme_candidate(k-1);
                 if abs(resp(index)-resp(last_index))<thr
@@ -62,7 +60,65 @@ function res = get_extreme(data, type)
         
         fprintf("\n极值点个数：%d\n",length(local_extreme));
         
-        
+        a = 0;
+        p = 1;
+        for i=1:1:length(resp)
+            if i==local_extreme(p)
+                p = p+1;
+                if a==0
+                    a = resp(i);
+                end
+                fac = abs(a/resp(i));
+                resp(i) = resp(i)*fac;
+                j = i+1;
+                while resp(j)*resp(i)>0
+                    resp(j) = resp(j)*fac;
+                    j = j+1;
+                end
+                j = i-1;
+                while resp(j)*resp(i)>0
+                    resp(j) = resp(j)*fac;
+                    j = j-1;
+                end
+                
+            end
+            if a==0
+                continue;
+            end
             
+        
+%         % 用正弦函数拟合
+%         r = pi/2;
+%         p = 1;
+%         d = local_extreme(p);
+%         p = p+1;
+%         last = 0;
+%         for k=1:1:length(resp)
+%             if k==local_extreme(p)
+%                 if p<length(local_extreme)
+%                     p = p+1;
+%                     d = local_extreme(p)-k;
+%                 else
+%                     d = length(resp)-k;
+%                 end
+%                 last = k;
+%                 r = pi;
+%             end
+%             resp(k) = resp(k)*abs(sin((k-last)/d*r-pi/2));
+%         end
+
+%         factor = 1;
+%         p = 1;
+%         for k=1:1:length(resp)
+%             resp(k) = resp(k)*factor;
+%             if k==local_extreme(p)
+%                 if p+1<length(local_extreme)
+%                     factor = local_extreme(p)/local_extreme(p+2);
+%                     p = p+1;
+%                 else
+%                     factor = 1;
+%                 end
+%             end
+%         end
     res = local_extreme;
 end
