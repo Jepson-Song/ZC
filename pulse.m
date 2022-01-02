@@ -160,6 +160,13 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 global  dev
 global  cfg
 
+
+
+    time = datetime();
+    prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
+    set(handles.edit1, 'string', prefix);
+    
+
 dev = daq.createSession('ni');
 dev.DurationInSeconds = cfg.duration;
 dev.IsContinuous = 1;
@@ -211,10 +218,6 @@ fprintf("\n-----【开始读入数据】-----\n");
     cfg.datain = [];
     
     
-
-    time = datetime();
-    prefix = sprintf('%04d%02d%02d_%02d%02d%02d',time.Year,time.Month,time.Day,time.Hour,time.Minute,floor(time.Second));
-    set(handles.edit1, 'string', prefix);
     
 end
 
@@ -385,7 +388,8 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     cfg.wavelength = cfg.soundspeed/cfg.freq;  %temperature and wavelength
     fprintf("\n【温度设置为%d摄氏度】\n",cfg.temp);
     
-    cfg.rate = str2num(get(cfg.handles.edit4, 'string'));
+%     cfg.rate = str2num(get(cfg.handles.edit4, 'string'));
+    cfg.rate = 10;
     cfg.zcrep = cfg.fs/cfg.zclen/cfg.rate;
     cfg.seglen = cfg.zclen*cfg.zcrep;
     fprintf("\n【刷新率设置为%d】\n",cfg.rate);
@@ -463,6 +467,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     if cfg.ifResp == 1
         cfg.lastCIR = prefix;
         cir = cfg.cir1;
+        
+        cfg.imag_cir = imag(cir);
+        cfg.real_cir = real(cir);
+        
         whos cir
         save_data(real(cir), 'cir_real')
         save_data(imag(cir), 'cir_imag')
@@ -495,9 +503,9 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 %         whos allcir_real
 %         allcir_imag = load_data('cir_imag');
 %         whos allcir_imag
-        
+        last_prefix = cfg.lastCIR
         prefix = get(cfg.handles.edit1, 'string')
-        % 如果这个CIR数据已经在内存中就不重复读取
+        % 如果这个CIR数据已经在内存中就不重复读取，如果不在内存中则重新读取数据
         if strcmp(cfg.lastCIR, prefix)==0
             
             allcir_real = load_data('cir_real');
@@ -533,6 +541,10 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         
         % 实部虚部计算的波形相减
         resp = resp_real-resp_imag;
+        
+%         resp = resp_real;
+        
+%         resp = resp_imag;
         
         
         % 极值点检测
@@ -596,21 +608,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         
     end
     
-    
-    %% cal_resp_rt
-%     global cfg
-%         cfg.resp = [];
-%         prefix = get(cfg.handles.edit1, 'string');
-%         if strcmp(cfg.lastCIR, prefix)==0
-%             
-%             allcir_real = load_data('cir_real');
-%             allcir = allcir_real;%+allcir_imag*1j;
-%             cfg.cir1 = allcir;
-%             
-%             cfg.lastCIR = prefix;
-%         end
-%         cfg.index = size(cfg.cir1, 1);
-        
     
     %% 计算呼吸
 %     fprintf("\n-----【开始计算呼吸】-----\n");

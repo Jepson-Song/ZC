@@ -105,6 +105,8 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     global  dev
 global  cfg
 
+    cfg.rate = 1;
+
 dev = daq.createSession('ni');
 dev.DurationInSeconds = 120;%cfg.duration;
 dev.IsContinuous = 1;

@@ -6,6 +6,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
     
     %allcir = cfg.cir1(cur_index-seg_len+1:cur_index, :);
     allcir = data;
+    whos allcir
     %% pca
         sel_cir1 = [];
         all_SNR = [];
@@ -65,13 +66,20 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         % 处理后
         %draw_pic(cfg.figure6, cir1');
         
-        % 选择path
         all_SNR = [all_SNR; SNR];
+        % 选择path
+        
+        % 阈值法，取出SNR大阈值的路径
         l_bd = 1;
         r_bd = 960;
-        SNR_thr = 0; %SNR_thr设为0意味着不做路径选择
+        SNR_thr = 0.8; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
+        
+        % 百分比法，取出SNR最大的百分之几个路径
+        percent = 0.75;
+        [val, index] = sort(SNR);
+        sel = index(floor((1-percent)*length(SNR))+1:end);
 %         sel = [1:1:960];
 
 %         % 画出选择的path
@@ -113,12 +121,6 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         score(:, i) = smooth(score(:, i), 5);
         end
 
-        % 画图
-%         resp = score(:, i);
-%         figure(cur_index+i)
-%         plot(resp)
-%         title('呼吸波形')
-%         legend(num2str(cur_index+i))
     end
     
     res = score(:, 1)';
