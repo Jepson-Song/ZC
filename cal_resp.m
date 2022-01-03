@@ -36,7 +36,9 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
 %         draw_pic(cfg.figure5, fft_cir1(1:51,:)');
 
         % path selection
-        fft_cir1 = abs(fft(cir1,100));
+        fft_cir1 = abs(fft(cir1,960));
+        
+        fb_start = fs/n
         
         for index=1:1:Frame
             
@@ -67,19 +69,21 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         %draw_pic(cfg.figure6, cir1');
         
         all_SNR = [all_SNR; SNR];
+        
         % 选择path
         
-        % 阈值法，取出SNR大阈值的路径
+        % 阈值法，取出SNR大于阈值的路径
         l_bd = 1;
         r_bd = 960;
         SNR_thr = 0.8; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
         
-        % 百分比法，取出SNR最大的百分之几个路径
-        percent = 0.75;
+        % 百分比法，取出SNR最大的百分之多少的路径
+        percent = 1;
         [val, index] = sort(SNR);
         sel = index(floor((1-percent)*length(SNR))+1:end);
+        % 20220102_160709
 %         sel = [1:1:960];
 
 %         % 画出选择的path
@@ -110,7 +114,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
 
         if type==1
         % 低通滤波（呼吸）
-        score(:, i) = lowpass(0.5,0.6,score(:, i),10);
+        score(:, i) = lowpass(0.25,0.3,score(:, i),10);
 %         score(:, i) = bandpass(0.1,0.5,score(:, i),10);
         % 对呼吸结果做滑动平均 
         score(:, i) = smooth(score(:, i), 15); % 有作用
