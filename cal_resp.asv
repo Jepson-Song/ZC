@@ -23,7 +23,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         % 按时间进行差分
         dcir1 = diff(tcir1, 1, 1);  % para3: 1是列差分 2是行差分
         
-%         % 画差分cir1
+        % 画差分cir1
 %         draw_pic(cfg.figure8,dcir1')
 
         cir1 = dcir1;
@@ -83,7 +83,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         sel = sel + l_bd - 1;
         
         % 百分比法，取出SNR最大的百分之几个路径
-        percent = 0.1;
+        percent = 0.2;
         [val, index] = sort(SNR);
         sel = index(floor((1-percent)*length(SNR))+1:end);
 

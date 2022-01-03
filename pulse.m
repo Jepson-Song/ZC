@@ -506,24 +506,21 @@ function pushbutton4_Callback(hObject, eventdata, handles)
         last_prefix = cfg.lastCIR
         prefix = get(cfg.handles.edit1, 'string')
         % 如果这个CIR数据已经在内存中就不重复读取，如果不在内存中则重新读取数据
+        time_start_shift = 60; % 起始时间（帧）
+        time_end_shift = -30; 
         if strcmp(cfg.lastCIR, prefix)==0
             
             allcir_real = load_data('cir_real');
             whos allcir_real
-            cfg.real_cir = allcir_real;
+            cfg.real_cir = allcir_real(1+time_start_shift:end+time_end_shift, :);
             
             allcir_imag = load_data('cir_imag');
             whos allcir_imag
-            cfg.imag_cir = allcir_imag;
+            cfg.imag_cir = allcir_imag(1+time_start_shift:end+time_end_shift, :);
             
-            allcir = allcir_real+allcir_imag*j;%atan(allcir_imag./allcir_real);
+            allcir = allcir_real+allcir_imag*1j;%atan(allcir_imag./allcir_real);
             whos allcir
             cfg.cir1 = allcir;
-
-            % 丢掉前两秒的数据
-%             allcir = allcir_real(21:end,: );%+allcir_imag*1j;
-            
-%             cfg.cir1 = allcir(1+50:end-30,:);
 
             cfg.lastCIR = prefix;
         end
