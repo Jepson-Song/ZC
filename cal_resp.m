@@ -36,7 +36,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
 %         draw_pic(cfg.figure5, fft_cir1(1:51,:)');
 
         % path selection
-        fft_cir1 = abs(fft(cir1));
+        fft_cir1 = abs(fft(cir1)); % 默认对列做fft
         
         f_start = floor(0.1/(10/T));
         f_end = floor(0.5/(10/T));
@@ -45,8 +45,10 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
             
             % 路径选择
             Emax = max(fft_cir1([f_start:1:f_end],index));
-            part1 = sum(fft_cir1([f_start:1:f_end],index))-Emax;
-            part2 = sum(fft_cir1([f_end+1:1:end],index));
+%             part1 = sum(fft_cir1([f_start:1:f_end],index))-Emax;
+%             part2 = sum(fft_cir1([f_end+1:1:end],index));
+            part1 = (sum(fft_cir1([f_start:1:f_end],index))-Emax)/(f_end-f_start+1-1);
+            part2 = sum(fft_cir1([f_end+1:1:end],index))/(length(fft_cir1(:,index))-(f_end+1)+1);
             w1 = 0.5;
             w2 = 0.5;
             SNR(index) = w1*Emax/part1+w2*Emax/part2;
@@ -78,7 +80,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         % 阈值法，取出SNR大阈值的路径
         l_bd = 1;
         r_bd = 960;
-        SNR_thr = 0.045; %SNR_thr设为0意味着不做路径选择
+        SNR_thr = 5; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
         
