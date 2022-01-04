@@ -1,22 +1,34 @@
 function res = get_extreme(data, type)
         
-        resp = data;
-        
-        s = std(resp);
+        s = std(data);
         
         fprintf("\n标准差：%d\n",s);
         
+        % 呼吸阈值
+        resp_snr = s/5;
+        % 心跳阈值
+        heart_snr = s/10;
+        
         % 列出所有候选极值
         extreme_candidate = [];
-        for k=2:1:length(resp)-1
-            % 相等点只取第一个
-            if resp(k) == resp(k-1)
+        for k=2:1:length(data)-1
+            
+            % 连续相等点只取第一个
+            if data(k) == data(k-1)
                 continue;
             end
             
-            if resp(k)>=resp(k-1)&&resp(k)>=resp(k+1)
+            % 没检测出呼吸或者心跳
+            if type==1&&abs(data(k))<resp_snr
+                continue;
+            elseif type==2&&abs(data(k))<heart_snr
+                continue;
+            end
+                
+            % 增加候选极值点
+            if data(k)>=data(k-1)&&data(k)>=data(k+1)
                 extreme_candidate = [extreme_candidate, k];
-            elseif resp(k)<=resp(k-1)&&resp(k)<=resp(k+1)
+            elseif data(k)<=data(k-1)&&data(k)<=data(k+1)
                 extreme_candidate = [extreme_candidate, k];
             end
         end
@@ -27,6 +39,7 @@ function res = get_extreme(data, type)
         if type == 1
             thr = s/2;
         end
+        % 从候选极值点中找出真实极值点
         for k = 1:1:length(extreme_candidate)
             index = extreme_candidate(k);
             
@@ -38,7 +51,7 @@ function res = get_extreme(data, type)
             % 跟上一个极值点的差值与阈值比较
             if k~=1
                 last_index = extreme_candidate(k-1);
-                if abs(resp(index)-resp(last_index))<thr
+                if abs(data(index)-data(last_index))<thr
                     continue;
                 end
             end
@@ -48,11 +61,11 @@ function res = get_extreme(data, type)
                 local_extreme = [local_extreme, index];
             else
                 % 异号，一个极大值一个极小值
-                if resp(index)*resp(last_index)<0 
+                if data(index)*data(last_index)<0 
                     last_index = index;
                     local_extreme = [local_extreme, index];
                 else % 同号，如果绝对值更大则更新上一个极值
-                    if abs(resp(index))>abs(resp(last_index))
+                    if abs(data(index))>abs(data(last_index))
                         local_extreme(end) = index;
                         last_index = index;
                     end

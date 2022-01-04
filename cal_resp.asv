@@ -23,7 +23,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         % 按时间进行差分
         dcir1 = diff(tcir1, 1, 1);  % para3: 1是列差分 2是行差分
         
-%         % 画差分cir1
+        % 画差分cir1
 %         draw_pic(cfg.figure8,dcir1')
 
         cir1 = dcir1;
@@ -36,21 +36,17 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
 %         draw_pic(cfg.figure5, fft_cir1(1:51,:)');
 
         % path selection
-        
-        fft_cir1 = abs(fft(cir1)); % 默认对列做fft
+        fft_cir1 = abs(fft(cir1));
         
         f_start = floor(0.1/(10/T));
         f_end = floor(0.5/(10/T));
-        
         
         for index=1:1:Frame
             
             % 路径选择
             Emax = max(fft_cir1([f_start:1:f_end],index));
-%             part1 = sum(fft_cir1([f_start:1:f_end],index))-Emax;
-%             part2 = sum(fft_cir1([f_end+1:1:end],index));
-            part1 = (sum(fft_cir1([f_start:1:f_end],index))-Emax)/(f_end-f_start+1-1);
-            part2 = sum(fft_cir1([f_end+1:1:end],index))/(length(fft_cir1(:,index))-(f_end+1)+1);
+            part1 = sum(fft_cir1([f_start:1:f_end],index))-Emax;
+            part2 = sum(fft_cir1([f_end+1:1:end],index));
             w1 = 0.5;
             w2 = 0.5;
             SNR(index) = w1*Emax/part1+w2*Emax/part2;
@@ -74,23 +70,20 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         %draw_pic(cfg.figure6, cir1');
         
         all_SNR = [all_SNR; SNR];
-        
 %         figure(1003)
 %         plot(SNR)
 
         % 选择path
 
         % 阈值法，取出SNR大阈值的路径
-        
         l_bd = 1;
         r_bd = 960;
-        SNR_thr = 5; %SNR_thr设为0意味着不做路径选择
+        SNR_thr = 0.045; %SNR_thr设为0意味着不做路径选择
         [, sel]= find(SNR(l_bd:r_bd)>=SNR_thr);
         sel = sel + l_bd - 1;
         
-        
         % 百分比法，取出SNR最大的百分之几个路径
-        percent = 0.1;
+        percent = 0.2;
         [val, index] = sort(SNR);
         sel = index(floor((1-percent)*length(SNR))+1:end);
 
@@ -122,7 +115,7 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
 
         if type==1
         % 低通滤波（呼吸）
-        score(:, i) = lowpass(0.25,0.3,score(:, i),10);
+        score(:, i) = lowpass(0.5,0.6,score(:, i),10);
 %         score(:, i) = bandpass(0.1,0.5,score(:, i),10);
         % 对呼吸结果做滑动平均 
         score(:, i) = smooth(score(:, i), 15); % 有作用
