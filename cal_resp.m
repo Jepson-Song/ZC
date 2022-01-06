@@ -42,6 +42,22 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         f_start = floor(0.1/(10/T));
         f_end = floor(0.5/(10/T));
         
+        % 找到直达信号
+        sum_cir = sum(abs(tcir1), 1); % 按列求和
+        [tm, p] = max(sum_cir); % 找到峰值坐标p
+        
+        dir_snr = tm/(sum(sum_cir)-tm)*(cfg.zclen/2-1) % 直达径是否被遮挡
+        if dir_snr>10%cfg.SIG_LOS
+        width = 3; % 直达信号窗口宽度一半
+        lb = max(1, p-width); %直达窗口左边界
+        rb = min(960, p+width); % 直达窗口右边界
+        
+        dir_fac = 0.5; % 直达系数
+        ref_fac = 1-dir_fac; % 反射系数
+        cir1 = cir1*ref_fac; % 反射径信号乘上反射系数
+        cir1(:, lb:1:rb) = cir1(:, lb:1:rb)/ref_fac*dir_fac; % 直达径信号乘上直达系数
+        end
+        
         
         for index=1:1:Frame
             
