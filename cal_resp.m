@@ -46,8 +46,9 @@ function res = cal_resp(data, type)%, cur_index, seg_len)
         sum_cir = sum(abs(tcir1), 1); % 按列求和
         [tm, p] = max(sum_cir); % 找到峰值坐标p
         
-        dir_snr = tm/(sum(sum_cir)-tm)*(cfg.zclen/2-1) % 直达径是否被遮挡
-        if dir_snr>10%cfg.SIG_LOS
+        dir_snr = tm/(sum(sum_cir)-tm)*(cfg.zclen/2-1); % 直达径是否被遮挡
+        
+        if dir_snr>10 % cfg.SIG_LOS
         width = 3; % 直达信号窗口宽度一半
         lb = max(1, p-width); %直达窗口左边界
         rb = min(960, p+width); % 直达窗口右边界
