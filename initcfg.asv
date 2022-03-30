@@ -14,9 +14,8 @@ niconfig.output={'ao0', 'ao1'};  %NI output ports
 % niconfig.nin=6;
 % niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
-% 驾驶场景
 niconfig.nin=8;
-niconfig.input={'ai0','ai1','ai2','ai3', 'ai4', 'ai5', 'ai6', 'ai7'};%{'ai0','ai4','ai2'}; %NI input ports
+niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
 niconfig.figure2=[];
@@ -182,7 +181,7 @@ end
 
 
 
-niconfig.color = ["r", "g", "b","c", "m", "y", "k", "w"];
+niconfig.color = ["r", "g", "b","c", "m", "y"];
 
 
 niconfig.A = [0 -0.05 0];
@@ -261,10 +260,10 @@ niconfig.chose2 = [];
 % end
 % niconfig.init_dis = niconfig.init_dis';
 % niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
-niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0 0 0;
-                        0 0 0 0.0759 0.0723 0.0723 0 0];
-niconfig.init_dis = [0.0723 0.0687 0.0651 0 0 0 0 0;
-                        0 0 0 0.0687 0.0687 0.0687 0 0];
+niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0;
+                        0 0 0 0.0759 0.0723 0.0723];
+niconfig.init_dis = [0.0723 0.0687 0.0651 0 0 0;
+                        0 0 0 0.0687 0.0687 0.0687];
 niconfig.handles = [];
 niconfig.SIG_LOS = 4;
 

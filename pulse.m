@@ -247,8 +247,9 @@ function processData(src,event)
             fmcw_cal_dis(cur_index);
         elseif strcmp(cfg.signal, 'zc')==1
 %             cal_dis(cur_index);
-            cal_dis_2O6I(cur_index);
+            cal_dis(cur_index);
         end
+        
         draw_dis(cur_index);
         
 %         str = '';
