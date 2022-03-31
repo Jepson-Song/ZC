@@ -15,7 +15,7 @@ niconfig.output={'ao0', 'ao1'};  %NI output ports
 % niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
 % 驾驶场景
-niconfig.nin=8;
+niconfig.nin=4;
 niconfig.input={'ai0','ai1','ai2','ai3', 'ai4', 'ai5', 'ai6', 'ai7'};%{'ai0','ai4','ai2'}; %NI input ports
 
 niconfig.figure1=[];
@@ -246,6 +246,10 @@ niconfig.SIGQUAL2 = [];%zeros(niconfig.nout, niconfig.nin);
 
 niconfig.chose1 = [];
 niconfig.chose2 = [];
+
+% new
+niconfig.dis_rcv = []; %zeros(niconfig.nin, niconfig.nout);
+
 
 
 % 初始距离

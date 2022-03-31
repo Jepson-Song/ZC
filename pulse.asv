@@ -123,7 +123,6 @@ function init_para()
     cfg.dis1 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.cir1 = [];
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
-    cfg.dis_rcv = [];
     cfg.pos1 = [];
     cfg.pos2 = [];
     cfg.pos3 = [];
@@ -395,23 +394,28 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     cfg.zcrep = cfg.fs/cfg.zclen/cfg.rate;
     cfg.seglen = cfg.zclen*cfg.zcrep;
     fprintf("\n【刷新率设置为%d】\n",cfg.rate);
-
+    
+%     set(handles.edit2, 'string', num2str(cfg.temp));
+    
     
     prefix = get(handles.edit1, 'string');
+    
     if strcmp(prefix,cfg.lastDataNum)~=1
         set(handles.radiobutton3,'value',0);
+        init_para();
         cfg.datain = [];
+    else
+        init_para();
     end
-    init_para();
     cfg.lastDataNum = prefix;
         
     
     %% 从文件中读取数据
     if get(handles.radiobutton3,'value') == 0
 
-        cfg.datain = load_data('');
-
-        set(handles.radiobutton3,'value',1);
+    cfg.datain = load_data('');
+    
+    set(handles.radiobutton3,'value',1);
     end
     cfg.data_len = size(cfg.datain,1);
     
@@ -420,7 +424,6 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     fprintf("\n-----【开始计算距离】-----\n");
     fprintf('Total Data length: %d\n',cfg.data_len)
     cfg.index = floor(cfg.data_len/cfg.seglen);
-%     index = cfg.index
     
     tic
     for cur_index = 1:1:cfg.index
@@ -491,12 +494,11 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     else
         dis = load_data('dis_cor');
     end
-    whos dis
+%     whos dis
     cfg.index = size(dis, 1);
-    tmp = cfg.index
-
-    cfg.dis1 = dis(:, 1:2:cfg.nin*cfg.nout);
-    cfg.dis2 = dis(:, 2:2:cfg.nin*cfg.nout);
+    a = cfg
+    cfg.dis1 = dis(:, 1:cfg.nin);
+    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
     fprintf("-----【完成读取距离】-----\n");
     
     %% 读取结果后画图
