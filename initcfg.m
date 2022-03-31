@@ -248,7 +248,11 @@ niconfig.chose1 = [];
 niconfig.chose2 = [];
 
 % new
-niconfig.dis_rcv = []; %zeros(niconfig.nin, niconfig.nout);
+niconfig.dis_rcv = []; % 接收端到发射端的距离 zeros(1,niconfig.nin*niconfig.nout);
+niconfig.pos_rcv = []; % 接收端的坐标 zeros(1,niconfig.nin*3)
+niconfig.init_pos_rcv = [-0.1, 0.65, 0, 0.1, 0.65, 0, -0.0725, 0.65, 0.12, 0.0725, 0.65, 0.12]; % 接收端的初始坐标 zeros(1,niconfig.nin*3)
+niconfig.pos_snd = [-0.2, 0, 0, 0.2, 0, 0]; % 发射端的坐标 zeros(1,niconfig.nout*3)
+niconfig.dis_snd = [0.2, 0.12, 0.155, 0.12]; % 发射端之间的距离 [disS1-S2, disS1-S3, disS3-S4, disS2-S4]
 
 
 

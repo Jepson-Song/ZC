@@ -124,6 +124,7 @@ function init_para()
     cfg.cir1 = [];
     cfg.dis2 = [];%zeros(cfg.nin, cfg.dislen);
     cfg.dis_rcv = [];
+    cfg.pos_rcv = [];
     cfg.pos1 = [];
     cfg.pos2 = [];
     cfg.pos3 = [];
@@ -651,8 +652,9 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     end
 %     whos dis
     cfg.index = size(dis, 1);
-    cfg.dis1 = dis(:, 1:cfg.nin);
-    cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+%     cfg.dis1 = dis(:, 1:cfg.nin);
+%     cfg.dis2 = dis(:, cfg.nin+1:cfg.nin*2);
+    cfg.dis_rcv = dis;
     fprintf("-----【完成读取距离】-----\n");
     
     %% 离线计算位置
@@ -662,7 +664,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     cfg.pos2 = [];
     tic;
     % 把data划分成dataseg
-    for cur_index = 1:1:cfg.index
+    for cur_index = 1:1:1%cfg.index
         %fprintf("【正在离线计算...】 Dataseg index: %d\n",cur_index);
 %         if cfg.pause
 %             toobar();
@@ -674,6 +676,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 
         % 计算坐标
 %         tic;
+%         cal_pos(cur_index);
         cal_pos(cur_index);
         cfg.cur_index = cur_index;
         % 画图
@@ -690,7 +693,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
     
     
     %% 保存位置
-    pos = [cfg.pos1,cfg.pos2];
+    pos = cfg.pos_rcv; % 1*12
     if cfg.choseCorrect == 0
         save_data(pos, 'pos')
     else
@@ -707,58 +710,59 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     
-%     global cfg
-%     
-%     %save_var(fileName)
-%     
-%     %clear
-%     %load(address)
-%     
-%     init_para();
-%     
-%     %% 从文件中读取位置
-%     if cfg.choseCorrect == 0
-%         pos = load_data('pos');
-%     else
-%         pos = load_data('pos_cor');
-%     end
-%     cfg.index = size(pos, 1);
-%     
+    global cfg
+    
+    %save_var(fileName)
+    
+    %clear
+    %load(address)
+    
+    init_para();
+    
+    %% 从文件中读取位置
+    if cfg.choseCorrect == 0
+        pos = load_data('pos');
+    else
+        pos = load_data('pos_cor');
+    end
+    cfg.index = size(pos, 1);
+    
 %     cfg.pos1 = pos(:, 1:3);
 %     cfg.pos2 = pos(:, 4:6);  
-%     
-%     %% 读取结果后画图
-%     fprintf("\n-----【开始画图】-----\n");
-%     for cur_index=1:1:cfg.index
-%         if cfg.pause
-%             toobar();
-%             fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
-%             while cfg.pause
-%                 pause(0.1)
-%             end
-%         end
-%         tic
-%         draw_pos(cur_index);
-%         t = toc;
-%         fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
-%     end
-%     toobar();
-%     fprintf("-----【结束画图】-----\n");
+    cfg.pos_rcv = pos;
+    
+    %% 读取结果后画图
+    fprintf("\n-----【开始画图】-----\n");
+    for cur_index=1:1:cfg.index
+        if cfg.pause
+            toobar();
+            fprintf("【暂停中...】 Next dataseg index: %d \n",cur_index);
+            while cfg.pause
+                pause(0.1)
+            end
+        end
+        tic
+        draw_pos_new(cur_index);
+        t = toc;
+        fprintf("【正在画图...】 Dataseg index: %d  用时：%.4f\n",cur_index, vpa(t));
+    end
+    toobar();
+    fprintf("-----【结束画图】-----\n");
 
 
 
-    tic;
-    pushbutton3_Callback(hObject, eventdata, handles);
-    t1 = toc;
-    fprintf("计算距离一共用时：%.4f\n", vpa(t));
-    tic;
-    pushbutton5_Callback(hObject, eventdata, handles);
-    t2 = toc;
-    fprintf("计算位置一共用时：%.4f\n", vpa(t));
-    tic;
-    pushbutton11_Callback(hObject, eventdata, handles);
-    t3 = toc;
-    fprintf("计算方向一共用时：%.4f\n", vpa(t));
+%     tic;
+%     pushbutton3_Callback(hObject, eventdata, handles);
+%     t1 = toc;
+%     fprintf("计算距离一共用时：%.4f\n", vpa(t));
+%     tic;
+%     pushbutton5_Callback(hObject, eventdata, handles);
+%     t2 = toc;
+%     fprintf("计算位置一共用时：%.4f\n", vpa(t));
+%     tic;
+%     pushbutton11_Callback(hObject, eventdata, handles);
+%     t3 = toc;
+%     fprintf("计算方向一共用时：%.4f\n", vpa(t));
 
 
 end

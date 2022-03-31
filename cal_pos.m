@@ -10,29 +10,31 @@ function cal_pos(cur_index)
     
     
     %% 解方程
-    [pos1, pos2] = solve_equations2(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
+    pos_rcv = solve_equations_new(cur_index);%solve_equations(cfg.dis1(cur_index, :), cfg.dis2(cur_index, :));
     
+    cfg.pos_rcv = [cfg.pos_rcv; pos_rcv];
     
-    % 处理异常值
-    if cur_index~=1 && 0
-        last_pos1 = cfg.pos1(cur_index-1, :);
-        last_pos2 = cfg.pos2(cur_index-1, :);
-        
-        threshold_pos = 0.05/cfg.rate;
-        change_pos1 = get_distance(pos1, last_pos1)
-        change_pos2 = get_distance(pos2, last_pos2)
-        if change_pos1 > threshold_pos
-            pos1 = last_pos1;
-        end
-            
-        if change_pos2 > threshold_pos 
-            pos2 = last_pos2;
-        end
-    end
-    
-    cfg.pos1 = [cfg.pos1; pos1];
-    cfg.pos2 = [cfg.pos2; pos2];
+%     % 处理异常值
+%     if cur_index~=1 && 0
+%         last_pos1 = cfg.pos1(cur_index-1, :);
+%         last_pos2 = cfg.pos2(cur_index-1, :);
+%         
+%         threshold_pos = 0.05/cfg.rate;
+%         change_pos1 = get_distance(pos1, last_pos1)
+%         change_pos2 = get_distance(pos2, last_pos2)
+%         if change_pos1 > threshold_pos
+%             pos1 = last_pos1;
+%         end
+%             
+%         if change_pos2 > threshold_pos 
+%             pos2 = last_pos2;
+%         end
+%     end
+%     
+%     cfg.pos1 = [cfg.pos1; pos1];
+%     cfg.pos2 = [cfg.pos2; pos2];
 %     cfg.pos3 = [cfg.pos3; pos3];
+    
 
     t = toc(pos_tim);
     fprintf("计算位置用时：%.4f\n", vpa(t));
@@ -47,6 +49,104 @@ function res = get_distance(a, b)
     res = sqrt(sum(c.*c));
 
 end
+
+
+%% 手写牛顿迭代解方程
+function pos_rcv = solve_equations_new(cur_index) 
+
+    global  cfg
+    
+    
+    
+    if cur_index == 1
+        start_pos_rcv = cfg.init_pos_rcv;
+    else
+        start_pos_rcv = cfg.pos_rcv(cur_index-1, :);
+    end
+    
+    pos_snd = cfg.pos_snd
+    
+    dis = [cfg.dis_rcv(cur_index, :), cfg.dis_snd]
+    
+    start_pos_rcv
+    
+    solve = tic;
+    
+    pos_rcv = newton_new(pos_snd, dis, start_pos_rcv)
+    
+    t = toc(solve);
+    fprintf("解方程用时：%.4f\n", vpa(t));
+    
+    
+    
+
+end
+
+%% 牛顿迭代 new
+% 参数：发射端坐标，距离信息，初始迭代位置
+function next_ans = newton_new(pos, dis, ans)
+    eps = 1e-6;
+    
+    %% 手写牛顿迭代
+    cnt = 0;
+    while(1)
+        cnt = cnt + 1;
+
+        % 雅克比矩阵
+        J = 2*[ans(1)-pos(1), ans(2)-pos(2), ans(3)-pos(3), 0, 0, 0, 0, 0, 0, 0, 0, 0;
+               ans(1)-pos(4), ans(2)-pos(5), ans(3)-pos(6), 0, 0, 0, 0, 0, 0, 0, 0, 0;
+               0, 0, 0, ans(4)-pos(1), ans(5)-pos(2), ans(6)-pos(3), 0, 0, 0, 0, 0, 0;
+               0, 0, 0, ans(4)-pos(4), ans(5)-pos(5), ans(6)-pos(6), 0, 0, 0, 0, 0, 0;
+               0, 0, 0, 0, 0, 0, ans(7)-pos(1), ans(8)-pos(2), ans(9)-pos(3), 0, 0, 0;
+               0, 0, 0, 0, 0, 0, ans(7)-pos(4), ans(8)-pos(5), ans(9)-pos(6), 0, 0, 0;
+               0, 0, 0, 0, 0, 0, 0, 0, 0, ans(10)-pos(1), ans(11)-pos(2), ans(12)-pos(3);
+               0, 0, 0, 0, 0, 0, 0, 0, 0, ans(10)-pos(4), ans(11)-pos(5), ans(12)-pos(6);
+               ans(1)-ans(4), ans(2)-ans(5), ans(3)-ans(6), ans(4)-ans(1), ans(5)-ans(2), ans(6)-ans(3), 0, 0, 0, 0, 0, 0;
+               ans(1)-ans(7), ans(2)-ans(8), ans(3)-ans(9), 0, 0, 0, ans(7)-ans(1), ans(8)-ans(2), ans(9)-ans(3), 0, 0, 0;
+               0, 0, 0, 0, 0, 0, ans(7)-ans(10), ans(8)-ans(11), ans(9)-ans(12), ans(10)-ans(7), ans(11)-ans(8), ans(12)-ans(9);
+               0, 0, 0, ans(4)-ans(10), ans(5)-ans(11), ans(6)-ans(12), 0, 0, 0, ans(10)-ans(4), ans(11)-ans(5), ans(12)-ans(6);]
+           
+        de = det(J)
+
+        f = [(ans(1)-pos(1))^2+(ans(2)-pos(2))^2+(ans(3)-pos(3))^2-dis(1)^2;
+             (ans(1)-pos(4))^2+(ans(2)-pos(5))^2+(ans(3)-pos(6))^2-dis(2)^2;
+             (ans(4)-pos(1))^2+(ans(5)-pos(2))^2+(ans(6)-pos(3))^2-dis(3)^2;
+             (ans(4)-pos(4))^2+(ans(5)-pos(5))^2+(ans(6)-pos(6))^2-dis(4)^2;
+             (ans(7)-pos(1))^2+(ans(8)-pos(2))^2+(ans(9)-pos(3))^2-dis(5)^2;
+             (ans(7)-pos(4))^2+(ans(8)-pos(5))^2+(ans(9)-pos(6))^2-dis(6)^2;
+             (ans(10)-pos(1))^2+(ans(11)-pos(2))^2+(ans(12)-pos(3))^2-dis(7)^2;
+             (ans(10)-pos(4))^2+(ans(11)-pos(5))^2+(ans(12)-pos(6))^2-dis(8)^2;
+             (ans(1)-ans(4))^2+(ans(2)-ans(5))^2+(ans(3)-ans(6))^2-dis(9)^2;
+             (ans(1)-ans(7))^2+(ans(2)-ans(8))^2+(ans(3)-ans(9))^2-dis(10)^2;
+             (ans(7)-ans(10))^2+(ans(8)-ans(11))^2+(ans(9)-ans(12))^2-dis(11)^2;
+             (ans(4)-ans(10))^2+(ans(5)-ans(11))^2+(ans(6)-ans(12))^2-dis(12)^2;];
+
+
+        next_ans = ans - (inv(J)*f)';
+        
+        stop = 1;
+        for i=1:1:12
+            if(abs(next_ans(i)-ans(i))>eps)
+                stop = 0;
+                break;
+            end
+        end
+        
+        if(stop)
+            fprintf("牛顿迭代次数：%d\n", cnt);
+            break;    
+        end
+        
+        
+        if cnt > 10
+            fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
+            break;    
+        end
+
+    
+    end
+end
+
 
 
 %% 手写牛顿迭代解方程
@@ -86,74 +186,6 @@ function [pos1, pos2] = solve_equations2(cur_index)
     
 
 end
-
-%% 牛顿迭代 new
-function xyz = newton_new(ans, dis)
-    x = pos(1);
-    y = pos(2);
-    z = pos(3);
-    
-    eps = 1e-6;
-    
-    %% 手写牛顿迭代
-    cnt = 0;
-    while(1)
-        cnt = cnt + 1;
-
-        % 雅克比矩阵
-        J = 2*[ans(1)-pos(1), ans(2)-pos(2), ans(3)-pos(3), 0, 0, 0, 0, 0, 0, 0, 0, 0;
-               ans(1)-pos(4), ans(2)-pos(5), ans(3)-pos(6), 0, 0, 0, 0, 0, 0, 0, 0, 0;
-               0, 0, 0, ans(4)-pos(1), ans(5)-pos(2), ans(6)-pos(3), 0, 0, 0, 0, 0, 0;
-               0, 0, 0, ans(4)-pos(4), ans(5)-pos(5), ans(6)-pos(6), 0, 0, 0, 0, 0, 0;
-               0, 0, 0, 0, 0, 0, ans(7)-pos(1), ans(8)-pos(2), ans(9)-pos(3), 0, 0, 0;
-               0, 0, 0, 0, 0, 0, ans(7)-pos(4), ans(8)-pos(5), ans(9)-pos(6), 0, 0, 0;
-               0, 0, 0, 0, 0, 0, 0, 0, 0, ans(10)-pos(1), ans(11)-pos(2), ans(12)-pos(3);
-               0, 0, 0, 0, 0, 0, 0, 0, 0, ans(10)-pos(4), ans(11)-pos(5), ans(12)-pos(6);
-               ans(1)-ans(4), ans(2)-ans(5), ans(3)-ans(6), ans(4)-ans(1), ans(5)-ans(2), ans(6)-ans(3), 0, 0, 0, 0, 0, 0;
-               ans(1)-ans(7), ans(2)-ans(8), ans(3)-ans(9), 0, 0, 0, ans(7)-ans(1), ans(8)-ans(2), ans(9)-ans(3), 0, 0, 0;
-               0, 0, 0, 0, 0, 0, ans(7)-ans(10), ans(8)-ans(11), ans(9)-ans(12), ans(10)-ans(7), ans(11)-ans(8), ans(12)-ans(9);
-               0, 0, 0, ans(4)-ans(10), ans(5)-ans(11), ans(6)-ans(12), 0, 0, 0, ans(10)-ans(4), ans(11)-ans(5), ans(12)-ans(6);];
-
-        f = [(ans(1)-pos(1))^2+(ans(2)-pos(2))^2+(ans(3)-pos(3))^2-dis(1)^2;
-             (ans(1)-pos(4))^2+(ans(2)-pos(5))^2+(ans(3)-pos(6))^2-dis(1)^2;
-             (ans(4)-pos(1))^2+(ans(5)-pos(2))^2+(ans(6)-pos(3))^2-dis(1)^2;
-             (ans(4)-pos(4))^2+(ans(5)-pos(5))^2+(ans(6)-pos(6))^2-dis(1)^2;
-             (ans(7)-pos(1))^2+(ans(8)-pos(2))^2+(ans(9)-pos(3))^2-dis(1)^2;
-             (ans(7)-pos(4))^2+(ans(8)-pos(5))^2+(ans(9)-pos(6))^2-dis(1)^2;
-             (ans(10)-pos(1))^2+(ans(11)-pos(2))^2+(ans(12)-pos(3))^2-dis(1)^2;
-             (ans(10)-pos(4))^2+(ans(11)-pos(5))^2+(ans(12)-pos(6))^2-dis(1)^2;
-             (ans(1)-pos(4))^2+(ans(2)-pos(5))^2+(ans(3)-pos(6))^2-dis(1)^2;
-             (ans(1)-pos(7))^2+(ans(2)-pos(8))^2+(ans(3)-pos(9))^2-dis(1)^2;
-             (ans(7)-pos(10))^2+(ans(8)-pos(11))^2+(ans(9)-pos(12))^2-dis(1)^2;
-             (ans(4)-pos(10))^2+(ans(5)-pos(11))^2+(ans(6)-pos(12))^2-dis(1)^2;];
-
-
-        ans = ans - (inv(J)*f)';
-
-        
-        if( abs(xyz(1)-x)<eps && abs(xyz(2)-y)<eps && abs(xyz(3)-z)<eps)
-            fprintf("牛顿迭代次数：%d\n", cnt);
-            break;    
-        end
-        
-        x = xyz(1);
-        y = xyz(2);
-        z = xyz(3);
-        
-        if cnt > 10
-%             fprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n**************超过最大牛顿迭代次数：%d**************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", cnt);
-            break;    
-        end
-
-
-%         x = xyz(1);
-%         y = xyz(2);
-%         z = xyz(3);
-    
-    end
-end
-
-
 
 %% 牛顿迭代
 function xyz = newton(pos, qos, dis)
