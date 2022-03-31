@@ -14,7 +14,7 @@ niconfig.output={'ao0', 'ao1'};  %NI output ports
 % niconfig.nin=6;
 % niconfig.input={'ai0','ai1','ai2','ai4','ai5','ai6'};%{'ai0','ai4','ai2'}; %NI input ports
 
-% 驾驶场景
+% new
 niconfig.nin=4;
 niconfig.input={'ai0','ai1','ai2','ai3', 'ai4', 'ai5', 'ai6', 'ai7'};%{'ai0','ai4','ai2'}; %NI input ports
 
