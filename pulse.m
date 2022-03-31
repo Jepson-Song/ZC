@@ -247,35 +247,22 @@ function processData(src,event)
         if strcmp(cfg.signal, 'fmcw')==1
             fmcw_cal_dis(cur_index);
         elseif strcmp(cfg.signal, 'zc')==1
-%             cal_dis(cur_index);
             cal_dis_new(cur_index);
         end
         
         draw_dis(cur_index);
-        
-%         str = '';
-%         for o = 1:1:cfg.nout
-%             for i = 1:1:cfg.nin
-%                 str = [str, sprintf('%.4f ', cfg.init_dis(o, i))];
-%             end
-%             str = [str, '\n'];
+
+%         % 计算坐标 
+%         cal_pos(cur_index);
+%         if cfg.drawStyle == 2 ||cfg.drawStyle == 1
+%             draw_pos(cur_index);
 %         end
-%         set(cfg.handles.edit2, 'string', str);
-% %         set(cfg.handles.edit2, 'string', "20210518_193646");
-
-%         PhaseRange(cur_index);
-
-        % 计算坐标 
-        cal_pos(cur_index);
-        if cfg.drawStyle == 2 ||cfg.drawStyle == 1
-        draw_pos(cur_index);
-        end
-        
-        % 计算方向
-        if cfg.drawStyle == 3
-        cal_dir(cur_index);
-        draw_dir(cur_index);
-        end
+%         
+%         % 计算方向
+%         if cfg.drawStyle == 3
+%             cal_dir(cur_index);
+%             draw_dir(cur_index);
+%         end
         
         cfg.cur_index = cur_index;
     end
@@ -493,7 +480,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
     end
     whos dis
     cfg.index = size(dis, 1);
-    tmp = cfg.index
 
     cfg.dis1 = dis(:, 1:2:cfg.nin*cfg.nout);
     cfg.dis2 = dis(:, 2:2:cfg.nin*cfg.nout);

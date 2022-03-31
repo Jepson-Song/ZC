@@ -18,6 +18,9 @@ function cal_dis_new(cur_index)
 %     whos allcir
     dis_rcv = zeros(1, cfg.nin*cfg.nout); % [disR1-S1,disR1-S2,disR2-S1,disR2-S2,...,disRn-S1,disRn-S2]
     
+    dis_snd1 = zeros(1, cfg.nin);
+    dis_snd2 = zeros(1, cfg.nin);
+    
     %% 左右发射端
     for i=1:1:cfg.nin                 %for each mic
         
@@ -57,6 +60,9 @@ function cal_dis_new(cur_index)
         dis_rcv((i-1)*cfg.nout+1) = d1;
         dis_rcv((i-1)*cfg.nout+2) = d2;
         
+        dis_snd1(i) = d1;
+        dis_snd2(i) = d2;
+        
         % 把所有cir放到一行
         allcir((i-1)*960+1:i*960) = cir1(1:960, i)';
         allcir((i-1+cfg.nin)*960+1:(i+cfg.nin)*960) = cir2(1:960, i)';
@@ -77,7 +83,11 @@ function cal_dis_new(cur_index)
 %     dis1 = dis1-cfg.init_dis(1, :);
 %     dis2 = dis2-cfg.init_dis(2, :);
 
+    % 从接收端角度
     cfg.dis_rcv = [cfg.dis_rcv; dis_rcv];
+    % 从发射端角度
+    cfg.dis1 = [cfg.dis1; dis_snd1];
+    cfg.dis2 = [cfg.dis2; dis_snd2];
 
     cfg.cir1 = [cfg.cir1; allcir];
 
