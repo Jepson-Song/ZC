@@ -271,7 +271,10 @@ niconfig.dis_snd = [0.2, 0.12, 0.155, 0.12]; % 发射端之间的距离 [disS1-S
 % niconfig.init_dis = ones(niconfig.nout, niconfig.nin)*100;
 % niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0 0 0;
 %                         0 0 0 0.0759 0.0723 0.0723 0 0];
-
+% niconfig.init_dis = [0.0723 0.0687 0.0651 0 0 0 0 0;
+%                         0 0 0 0.0687 0.0687 0.0687 0 0];
+niconfig.init_dis = [0.0723 0.0723 0.0651 0 0 0;
+                        0 0 0 0.0759 0.0723 0.0723 0 0];
 niconfig.handles = [];
 niconfig.SIG_LOS = 4;
 

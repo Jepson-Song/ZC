@@ -249,7 +249,7 @@ function processData(src,event)
         fprintf("【正在实时计算...】 Dataseg index: %d\n",cur_index);
         
         % 读IMU数据
-        Head = fread(cfg.ser,2,'uint8');
+        Head = fread(s,2,'uint8');
 %         if (Head(1)~=uint8(85))
 %             continue;
 %         end   
@@ -260,7 +260,7 @@ function processData(src,event)
 %             case 82 
 %                 b = fread(s,3,'int16')/32768*2000 ;   
             case 83 
-                c = fread(cfg.ser,3,'int16')/32768*180;
+                c = fread(cfg.se,3,'int16')/32768*180;
 %                 cfg.aa = [cfg.aa;a'];
 %                 cfg.bb = [cfg.bb;b'];
                 cfg.cc = [cfg.cc;c'];

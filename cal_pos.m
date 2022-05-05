@@ -74,6 +74,8 @@ function pos_rcv = solve_equations_new(cur_index)
     
     pos_rcv = newton_new(pos_snd, dis, start_pos_rcv)
     
+%     pos_rcv = [-0.5 0 0 0.5 0 0 -0.5 1 0 0.5 1 0]
+    
     t = toc(solve);
     fprintf("解方程用时：%.4f\n", vpa(t));
     
@@ -91,6 +93,20 @@ function next_ans = newton_new(pos, dis, ans)
     cnt = 0;
     while(1)
         cnt = cnt + 1;
+        
+        % 方程组
+        f = [(ans(1)-pos(1))^2+(ans(2)-pos(2))^2+(ans(3)-pos(3))^2-dis(1)^2;
+             (ans(1)-pos(4))^2+(ans(2)-pos(5))^2+(ans(3)-pos(6))^2-dis(2)^2;
+             (ans(4)-pos(1))^2+(ans(5)-pos(2))^2+(ans(6)-pos(3))^2-dis(3)^2;
+             (ans(4)-pos(4))^2+(ans(5)-pos(5))^2+(ans(6)-pos(6))^2-dis(4)^2;
+             (ans(7)-pos(1))^2+(ans(8)-pos(2))^2+(ans(9)-pos(3))^2-dis(5)^2;
+             (ans(7)-pos(4))^2+(ans(8)-pos(5))^2+(ans(9)-pos(6))^2-dis(6)^2;
+             (ans(10)-pos(1))^2+(ans(11)-pos(2))^2+(ans(12)-pos(3))^2-dis(7)^2;
+             (ans(10)-pos(4))^2+(ans(11)-pos(5))^2+(ans(12)-pos(6))^2-dis(8)^2;
+             (ans(1)-ans(4))^2+(ans(2)-ans(5))^2+(ans(3)-ans(6))^2-dis(9)^2;
+             (ans(1)-ans(7))^2+(ans(2)-ans(8))^2+(ans(3)-ans(9))^2-dis(10)^2;
+             (ans(7)-ans(10))^2+(ans(8)-ans(11))^2+(ans(9)-ans(12))^2-dis(11)^2;
+             (ans(4)-ans(10))^2+(ans(5)-ans(11))^2+(ans(6)-ans(12))^2-dis(12)^2;];
 
         % 雅克比矩阵
         J = 2*[ans(1)-pos(1), ans(2)-pos(2), ans(3)-pos(3), 0, 0, 0, 0, 0, 0, 0, 0, 0;
@@ -107,19 +123,7 @@ function next_ans = newton_new(pos, dis, ans)
                0, 0, 0, ans(4)-ans(10), ans(5)-ans(11), ans(6)-ans(12), 0, 0, 0, ans(10)-ans(4), ans(11)-ans(5), ans(12)-ans(6);]
            
         de = det(J)
-
-        f = [(ans(1)-pos(1))^2+(ans(2)-pos(2))^2+(ans(3)-pos(3))^2-dis(1)^2;
-             (ans(1)-pos(4))^2+(ans(2)-pos(5))^2+(ans(3)-pos(6))^2-dis(2)^2;
-             (ans(4)-pos(1))^2+(ans(5)-pos(2))^2+(ans(6)-pos(3))^2-dis(3)^2;
-             (ans(4)-pos(4))^2+(ans(5)-pos(5))^2+(ans(6)-pos(6))^2-dis(4)^2;
-             (ans(7)-pos(1))^2+(ans(8)-pos(2))^2+(ans(9)-pos(3))^2-dis(5)^2;
-             (ans(7)-pos(4))^2+(ans(8)-pos(5))^2+(ans(9)-pos(6))^2-dis(6)^2;
-             (ans(10)-pos(1))^2+(ans(11)-pos(2))^2+(ans(12)-pos(3))^2-dis(7)^2;
-             (ans(10)-pos(4))^2+(ans(11)-pos(5))^2+(ans(12)-pos(6))^2-dis(8)^2;
-             (ans(1)-ans(4))^2+(ans(2)-ans(5))^2+(ans(3)-ans(6))^2-dis(9)^2;
-             (ans(1)-ans(7))^2+(ans(2)-ans(8))^2+(ans(3)-ans(9))^2-dis(10)^2;
-             (ans(7)-ans(10))^2+(ans(8)-ans(11))^2+(ans(9)-ans(12))^2-dis(11)^2;
-             (ans(4)-ans(10))^2+(ans(5)-ans(11))^2+(ans(6)-ans(12))^2-dis(12)^2;];
+        
 
 
         next_ans = ans - (inv(J)*f)';
